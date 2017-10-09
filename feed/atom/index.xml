@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-09-27T00:33:38+09:00</updated>
+ <updated>2017-10-10T01:29:33+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,311 @@
  </author>
  
 
+ 
+ <entry>
+   <title>Clean ArchitectureとBuilding Evolutionary Architecturesを読んだ</title>
+   <link href="http://efcl.info/2017/10/09/clean-architecture-and-building-evolutionary-architectures/"/>
+   <updated>2017-10-09T23:27:00+09:00</updated>
+   <id>http://efcl.info/2017/10/09/clean-architecture-and-building-evolutionary-architectures</id>
+   <content type="html"><![CDATA[ <p><a href="http://www.informit.com/store/clean-architecture-a-craftsmans-guide-to-software-structure-9780134494319" title="Clean Architecture: A Craftsman&amp;#39;s Guide to Software Structure and Design | InformIT">Clean Architecture</a>という本と<a href="https://www.amazon.com/dp/1491986360/" title="Building Evolutionary Architectures: Support Constant Change: Neal Ford, Rebecca Parsons, Patrick Kua: 9781491986363: Amazon.com: Books">Building Evolutionary Architectures</a>という本を最近読んだのでざっくりとしたメモ。（両方共2-3時間ぐらいでざっくりとしか読んでないので、解釈間違いは普通にありそうです）</p>
+
+<p>両方共アーキテクチャに対するメタ的な視点な部分があるので、合わせて読むと面白いかも。</p>
+
+<h2 id="clean-architecture">Clean Architecture</h2>
+
+<p>Clean Architecture(Clean Codeの人のシリーズ)という本を読んだ。</p>
+
+<ul>
+<li><a href="http://www.informit.com/store/clean-architecture-a-craftsmans-guide-to-software-structure-9780134494319" title="Clean Architecture: A Craftsman&amp;#39;s Guide to Software Structure and Design | InformIT">Clean Architecture: A Craftsman&#39;s Guide to Software Structure and Design | InformIT</a>
+
+<ul>
+<li>PDFとかEpubとかMobiが買える</li>
+</ul></li>
+</ul>
+
+<p><a href="https://www.amazon.com/Robert-C.-Martin/e/B000APG87E/ref=dp_byline_cont_book_1" title="Robert C. Martin">Robert C. Martin</a>の<code>Clean *</code>シリーズでいわゆる<a href="http://blog.tai2.net/the_clean_architecture.html" title="クリーンアーキテクチャ">クリーンアーキテクチャ</a>そのものだけを扱ったという内容ではない。</p>
+
+<p>でもクリーンアーキテクチャについて紹介してる章もある。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/CleanArchitecture?src=hash&amp;ref_src=twsrc%5Etfw">#CleanArchitecture</a> Clean ArchitectureがClean Architectureについて書いてる章があった… <a href="https://t.co/75EB3FW4U3">pic.twitter.com/75EB3FW4U3</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/912128410343768064?ref_src=twsrc%5Etfw">September 25, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>アーキテクチャのルール自体はシステム/アプリケーションのサイズにかかわらずいつも同じという話。
+これはアーキテクチャのメタ的な感じっぽい。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/CleanArchitecture?src=hash&amp;ref_src=twsrc%5Etfw">#CleanArchitecture</a> シングルスレッドのアプリ、マルチスレッドのアプリ、重量プロセスのアプリ、軽量プロセスのアプリ色々作ってきたけどアーキテクチャのルールはいつも同じ<br><br>&gt; The architecture rules are the same!</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/912117809714307072?ref_src=twsrc%5Etfw">September 25, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>そもそもの話としてアーキテクチャを決めるのはプログラマ（アーキテクト）で、その人のスキルとかチームによって異なる選択をしてる。なので、暗黙的に、異なるチームでは異なるアーキテクチャの決定をする。</p>
+
+<p>アーキテクチャの目的は開発、デプロイ、運用、メンテをやりやすくするため。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/CleanArchitecture?src=hash&amp;ref_src=twsrc%5Etfw">#CleanArchitecture</a>  良いアーキテクチャがサポートすべきもの <a href="https://t.co/xp1upNzbO5">pic.twitter.com/xp1upNzbO5</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/912124439344562176?ref_src=twsrc%5Etfw">September 25, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>アーキテクトは境界を見つけることが仕事で、そのboundariesの線を引くこと。
+境界はDBとかテストとかアプリケーションとかcontextとか色々なところにある。
+それを気をつけて認識しないといけない。また同時に認識した境界を無視しなければならない。
+なぜなら、すべてを実装するのはコストが高いため。</p>
+
+<p>後は境界を引いた上でそれぞれのコンポーネントを結合するプラグインの仕組みなどについて。
+フレームワークをコードに入れるのではなく、コードに対してフレームワークというコンポーネントをプラグインとして入れるようにするとか。</p>
+
+<blockquote>
+<p>Don’t marry the framework!</p>
+</blockquote>
+
+<p>境界をちゃんとして、依存関係をちゃんとしよう的な話が多かった。</p>
+
+<h2 id="building-evolutionary-architectures">Building Evolutionary Architectures</h2>
+
+<p>Building Evolutionary ArchitecturesというEvolutionary Architectures(進化的アーキテクチャ)についての本を読んだ。</p>
+
+<ul>
+<li><a href="https://www.thoughtworks.com/books/building-evolutionary-architectures" title="Building Evolutionary Architectures | ThoughtWorks">Building Evolutionary Architectures | ThoughtWorks</a></li>
+<li><a href="https://www.amazon.com/dp/1491986360/" title="Building Evolutionary Architectures: Support Constant Change: Neal Ford, Rebecca Parsons, Patrick Kua: 9781491986363: Amazon.com: Books">Building Evolutionary Architectures: Support Constant Change: Neal Ford, Rebecca Parsons, Patrick Kua: 9781491986363: Amazon.com: Books</a></li>
+</ul>
+
+<p>ThoughtWorksの人達が書いた本なので、アーキテクチャに対するメタ的な目線が多かった。</p>
+
+<p>そもそも、Evolutionary Architectures(進化的アーキテクチャ)とは何かという話や進化的アーキテクチャというのは何を目的にしているか。(adaptable Architectureと言わなかったのはなぜかなど?)</p>
+
+<blockquote class="twitter-tweet" data-partner="tweetdeck"><p lang="en" dir="ltr">Why Evolutionary? <a href="https://t.co/dhWQIhUg4k">pic.twitter.com/dhWQIhUg4k</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/917406155374157824?ref_src=twsrc%5Etfw">October 9, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>進化的アーキテクチャは次の3つのポイントが主になってる的な話。
+ 
+- Incremental change
+- Guided change with fitness functions
+- Appropriate coupling</p>
+
+<p>継続的に変更すること(Incremental change)ができ、その変更/進化が目的の方向なのかをチェックできる指標をちゃんと持つこと(Guided change with fitness functions)。
+つまりアーキテクチャを選ぶことが目的でなく、Fitness functionとなる指標がありそれに対するアーキテクチャを選べているかを確認できるようにすることが目的。</p>
+
+<p>ある変化に対してその変化が目的に沿ったものだったかを計測できる指標のことをfitness functionと言っているという理解。</p>
+
+<blockquote>
+<p>A fitness function is a particular type of objective function that is used to summarise, as a single figure of merit, how close a given design solution is to achieving the set aims.</p>
+</blockquote>
+
+<p>元ネタは<a href="https://en.wikipedia.org/wiki/Fitness_function" title="Fitness function - Wikipedia">Fitness function - Wikipedia</a>とのこと。</p>
+
+<p>でてくる用語が抽象的なので次の動画も見たほうが分かりやすいかも。</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/SzSZpZI02Jg" frameborder="0" allowfullscreen></iframe>
+
+<p>そのため、何がFitness functionなのかは、作るシステム/アプリケーションによって異なる。
+あるシステムではパフォーマンスやセキュリティが大事だったり、作るものによって異なる = 進化の方向はアプリケーションで異なる。</p>
+
+<p>テストとかパフォーマンスとかそれぞれコンポーネント毎にfitness functionがあり、システム全体でのバランスを検証する。
+スケーラビリティとか、パフォーマンス、セキュリティとかデータスキーマとかプロジェクトにおける指標となるものをちゃんと決めてないと、都度の変化はただの反応的な変化(reactionary architecture)となるので、最初にシステム全体として進化の指標を決めることは大事という話。
+つまり、正しい方向を向いてるかどうかという指標はちゃんと決めないと、正しさが分からずに問題となるよという話だと思う。</p>
+
+<p>その指標が決まっているだけでは継続的な進化はできないので、Incremental changeをするためには継続的インテグレーション(CI)と継続的デリバリー(CD)といったリリースサイクルに関わるもの大事という話が結構でてきた。(また、このデプロイの頻度とかは物理的なものとデジタル的なもので異なるという話とか。)</p>
+
+<p>リリースサイクルの例としてGitHubとかの例がでてきた。</p>
+
+<ul>
+<li><a href="https://githubengineering.com/move-fast/" title="Move Fast and Fix Things | GitHub Engineering">Move Fast and Fix Things | GitHub Engineering</a></li>
+</ul>
+
+<p>なんでリリースサイクルが大事かというとリリース速度と進化的アーキテクチャに相関が存在する。
+つまりプロジェクトのサイクルタイムによってアーキテクチャの進化速度が決まり、より早いサイクルはより早い進化を促すことができるため。</p>
+
+<p>継続的にデプロイするには、そのシステムがモジュール化されていることが大事。
+そのモジュール化を行う方法?としていろんなアーキテクチャがあるよという、既存のいろんなアーキテクチャ紹介(モノリシック、レイヤードアーキテクチャ、<a href="https://en.wikipedia.org/wiki/Event-driven_architecture" title="Event-driven architecture">Event-driven architecture</a>、serverlessとか)</p>
+
+<p>けど</p>
+
+<blockquote>
+<p>Don’t build an architecture just because it will be fun meta-work.</p>
+</blockquote>
+
+<p>だよという話。</p>
+
+<hr>
+
+<p>アーキテクチャの対義語(アンチパターン)として泥団子(<a href="https://ja.wikipedia.org/wiki/%E5%A4%A7%E3%81%8D%E3%81%AA%E6%B3%A5%E3%81%A0%E3%82%93%E3%81%94" title="Big ball of mud">Big ball of mud</a>)の話。
+基本的に泥団子は進化することができないので、新しい変化を取り込むことができない。
+いくかの柔軟性を取り込んでいくことでアーキテクチャ全体を変更せずに、取り入れることができる。</p>
+
+<p>柔軟性についてでどういうものがあるかという話。</p>
+
+<ul>
+<li>必要ない変数を取り除く
+
+<ul>
+<li>Immutabilityを取り入れる</li>
+<li>Immutable infrastructureは必要ない変数を取り除く</li>
+</ul></li>
+<li>決定を可逆にする
+
+<ul>
+<li>Make Decisions Reversible</li>
+<li>Revertable、 blue/green deployment</li>
+</ul></li>
+<li>Prefer Evolvable over Predictable</li>
+<li>Build Anticorruption Layers
+
+<ul>
+<li>腐敗防止を設ける</li>
+</ul></li>
+<li>Mitigate External Change
+
+<ul>
+<li>外部ライブラリの変更の影響を小さく保つ</li>
+<li>left-padの教訓</li>
+</ul></li>
+<li>Updating Libraries Versus Frameworks
+
+<ul>
+<li>アーキテクトはライブラリとフレームワークを区別する</li>
+<li>開発者のコードがライブラリを呼び出す</li>
+<li>フレームワークは開発者のコードを呼び出す</li>
+<li>多くの場合はライブラリを選ぶことで影響が軽減される</li>
+<li>フレームワークは積極的に依存を更新する(セキュリティアップデート)</li>
+<li>ライブラリは必要になったら更新する(update when neededモデル)</li>
+</ul></li>
+<li>Prefer Continuous Delivery to Snapshots
+
+<ul>
+<li>The conflict between Continuous Delivery and traditional Agile - kief.com</li>
+<li>-LATESTみたいなスナップショットじゃなくてタグ切って管理</li>
+</ul></li>
+<li>これはMake Decisions Reversibleとも繋がる(revert可能にする)
+
+<ul>
+<li>Prefer Continuous Delivery over snapshots for (external) dependencies.</li>
+<li>継続的デプロイができる環境では外部依存についての考えかたも変える</li>
+<li>2つの指標を導入する</li>
+<li>fluid
+
+<ul>
+<li>自動的に依存を更新する</li>
+</ul></li>
+<li>guarded
+
+<ul>
+<li>固定 -&gt; fluidに戻すように修正する</li>
+</ul></li>
+</ul></li>
+<li>Version Services Internally
+
+<ul>
+<li>一度に管理するサービスのエンドポイントのバージョンは2つまで</li>
+</ul></li>
+</ul>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">left-padだ <a href="https://t.co/JctKbVAVfH">pic.twitter.com/JctKbVAVfH</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/917040368339755008?ref_src=twsrc%5Etfw">October 8, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script
+
+外部モジュールのバージョン管理の話が結構面白かった。
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">ライブラリとフレームワークの区別について<br>開発者のコードがライブラリを呼び出す。一方、フレームワークは開発者のコードを呼び出す。<br>多くの場合はライブラリを選ぶことで影響が軽減される。<br><br>フレームワークのアップデートは積極的に行い、ライブラリのアップデートは必要になったら行う。</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/917041667881893889?ref_src=twsrc%5Etfw">October 8, 2017</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>つまり、フレームワークは自分が制御するわけではないので、アップデートは積極的に行わないと進化できなくなる可能性がある。一方ライブラリは必要になったタイミングで更新すればいいという話。</p>
+
+<hr>
+
+<p>泥団子から進化することはできないのでどうやって分解するかという話。</p>
+
+<p>泥団子を進化させることはできない。(本で ball of mud は結構出てくる)
+泥団子を再加工するコストが莫大なものとなる。これを変質させる方法の第一歩はモジュール化。
+最初に行うべき作業は現在のシステムからモジュールの発見すること。</p>
+
+<p>ここでも境界を見つける話や泥団子からのマイグレーション方法についてなど。
+モジュールへ分解していくのだけど、安易に分解するとパフォーマンスが問題になることがあるよとか、分解した結果複数のモジュールが共有してる共有モジュールはどうするの?とか。</p>
+
+<p>どうにかして境界を見つけて分解することができたら、取捨選択のステップへ。ここでも指標となるFitness functionがでてくる。</p>
+
+<blockquote>
+<p>Next, developers choose and detach the chosen service from the monolith, fixingany calling points. Fitness functions play a critical role here — developersshould build fitness functions to make sure the newly introduced integrationpoints don’t change, and add consumer-driven contracts.</p>
+</blockquote>
+
+<hr>
+
+<p>またIncremental changeの話に戻って</p>
+
+<p>サイクルタイムはビジネスメトリクスであるという話。ならなぜ、短い時間で繰り返せるということはコストが小さくなるということ。最小のコストで試すことができる。
+このサイクルタイムを短くするにはいろいろ自動化が必要になるという話。</p>
+
+<p>変化のリスクを小さくするのが進化的アーキテクチャの考え方。
+その変化において大きなBreaking Changeを減らす/なくしIncremental changeできるようにする。
+それによって、新しいものを取り入れる余地を作る。</p>
+
+<p>雑に進化的アーキテクチャとは何かというと</p>
+
+<ul>
+<li>予測可能性より進化性</li>
+<li>進化のリスクを小さくする(痛みを伴うBreaking Changeなしに進化)</li>
+<li>依存するライブラリとフレームワークの管理とリスクを考えて意思決定をする</li>
+<li>可逆性を持つ決定を取り入れる</li>
+<li>腐敗防止層を設ける</li>
+<li>進化の速度とリリースサイクルには相関がある
+
+<ul>
+<li>短い時間で繰り返せるということは、試すコストが小さい</li>
+<li>プロジェクトのサイクルタイムによってアーキテクチャの進化速度が決まる</li>
+</ul></li>
+<li>泥団子は進化することができないので、柔軟性のポイントを取り入れる</li>
+<li>目的に対する成長なのかを計測する(そのため実装の詳細を無視してはいけない)</li>
+</ul>
+
+<p>アーキテクチャは方程式ではなく、進行中のプロセスのスナップショットにすぎないという話。</p>
+
+<hr>
+
+<p>読み終わってそういえば<a href="http://bliki-ja.github.io/SacrificialArchitecture/" title="犠牲的アーキテクチャ">犠牲的アーキテクチャ</a>というものが同じくThoughtWorksのMartin Fowlerさんが言っていたのを思い出した。
+進化的アーキテクチャはより緩やか/より前進的な犠牲的アーキテクチャと言えるのかもしれないなーとか思った。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">最近聞かなくなった気もするけど犠牲的アーキテクチャの話も少しでてきてた気がする。<br>進化的アーキテクチャは緩やかな犠牲的アーキテクチャと言えるのかもしれない<a href="https://t.co/FckZSanZai">https://t.co/FckZSanZai</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/917070245768028161?ref_src=twsrc%5Etfw">October 8, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<h2 id="おわり">おわり</h2>
+
+<p><a href="http://www.informit.com/store/clean-architecture-a-craftsmans-guide-to-software-structure-9780134494319" title="Clean Architecture: A Craftsman&amp;#39;s Guide to Software Structure and Design | InformIT">Clean Architecture</a>と<a href="https://www.amazon.com/dp/1491986360/" title="Building Evolutionary Architectures: Support Constant Change: Neal Ford, Rebecca Parsons, Patrick Kua: 9781491986363: Amazon.com: Books">Building Evolutionary Architectures</a>を読んでの雑なメモ書き。</p>
+
+<p>両方共、アーキテクチャとは境界を見つけることという話や異なるチーム異なるシステムでは異なるアーキテクチャがあるよという話をしてたのが良かった。</p>
+
+<p>あとはアーキテクチャ選び遊びは楽しいけど、目的にあってないアーキテクチャを選ぶアーキテクチャシンドロームにかかってはいけないという話も共通してた気がする。</p>
+
+<blockquote>
+<p>Don’t build an architecture just because it will be fun meta-work.</p>
+</blockquote>
+
+<p>どちらの本も読んで何か実践的な何かを学べるタイプのものではないので、その辺を見たい場合は別の本を見たほうが良さそう。</p>
+
+<ul>
+<li><a href="https://www.gitbook.com/book/delftswa/desosa-2017/details" title="Delft Students on Software Architecture: DESOSA 2017 · GitBook">Delft Students on Software Architecture: DESOSA 2017 · GitBook</a></li>
+<li><a href="http://ec.nikkeibp.co.jp/item/books/P98480.html" title=".NETのエンタープライズアプリケーションアーキテクチャ">.NETのエンタープライズアプリケーションアーキテクチャ</a></li>
+<li><a href="https://www.amazon.com/dp/1118714709/" title="Patterns, Principles, and Practices of Domain-Driven Design: Scott Millett, Nick Tune: 0787721845461: Amazon.com: Books">Patterns, Principles, and Practices of Domain-Driven Design: Scott Millett, Nick Tune: 0787721845461: Amazon.com: Books</a>
+
+<ul>
+<li><a href="http://efcl.info/2016/09/30/architecture-refs/" title="アーキテクチャをめぐるたび | Web Scratch">アーキテクチャをめぐるたび | Web Scratch</a></li>
+</ul></li>
+</ul>
+
+<p>どちらかというと次のものに近い方向だけど、もう少し技術よりなので短い時間で読みやすい。</p>
+
+<ul>
+<li><a href="https://www.amazon.co.jp/dp/B00ZF44J0I/" title="ソフトウェアシステムアーキテクチャ構築の原理">ソフトウェアシステムアーキテクチャ構築の原理</a></li>
+<li><a href="https://leanpub.com/livingdocumentation" title="Living Documentation by design, with Domain-Driven Design">Living Documentation by design, with Domain-Driven Design</a>
+
+<ul>
+<li><a href="http://efcl.info/2017/05/12/Living-Documentation-DDD/" title="Living Documentation by design, with Domain-Driven Designを読んだ | Web Scratch">Living Documentation by design, with Domain-Driven Designを読んだ | Web Scratch</a></li>
+</ul></li>
+</ul>
+
+<p>感想の量からもわかるように<a href="https://www.amazon.com/dp/1491986360/" title="Building Evolutionary Architectures: Support Constant Change: Neal Ford, Rebecca Parsons, Patrick Kua: 9781491986363: Amazon.com: Books">Building Evolutionary Architectures</a>は結構面白かった。</p>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように</title>
@@ -1886,337 +2191,6 @@ Reactなどで作るアプリケーションは、配列などを作るよりも
 サイズが小さくて、配列と同じ使い方ができるものがほしかったので作りました。</p>
 
 <p>あとTypeScriptの型定義ファイルも入っています。</p>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>#teppeis_sushi でクライアントサイドDDDについて発表した</title>
-   <link href="http://efcl.info/2017/07/04/teppeis_sushi/"/>
-   <updated>2017-07-04T23:26:00+09:00</updated>
-   <id>http://efcl.info/2017/07/04/teppeis_sushi</id>
-   <content type="html"><![CDATA[ <p><a href="https://twitter.com/search?f=realtime&amp;q=%20%23teppeis_sushi" title="#teppeis_sushi">#teppeis_sushi</a>というイベントで、<a href="http://azu.github.io/slide/2017/teppeis-sushi/client-side-ddd-on-github.html" title="Faao - ドメイン駆動設計で作るGitHub Issue Client -">Faao - ドメイン駆動設計で作るGitHub Issue Client -</a>という話をしました。</p>
-
-<p><a href="http://azu.github.io/slide/2017/teppeis-sushi/client-side-ddd-on-github.html"><img src="http://efcl.info/wp-content/uploads/2017/07/05-1499182533.png" alt="image"></a></p>
-
-<p>Electronやブラウザなどで動く<a href="https://github.com/azu/faao" title="faao">faao</a>というGitHubクライアントを書いていてそれの技術的な話です。
-クライアントサイドでDDDを取り入れた設計になっていて、その設計や規約の作り方やそれを守る方法についての話をしました。</p>
-
-<ul>
-<li><a href="https://github.com/azu/faao" title="azu/faao: Faao is a GitHub issue/pull-request client on Electron.">azu/faao: Faao is a GitHub issue/pull-request client on Electron.</a></li>
-</ul>
-
-<p><a href="https://leanpub.com/livingdocumentation" title="Living Documentation by… by Cyrille Martraire [PDF/iPad/Kindle]">Living Documentation by design, with Domain-Driven Design by Cyrille Martraire [PDF/iPad/Kindle]</a>という無料から買える書籍では、ドキュメントとコードを同じ速度で成長させていくためにはドキュメントに対しても自動化が必要であるなど(コミュニケーションの話なども)が書かれています。</p>
-
-<p>それらを参考にして、レイヤーの違反を自動的に見つけたり、<a href="https://azu.github.io/faao/meta/use-case.html" title="Faao - UseCase architecture">Faao - UseCase architecture</a>のようにコードからユースケースの図を自動生成したりなど、モデリングへのフィードバックループができるようにしているという話です。</p>
-
-<hr>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> 前回も台風でしたね</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882191585122820096">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li><a href="http://efcl.info/2016/07/14/teppeis_sushi/" title="#teppeis_sushi に参加した | Web Scratch">#teppeis_sushi に参加した | Web Scratch</a></li>
-</ul>
-
-<hr>
-
-<h2 id="vue-jsでssr">Vue.jsでSSR</h2>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="cs" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> vue.jsでSSR - k2wanko</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882192039919599616">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li><a href="https://firebase.google.com/?hl=ja" title="Firebase">Firebase</a></li>
-<li>lambdaのようなものが増えた</li>
-<li>Node.jsが動くのでVue.jsのサーバサイドレンダリングができる</li>
-<li><a href="https://vuejs.org/v2/guide/ssr.html" title="Server-Side Rendering — Vue.js">Server-Side Rendering — Vue.js</a></li>
-<li><a href="https://firebase.google.com/docs/database/?hl=ja" title="Firebase Realtime Database  |  Firebase">Firebase Realtime Database  |  Firebase</a></li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> Firebase裏がわにfastlyがいる</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882194840183689216">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<hr>
-
-<h2 id="最近electronでローカルプロキシを作っていてこまったこと-kyo_ago">最近Electronでローカルプロキシを作っていてこまったこと - kyo_ago</h2>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> Reduxを使ってStateとドメインと二重管理してる感じ。DDDの恩恵をあんまり受けてない感じする</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882195657447972864">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li>クライアントとサーバで両方データがある感じ</li>
-<li>クライアントのデータはサーバのキャッシュにすぎないので嘘のデータに見える</li>
-<li>サーバへ送信するまでの一時的なデータであるならばそれは無理してモデル化するべきなのか</li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> クライアント側のデータだけで動くものなら意味があるのかもしれない。<br>クライアントサイドに嘘のデータを持っている感じる。</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882195906057183232">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li>クライアントのデータはキャッシュでしかないならば、サーバに比べてDDDの魅力がオチている</li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> ちょうどいいところ落とし所を見つけるの重要なのでは by TDDのDDD談</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882196495218352128">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li>ドメインの共有はIsomorphicで辞めたほうがいいかも</li>
-<li>ドメインはクライアントとサーバで異なる</li>
-<li>サーバから見たドメインは所有という概念がなかったりする</li>
-<li>クライアントとサーバのドメインはアクターが異なるのでドメインモデルも異なる。 なので、クライアントとサーバで同じドメインモデルを共有することはできないのでは</li>
-<li>サーバは「自分が持っている」という概念はないので</li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> クラサバ時代のおじさんたち「ようやくその境地にやってきたな」</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882196920440987648">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> ユビキタス言語は共有していいけど、それ以外の共有は難しいのでは</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882197484763619329">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<hr>
-
-<h2 id="大規模フロントエンドのddd-83">大規模フロントエンドのDDD - 83</h2>
-
-<ul>
-<li>8人でやってるフロントエンドのチーム</li>
-<li>スキルレベルがバラバラ感</li>
-<li>Angular1だったものを2にする設計を始めた</li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">「Just Angular！」 <a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a></p>&mdash; Local Proxy (@kyo_ago) <a href="https://twitter.com/kyo_ago/status/882198460228706304">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li>設計を担当して質問を受け付けるようになった</li>
-<li>些細な質問なども殺到して個人が開発する時間がなくなった</li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> レビューが一人に集中。<br>@ 83</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882198608082108416">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li>質問ルームをslackチャットに作ってそこでやってもらったら質問が分散した</li>
-<li>サーバのAPIを作ってる人とクライアントサイドを作って流人は別。</li>
-<li>コンテキストがそもそも違う。 そこで腐敗防止層としてのDDDを取り入れる</li>
-<li>サーバから渡ってきたものをリマップしてクライアント側に主導権を持てるように</li>
-<li>AngularはViewは決まってるけど、設計は別に決まってない。</li>
-<li>無理難題が振ってくることがあるので、ngrxじゃなくて普通にrxをベースにして開発した</li>
-<li>モデリングをちゃんとやることでコピペコードは減る</li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> 「DDDとCQRSやってるよーいうと引かれる」</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882200748087427072">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li>1画面を作るのに7 APIを叩く</li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> 「BFFを作ればいいのでは」</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882201176560721921">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<hr>
-
-<h2 id="faao-ドメイン駆動設計で作るgithub-issue-client-azu"><a href="http://azu.github.io/slide/2017/teppeis-sushi/client-side-ddd-on-github.html" title="Faao - ドメイン駆動設計で作るGitHub Issue Client -">Faao - ドメイン駆動設計で作るGitHub Issue Client -</a> - azu</h2>
-
-<ul>
-<li>クライアントサイドでTypeScript + <a href="https://github.com/almin/almin" title="Almin">Almin</a> + DDDでの開発</li>
-<li>Living Documentationについて</li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">いいドキュメントは自動化されてなければならない <a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a></p>&mdash; OKUNOKENTARO (@armorik83) <a href="https://twitter.com/armorik83/status/882205550963851270">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">最も良いドキュメントは必要になるまで読まなくて良いドキュメント <a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a></p>&mdash; Yosuke FURUKAWA (@yosuke_furukawa) <a href="https://twitter.com/yosuke_furukawa/status/882206099222482944">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">ESLintは良いドキュメント、エラーになるまで読まなくて良い <a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a></p>&mdash; Yosuke FURUKAWA (@yosuke_furukawa) <a href="https://twitter.com/yosuke_furukawa/status/882206293204664320">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<hr>
-
-<h2 id="本の読み方-t_wada">本の読み方 - t_wada</h2>
-
-<ul>
-<li>本は未来方向には書けなくて、過去方向にしか書けない</li>
-<li>技術書を読むときは発刊された年数をちゃんと見る</li>
-<li>特に翻訳本はやたらと古い場合がある</li>
-<li>DDD本はRailsが出る前に書かれたけど、翻訳はRailsのずっと後</li>
-<li>絶版ショック</li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">(トッパン|ピアソン)ショック、単に絶版、様々な要因でOOA/OODの書籍がほぼ死滅し、訳書が出るタイミングが遅かったDDD本だけがオーパーツのような存在になった結果、日本ではDDD ≒ OOA/OODになってしまったという奇妙な状況の背景の話をした <a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a></p>&mdash; Takuto Wada (@t_wada) <a href="https://twitter.com/t_wada/status/882241157639487488">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<hr>
-
-<h2 id="rx6の話-laco">Rx6の話 - laco</h2>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> RxJS 6で何が変わるのかの話 <a href="https://t.co/XtDXct5F0m">https://t.co/XtDXct5F0m</a></p>&mdash; Laco (@laco0416) <a href="https://twitter.com/laco0416/status/882213465598771200">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> bufferの挙動がfindのバグ経由でBreaking Change  &quot;rxjs/CHANGELOG.md at 6.0.0-alpha.0 · ReactiveX/rxjs&quot;  <a href="https://t.co/BXIRrMQmE0">https://t.co/BXIRrMQmE0</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882212815339012096">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li>バグ修正によるBreaking Change</li>
-<li>Rxを拡張してるユーザーには影響がある</li>
-</ul>
-
-<h2 id="api-aiの話-vvkame">api.aiの話 - vvkame</h2>
-
-<p>聞けてなかった</p>
-
-<hr>
-
-<h2 id="2017年のフォームの話-会長">2017年のフォームの話 - 会長</h2>
-
-<blockquote>
-<p>スライド: <a href="https://speakerdeck.com/yosuke_furukawa/2017nian-falseformfalsehua" title="2017年のformの話 // Speaker Deck">2017年のformの話 // Speaker Deck</a></p>
-</blockquote>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> 2017年のフォームの話 - 会長</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882214321186521088">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li>Reactでのformの値の管理 unctrolledとcontrolled</li>
-<li>FBとしてはcontrolledで管理して</li>
-<li>ちょっと複雑なフォームをやるとバリデーションが複雑化する =&gt; controlled推奨</li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> jQueryなどの昔ながらのバリデーションライブラリはunctrolledで作られてる。</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882214853485617152">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> ちょっとまって!<br>2017年 いろんな所にstateがある。<br>どこにstateを保存するのが正しいの?</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882215092464398336">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li>React/Redux/永続化されたState</li>
-<li>どこで何を管理する?</li>
-<li>Twitterはハイブリット的な構造
-
-<ul>
-<li>入力中はコンポーネント、適宜Reduxへ</li>
-</ul></li>
-<li>ユーザー入力中に外からpropsで値がすり替わるとIMEなどで問題が起きるため</li>
-<li>処理速度的にコンポーネントに閉じたほうが良いこともある</li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> 再生時間みたいなMediaを考えると処理速度的にはコンポーネントで描画は行って、ドメインに定期的に状態を反映する形</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882216123596390400">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<hr>
-
-<h2 id="es-class-fieldの話-teppeis">ES class fieldの話 - teppeis</h2>
-
-<blockquote>
-<p>スライド: <a href="https://gist.github.com/teppeis/06c2b7e97c7d67684c3d3c94159893f3" title="ES Class Fieldsのプライベートフィールドがハッシュな変態記法なのは何でなんだぜ？">ES Class Fieldsのプライベートフィールドがハッシュな変態記法なのは何でなんだぜ？</a></p>
-</blockquote>
-
-<ul>
-<li><a href="https://github.com/tc39/proposal-private-fields" title="tc39/proposal-private-fields: A Private Fields Proposal for ECMAScript">tc39/proposal-private-fields: A Private Fields Proposal for ECMAScript</a></li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> Symbolでやれることをsyntaxでやる意味がない。</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882217632459444228">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li>hard protectionは言語としてできることを目指すべき</li>
-<li>Reflectとかで闇雲見られるようにはしない</li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> 見えちゃうとお前ら使うだろ。使えないようにするのが正義</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882219462954336257">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<hr>
-
-<h1 id="flutterの話">flutterの話</h1>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">「Flutterを知らないおじさん達へ」 <a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a></p>&mdash; Local Proxy (@kyo_ago) <a href="https://twitter.com/kyo_ago/status/882221826402734082">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">いつのまにかDartの話にすり替えるあくろすあざとい。 <a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a></p>&mdash; OKUNOKENTARO (@armorik83) <a href="https://twitter.com/armorik83/status/882221967205519361">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li><a href="https://flutter.io/web-analogs/" title="HTML/CSS Analogs in Flutter - Flutter">HTML/CSS Analogs in Flutter - Flutter</a></li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">OS再実装したりブラウザ再実装したり…。 <a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a></p>&mdash; OKUNOKENTARO (@armorik83) <a href="https://twitter.com/armorik83/status/882222891726544896">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<hr>
-
-<h2 id="web-packaging-jxck">Web Packaging - jxck</h2>
-
-<ul>
-<li><a href="https://tools.ietf.org/html/draft-yasskin-dispatch-web-packaging-00" title="draft-yasskin-dispatch-web-packaging-00 - Web Packaging">draft-yasskin-dispatch-web-packaging-00 - Web Packaging</a></li>
-<li><a href="http://asnokaze.hatenablog.com/entry/2017/07/02/171513" title="Webページを丸ごとパッケージングする Web Packagingとは - ASnoKaze blog">Webページを丸ごとパッケージングする Web Packagingとは - ASnoKaze blog</a></li>
-<li>ネットワークが遅いところで物理的p2pでサイトを見てるケース</li>
-<li>mhtmlみたいな</li>
-<li>データ・フォーマットなのでIETFへ</li>
-<li>ギリギリにGoogleから投げつけられてきた(いつもの)</li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> ネットワークが悪い国ではmhtmlをsdカードでやり取りしてる。<br>もっとカジュアルに共有できるようにしたい</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882225567365386241">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li>dispatchというWGで議論されて、どこで議論するべきなのかを決める</li>
-<li>WGができたら結構すごいことになるかも</li>
-<li>Service Workerの横つながりみたいな話がでてくるかも</li>
-<li>次回のプラハ会議に注目</li>
-</ul>
-
-<hr>
-
-<h2 id="その他">その他</h2>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> 未だに2年前と同じ話をしてる es module</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/882228287862210560">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li>Nodeの進捗がよくわからない</li>
-<li>CSPとバグとお金</li>
-</ul>
-
-<hr>
-
-<h2 id="おわり">おわり</h2>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Big boss is watching you <a href="https://twitter.com/hashtag/teppeis_sushi?src=hash">#teppeis_sushi</a> <a href="https://t.co/Yxz03NerJq">pic.twitter.com/Yxz03NerJq</a></p>&mdash; Yosuke FURUKAWA (@yosuke_furukawa) <a href="https://twitter.com/yosuke_furukawa/status/882229938232754177">July 4, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<p>おめでとうございます</p>
  ]]></content>
  </entry>
  

@@ -2,6 +2,12 @@
     "posts": [
         
         {
+            "title": "Clean ArchitectureとBuilding Evolutionary Architecturesを読んだ",
+            "url": "http://efcl.info/2017/10/09/clean-architecture-and-building-evolutionary-architectures/",
+            "date": "2017-10-09T23:27:00+09:00"
+        },
+        
+        {
             "title": "Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように",
             "url": "http://efcl.info/2017/09/20/almin-performance-profile-0.14.0/",
             "date": "2017-09-20T10:07:00+09:00"
