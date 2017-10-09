@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-10-10T01:29:33+09:00</updated>
+ <updated>2017-10-10T01:35:09+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -89,11 +89,13 @@
 
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<p>進化的アーキテクチャは次の3つのポイントが主になってる的な話。
- 
-- Incremental change
-- Guided change with fitness functions
-- Appropriate coupling</p>
+<p>進化的アーキテクチャは次の3つのポイントが主になってる的な話。</p>
+
+<ul>
+<li>Incremental change</li>
+<li>Guided change with fitness functions</li>
+<li>Appropriate coupling</li>
+</ul>
 
 <p>継続的に変更すること(Incremental change)ができ、その変更/進化が目的の方向なのかをチェックできる指標をちゃんと持つこと(Guided change with fitness functions)。
 つまりアーキテクチャを選ぶことが目的でなく、Fitness functionとなる指標がありそれに対するアーキテクチャを選べているかを確認できるようにすることが目的。</p>
