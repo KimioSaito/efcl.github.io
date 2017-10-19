@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-10-19T10:19:35+09:00</updated>
+ <updated>2017-10-19T10:20:33+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -19,7 +19,9 @@
    <link href="http://efcl.info/2017/10/19/text-map-kuromoji/"/>
    <updated>2017-10-19T09:45:00+09:00</updated>
    <id>http://efcl.info/2017/10/19/text-map-kuromoji</id>
-   <content type="html"><![CDATA[ <p><a href="https://ipsj.ixsq.nii.ac.jp/ej/?action=pages_view_main&amp;active_action=repository_view_main_item_detail&amp;item_id=70540&amp;item_no=1&amp;page_id=13&amp;block_id=8" title="くだけた表現を高精度に解析するための正規化ルール自動生成手法">くだけた表現を高精度に解析するための正規化ルール自動生成手法</a>という論文誌では、「ヵゎぃぃ」，「ゎた Uゎ」みたいな普通の形態素解析では未知語として検出されるものをどうやって正規化していくかという話が書かれていました。</p>
+   <content type="html"><![CDATA[ <p><a href="https://github.com/azu/text-map-kuromoji">azu/text-map-kuromoji: テキストを形態素解析した結果とテキストの関係をビジュアライズするエディタ</a>というツールを作った話。</p>
+
+<p><a href="https://ipsj.ixsq.nii.ac.jp/ej/?action=pages_view_main&amp;active_action=repository_view_main_item_detail&amp;item_id=70540&amp;item_no=1&amp;page_id=13&amp;block_id=8" title="くだけた表現を高精度に解析するための正規化ルール自動生成手法">くだけた表現を高精度に解析するための正規化ルール自動生成手法</a>という論文誌では、「ヵゎぃぃ」，「ゎた Uゎ」みたいな普通の形態素解析では未知語として検出されるものをどうやって正規化していくかという話が書かれていました。</p>
 
 <p>これを読んでいて面白かったのは形態素解析をした結果の未知語となった部分と穴埋め的にパターンを作って、そのパターンにマッチする同じようなテキストを探すというアプローチでした。</p>
 
