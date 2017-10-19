@@ -22,6 +22,12 @@
     </url>
     
     <url>
+        <loc>http://efcl.info/2017/10/19/text-map-kuromoji/</loc>
+        <lastmod>2017-10-19</lastmod>
+        <changefreq>never</changefreq>
+    </url>
+    
+    <url>
         <loc>http://efcl.info/2017/10/09/clean-architecture-and-building-evolutionary-architectures/</loc>
         <lastmod>2017-10-09</lastmod>
         <changefreq>never</changefreq>

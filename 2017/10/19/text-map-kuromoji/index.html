@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+    <title>
+        
+        kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする | Web Scratch
+        
+    </title>
+    <meta name="description" content="くだけた表現を高精度に解析するための正規化ルール自動生成手法という論文誌では、「ヵゎぃぃ」，「ゎた Uゎ」みたいな普通の形態素解析では未知語として検出されるものをどうやって正規化していくかという話が書かれていました。">
+    
+    <meta name="keywords" content="JavaScript,形態素解析" />
+    
+    <meta name="author" content="azu">
+    <!-- Icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="/public/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="/public/favicon.ico">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/public/css/main.css">
+    <!-- JavaScript -->
+    <!-- Open graph tags -->
+<meta property="og:title" content="kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://efcl.info/2017/10/19/text-map-kuromoji/">
+<meta property="og:image" content="http://efcl.info">
+
+<meta property="og:description" content="くだけた表現を高精度に解析するための正規化ルール自動生成手法という論文誌では、「ヵゎぃぃ」，「ゎた Uゎ」みたいな普通の形態素解析では未知語として検出されるものをどうやって正規化していくかという話が書かれていました。">
+<meta property="og:site_name" content="Web Scratch">
+
+
+
+
+<meta property="article:published_time" content="2017-10-19T09:45:00+09:00">
+<meta property="article:author" content="https://www.facebook.com/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/10/09/clean-architecture-and-building-evolutionary-architectures/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/09/20/almin-performance-profile-0.14.0/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/09/14/pwa_study/">
+
+
+
+
+
+<meta property="article:section" content="javascript">
+
+
+
+
+
+<meta property="article:tag" content="JavaScript">
+
+<meta property="article:tag" content="形態素解析">
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-2184335-8', 'auto');
+    ga('send', 'pageview');
+</script>
+    <script>
+var blog_categories = [
+{
+    "title" : "greasemonkey",
+    "count" : 61
+},{
+    "title" : "ニコニコ動画",
+    "count" : 16
+},{
+    "title" : "小説電子化",
+    "count" : 3
+},{
+    "title" : "vista",
+    "count" : 12
+},{
+    "title" : "firefox",
+    "count" : 55
+},{
+    "title" : "その他",
+    "count" : 13
+},{
+    "title" : "webサービス",
+    "count" : 22
+},{
+    "title" : "software",
+    "count" : 58
+},{
+    "title" : "雑記",
+    "count" : 36
+},{
+    "title" : "まとめ",
+    "count" : 11
+},{
+    "title" : "zaurus",
+    "count" : 3
+},{
+    "title" : "ハードウェア",
+    "count" : 8
+},{
+    "title" : "アドオン",
+    "count" : 31
+},{
+    "title" : "wordpress",
+    "count" : 6
+},{
+    "title" : "javascript",
+    "count" : 187
+},{
+    "title" : "インストール設定",
+    "count" : 12
+},{
+    "title" : "iphone",
+    "count" : 10
+},{
+    "title" : "loox u",
+    "count" : 1
+},{
+    "title" : "tombloo",
+    "count" : 3
+},{
+    "title" : "イベント",
+    "count" : 91
+},{
+    "title" : "userchome.js",
+    "count" : 8
+},{
+    "title" : "jetpack",
+    "count" : 7
+},{
+    "title" : "onenote",
+    "count" : 2
+},{
+    "title" : "nilscript",
+    "count" : 4
+},{
+    "title" : "keysnail",
+    "count" : 3
+},{
+    "title" : "ios",
+    "count" : 15
+},{
+    "title" : "shell",
+    "count" : 3
+},{
+    "title" : "r言語",
+    "count" : 2
+},{
+    "title" : "node.js",
+    "count" : 3
+},{
+    "title" : "mac",
+    "count" : 2
+},{
+    "title" : "github",
+    "count" : 11
+},{
+    "title" : "jekyll",
+    "count" : 1
+},{
+    "title" : "golang",
+    "count" : 1
+},{
+    "title" : "web",
+    "count" : 1
+},{
+    "title" : "スライド",
+    "count" : 1
+},{
+    "title" : "ie",
+    "count" : 1
+},{
+    "title" : "書籍",
+    "count" : 2
+},{
+    "title" : "textlint",
+    "count" : 8
+}
+];
+    blog_categories = blog_categories.filter(function(categoryObject){
+        return !/^\d+$/.test(categoryObject.title);
+    });
+</script>
+</head>
+
+
+<body class="layout-reverse theme-base-0d">
+<a href="https://github.com/efcl/efcl.github.io" class="github-ribbon">
+    <img style="position: fixed; z-index:100; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+<header>
+    <div class="site-header">
+    <img src="/public/img/reimu-right.png" class="header-logo">
+
+    <h1 class="site-title">
+        <a href="/">
+            Web Scratch
+        </a>
+    </h1>
+    <p class="lead">ブラウザ/JavaScript等についてのブログ</p>
+
+</div>
+</header>
+<aside>
+    <div class="sidebar">
+    <div class="container">
+        <div class="profile">
+            <a href="/about/" title="About"><img src="/public/img/azu.png" alt="Profile"></a>
+
+            <h2><a href="/about/" title="About">azu</a></h2>
+        </div>
+        <div class="social">
+            <a class="twitter" href="http://twitter.com/azu_re" title="Twitter">
+                <img src="/public/svg/twitter.svg" alt="twitter" width="32" height="32"/>
+            </a>
+            <a class="github" href="https://github.com/azu" title="GitHub">
+                <img src="/public/svg/github.svg" alt="GitHub" width="32" height="32"/>
+            </a>
+            <a class="rss" href="/feed/" title="RSS Feed">
+                <img src="/public/svg/feed.svg" alt="RSS" width="32" height="32"/>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="search">
+                <form class="search-box" method="get" action="https://www.google.co.jp/search">
+                    <label for="search-box-label">検索:</label>
+                    <input type="hidden" name="q" value="site:efcl.info">
+                    <input id="search-box-label" type="search" name="q">
+                    <input type="submit" value="search">
+                </form>
+            </div>
+            <div class="recent">
+    <h3 class="recent-posts-list-title">
+        <a href="/">最近の投稿</a>
+    </h3>
+    <ul class="recent-posts">
+        
+        <li>
+            <a href="/2017/10/19/text-map-kuromoji/">
+                kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/10/09/clean-architecture-and-building-evolutionary-architectures/">
+                Clean ArchitectureとBuilding Evolutionary Architecturesを読んだ
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/09/20/almin-performance-profile-0.14.0/">
+                Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/09/14/pwa_study/">
+                pwa_study アウトラインメモ
+            </a>
+        </li>
+        
+    </ul>
+</div>
+            <div class="recent">
+    <h3 class="categories-list-title"><a href="/categories">カテゴリ一覧</a></h3>
+
+    <div class="categories-list" id="js-categories-list">
+
+    </div>
+    <script>
+        (function () {
+            var categoriesList = window.blog_categories;
+            var appendPoint = document.getElementById("js-categories-list");
+            // big ... small
+            var sortedCategories = categoriesList.sort(function (a, b) {
+                return a.count < b.count ? 1 : -1;
+            });
+            var ulTag = document.createElement("ul");
+            var displayCount = sortedCategories.length < 3 ? sortedCategories.length : 3;
+            for (var i = 0; i < displayCount; i++) {
+                var category = sortedCategories[i];
+                var liTag = document.createElement("li");
+                var aTag = document.createElement("a");
+                aTag.href = "/categories#" + category.title;
+                aTag.textContent = category.title;
+                var spanTag = document.createElement("span");
+                spanTag.appendChild(document.createTextNode("[" + category.count + "]"));
+                liTag.appendChild(aTag);
+                liTag.appendChild(spanTag);
+                ulTag.appendChild(liTag);
+            }
+            var lastLiTag = document.createElement("li");
+            var lastATag = document.createElement("a");
+            lastATag.href = "/categories";
+            lastATag.textContent = "その他のタグ…";
+            lastLiTag.appendChild(lastATag);
+            ulTag.appendChild(lastATag);
+            appendPoint.appendChild(ulTag);
+        })();
+    </script>
+</div>
+        </nav>
+    </div>
+</div>
+
+</aside>
+<article>
+    <div class="content container">
+        <div class="post" id="js-post-url" data-post-url="/2017/10/19/text-map-kuromoji/">
+    <h1 class="post-title">kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする</h1>
+
+    <div class="pre-post-toolbar">
+        <span class="post-date">2017年10月19日</span>
+        <a class="btn edit-on-github" href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-10-19-text-map-kuromoji.md"><span class="edito-on-github-label"></span>Edit on GitHub</a>
+
+    </div>
+    <div class="post-content">
+        <p><a href="https://ipsj.ixsq.nii.ac.jp/ej/?action=pages_view_main&amp;active_action=repository_view_main_item_detail&amp;item_id=70540&amp;item_no=1&amp;page_id=13&amp;block_id=8" title="くだけた表現を高精度に解析するための正規化ルール自動生成手法">くだけた表現を高精度に解析するための正規化ルール自動生成手法</a>という論文誌では、「ヵゎぃぃ」，「ゎた Uゎ」みたいな普通の形態素解析では未知語として検出されるものをどうやって正規化していくかという話が書かれていました。</p>
+
+<p>これを読んでいて面白かったのは形態素解析をした結果の未知語となった部分と穴埋め的にパターンを作って、そのパターンにマッチする同じようなテキストを探すというアプローチでした。</p>
+
+<p>プログラミング言語と違って、大抵の自然言語パーサはパース失敗ではなく、単なる未知な言葉として検出されます。
+また、その未知な言葉は常に増えていて、さきほどの<a href="https://ipsj.ixsq.nii.ac.jp/ej/?action=pages_view_main&amp;active_action=repository_view_main_item_detail&amp;item_id=70540&amp;item_no=1&amp;page_id=13&amp;block_id=8" title="くだけた表現を高精度に解析するための正規化ルール自動生成手法">くだけた表現を高精度に解析するための正規化ルール自動生成手法</a>によると手動では登録できない増加量らしいです。</p>
+
+<blockquote>
+<p>著者らの経験では，1 人月あたり約 3 万種類の未知語登録が可 能であるのに対し，ブログ 600 万文を著名な形態素解析器 MeCab 3) を用いて解析したと ころ，約 65 万種類の未知語が検出されたことから，ブログ文書のくだけた表現を正しく解 析することは困難といえる.</p>
+</blockquote>
+
+<p>この辺のスラング的な単語もクローリングしたデータから辞書を作ることで扱える量が多い辞書として<a href="https://github.com/neologd/mecab-ipadic-neologd" title="mecab-ipadic-NEologd">mecab-ipadic-NEologd</a>が有名です。</p>
+
+<p>で、話を戻して形態素解析をした結果の未知語となるパターンってどれぐらいあるのかなーと思いました。
+普通に形態素解析した結果を見ればいいのですが、それは品詞付きの情報が並ぶだけだったり、JSONだったりして、テキストのこの部分が未知語というのがあまり分かりやすくなさそうでした。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">今日もしないとね。
+今日    名詞,副詞可能,*,*,*,*,今日,キョウ,キョー
+も      助詞,係助詞,*,*,*,*,も,モ,モ
+し      動詞,自立,*,*,サ変・スル,未然形,する,シ,シ
+ない    助動詞,*,*,*,特殊・ナイ,基本形,ない,ナイ,ナイ
+と      助詞,接続助詞,*,*,*,*,と,ト,ト
+ね      助詞,終助詞,*,*,*,*,ね,ネ,ネ
+。      記号,句点,*,*,*,*,。,。,。
+EOS
+今日    名詞,副詞可能,*,*,*,*,今日,キョウ,キョー
+もし    副詞,一般,*,*,*,*,もし,モシ,モシ
+ない    形容詞,自立,*,*,形容詞・アウオ段,基本形,ない,ナイ,ナイ
+と      助詞,接続助詞,*,*,*,*,と,ト,ト
+ね      助詞,終助詞,*,*,*,*,ね,ネ,ネ
+。      記号,句点,*,*,*,*,。,。,。
+</code></pre></div>
+<p>入力されたテキストと特定の位置に関する情報をビジュアライズするパターンについてはSourceMapを調べていたときに<a href="http://sokra.github.io/source-map-visualization/" title="source-map-visualization">source-map-visualization</a>というサイトがあるのを思い出しました。</p>
+
+<p><a href="http://sokra.github.io/source-map-visualization/"><img src="http://efcl.info/wp-content/uploads/2017/10/19-1508374636.png" alt="sourcemap"></a></p>
+
+<ul>
+<li><a href="http://efcl.info/2014/0622/res3933/" title="Source Mapを扱う関連ライブラリのまとめ | Web Scratch">Source Mapを扱う関連ライブラリのまとめ | Web Scratch</a></li>
+</ul>
+
+<p>これの形態素解析版があると良さそうと思いました。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">これの形態素解析版ほしいな  &quot;source-map-visualization&quot;  <a href="https://t.co/PZuGwXdYIQ">https://t.co/PZuGwXdYIQ</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/920646507254050822?ref_src=twsrc%5Etfw">October 18, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>ここで、既にJavaScriptとそのパース結果からECMAScriptのバージョンをToken毎に割り出すツールを作ってたのを思い出しました。</p>
+
+<p><a href="https://azu.github.io/ecmascript-version-detector/"><img src="http://efcl.info/wp-content/uploads/2016/08/04-1470309082.png" alt="image"></a></p>
+
+<ul>
+<li><a href="http://efcl.info/2016/08/04/ecmascript-version-detector/" title="そのコードが標準化されてるJavaScriptなのかを判定する方法 | Web Scratch">そのコードが標準化されてるJavaScriptなのかを判定する方法 | Web Scratch</a></li>
+</ul>
+
+<p>これをforkして<a href="https://github.com/takuyaa/kuromoji.js#api" title="kuromoji.js">kuromoji.js</a>で形態素解析してその結果をビジュアライズするものを作りました。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://t.co/zypZDjn20j">https://t.co/zypZDjn20j</a><a href="https://t.co/UOhjzSxMhI">https://t.co/UOhjzSxMhI</a><br><br>kuromojiで形態素解析した結果をビジュアライズするやつできた。<br>テキストをクリックすると対応した位置のトークン情報が表示される。 <a href="https://t.co/AqrbhMJFBm">pic.twitter.com/AqrbhMJFBm</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/920676180797173762?ref_src=twsrc%5Etfw">October 18, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<ul>
+<li>サイト: <a href="https://azu.github.io/text-map-kuromoji/">text-map-kuromoji</a></li>
+<li>ソースコード:<a href="https://github.com/azu/text-map-kuromoji">azu/text-map-kuromoji: テキストを形態素解析した結果とテキストの関係をビジュアライズするエディタ</a></li>
+</ul>
+
+<p>それで目的だった壊れた日本語は未知語として検出されるのかを確かめてみましたが、てにをはを間違えただけとかその程度だとやっぱり未知語として検出されないということがわかりました。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">日本語の文章ってやっぱり普通に書くと未知語が結構出にくいっぽい気がする。<br><br>変換ミスだとアルファベットが混ざってくるので未知語 = 壊れた文章の検出ができる可能性はありそう。<br>壊れた日本語は検出するの難しいかもなー。パースが失敗しない問題 <a href="https://t.co/EhpmHv34LD">pic.twitter.com/EhpmHv34LD</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/920678011141201920?ref_src=twsrc%5Etfw">October 18, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>一方、ローマ字入力のIME特有のtypoはアルファベットが不自然に混ざるからか未知な言葉として検出されやすくかったです(論文誌の形状が似てる言葉もこういうタイプ)</p>
+
+<ul>
+<li><a href="https://github.com/textlint-ja/textlint-rule-ja-unnatural-alphabet" title="textlint-ja/textlint-rule-ja-unnatural-alphabet: 不自然なアルファベットを検知するtextlintルール">textlint-ja/textlint-rule-ja-unnatural-alphabet: 不自然なアルファベットを検知するtextlintルール</a></li>
+</ul>
+
+<p>やっぱり形態素解析に失敗するパーサの必要性を感じました。</p>
+
+    </div>
+    <div class="post-post-toolbar">
+        <a class="btn edit-on-github"
+           href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-10-19-text-map-kuromoji.md"><span
+                class="edit-on-github-label"></span>修正リクエストをする</a>
+        <nav class="tags"
+             id="js-post-tags"
+             data-post-tags='["JavaScript","形態素解析"]'>
+            <span>タグ:</span>
+            <ul>
+                
+                <li><a href="/tags/?q=JavaScript">JavaScript</a></li>
+                
+                <li><a href="/tags/?q=形態素解析">形態素解析</a></li>
+                
+            </ul>
+        </nav>
+    </div>
+    <div class="announce-area">
+        <h3>お知らせ欄</h3>
+        <div class="announce-text">
+            <!--お知らせ-->
+JavaScriptに関する最新情報は週一で<a href="http://jser.info/" title="JSer.info">JSer.info</a>を更新しています。
+
+        </div>
+        <h3>次に書くかもしれない記事候補</h3>
+        <p>興味がありましたら<a href="https://github.com/efcl/efcl.github.io/labels/%E8%A8%98%E4%BA%8B%E5%80%99%E8%A3%9C" title="Issues · efcl/efcl.github.io">Issues · efcl/efcl.github.io</a>からご意見下さい</p>
+        <div class="announce-text">
+            <iframe src="https://azu.github.io/github-issue-widget/?owner=efcl&repo=efcl.github.io&labels=記事候補&limit=4&random"
+                    allowtransparency="true" frameborder="0" scrolling="0" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+    <div class="related-articles" id="js-related-articles">
+        <h3>関連記事</h3>
+    </div>
+</div>
+<div class="zenback-embed">
+    <!-- X:S ZenBackWidget --><div id="zenback-widget-loader"></div><script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var r=Math.ceil((new Date()*1)*Math.random());var j=d.createElement("script");j.id=i;j.async=true;j.src="//w.zenback.jp/v1/?base_uri=http%3A//efcl.info/&nsid=89229392978401102%3A%3A89229398078677080&rand="+r;d.body.appendChild(j);}}(document,"zenback-widget-js");</script><!-- X:E ZenBackWidget -->
+</div>
+<div class="disqus-embed" id="js-disqus-embed">
+    <button class="comment-button" id="js-comment-button">コメントを表示</button>
+</div>
+
+<script type="text/javascript" src="/public/js/tag-fetcher.js"></script>
+<script type="text/javascript" src="/public/js/show-related-article.js"></script>
+<script type="text/javascript" src="/public/js/show-disqus.js"></script>
+
+    </div>
+</article>
+</body>
+</html>

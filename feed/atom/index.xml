@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-10-19T10:00:17+09:00</updated>
+ <updated>2017-10-19T10:12:51+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,91 @@
  </author>
  
 
+ 
+ <entry>
+   <title>kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする</title>
+   <link href="http://efcl.info/2017/10/19/text-map-kuromoji/"/>
+   <updated>2017-10-19T09:45:00+09:00</updated>
+   <id>http://efcl.info/2017/10/19/text-map-kuromoji</id>
+   <content type="html"><![CDATA[ <p><a href="https://ipsj.ixsq.nii.ac.jp/ej/?action=pages_view_main&amp;active_action=repository_view_main_item_detail&amp;item_id=70540&amp;item_no=1&amp;page_id=13&amp;block_id=8" title="くだけた表現を高精度に解析するための正規化ルール自動生成手法">くだけた表現を高精度に解析するための正規化ルール自動生成手法</a>という論文誌では、「ヵゎぃぃ」，「ゎた Uゎ」みたいな普通の形態素解析では未知語として検出されるものをどうやって正規化していくかという話が書かれていました。</p>
+
+<p>これを読んでいて面白かったのは形態素解析をした結果の未知語となった部分と穴埋め的にパターンを作って、そのパターンにマッチする同じようなテキストを探すというアプローチでした。</p>
+
+<p>プログラミング言語と違って、大抵の自然言語パーサはパース失敗ではなく、単なる未知な言葉として検出されます。
+また、その未知な言葉は常に増えていて、さきほどの<a href="https://ipsj.ixsq.nii.ac.jp/ej/?action=pages_view_main&amp;active_action=repository_view_main_item_detail&amp;item_id=70540&amp;item_no=1&amp;page_id=13&amp;block_id=8" title="くだけた表現を高精度に解析するための正規化ルール自動生成手法">くだけた表現を高精度に解析するための正規化ルール自動生成手法</a>によると手動では登録できない増加量らしいです。</p>
+
+<blockquote>
+<p>著者らの経験では，1 人月あたり約 3 万種類の未知語登録が可 能であるのに対し，ブログ 600 万文を著名な形態素解析器 MeCab 3) を用いて解析したと ころ，約 65 万種類の未知語が検出されたことから，ブログ文書のくだけた表現を正しく解 析することは困難といえる.</p>
+</blockquote>
+
+<p>この辺のスラング的な単語もクローリングしたデータから辞書を作ることで扱える量が多い辞書として<a href="https://github.com/neologd/mecab-ipadic-neologd" title="mecab-ipadic-NEologd">mecab-ipadic-NEologd</a>が有名です。</p>
+
+<p>で、話を戻して形態素解析をした結果の未知語となるパターンってどれぐらいあるのかなーと思いました。
+普通に形態素解析した結果を見ればいいのですが、それは品詞付きの情報が並ぶだけだったり、JSONだったりして、テキストのこの部分が未知語というのがあまり分かりやすくなさそうでした。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">今日もしないとね。
+今日    名詞,副詞可能,*,*,*,*,今日,キョウ,キョー
+も      助詞,係助詞,*,*,*,*,も,モ,モ
+し      動詞,自立,*,*,サ変・スル,未然形,する,シ,シ
+ない    助動詞,*,*,*,特殊・ナイ,基本形,ない,ナイ,ナイ
+と      助詞,接続助詞,*,*,*,*,と,ト,ト
+ね      助詞,終助詞,*,*,*,*,ね,ネ,ネ
+。      記号,句点,*,*,*,*,。,。,。
+EOS
+今日    名詞,副詞可能,*,*,*,*,今日,キョウ,キョー
+もし    副詞,一般,*,*,*,*,もし,モシ,モシ
+ない    形容詞,自立,*,*,形容詞・アウオ段,基本形,ない,ナイ,ナイ
+と      助詞,接続助詞,*,*,*,*,と,ト,ト
+ね      助詞,終助詞,*,*,*,*,ね,ネ,ネ
+。      記号,句点,*,*,*,*,。,。,。
+</code></pre></div>
+<p>入力されたテキストと特定の位置に関する情報をビジュアライズするパターンについてはSourceMapを調べていたときに<a href="http://sokra.github.io/source-map-visualization/" title="source-map-visualization">source-map-visualization</a>というサイトがあるのを思い出しました。</p>
+
+<p><a href="http://sokra.github.io/source-map-visualization/"><img src="http://efcl.info/wp-content/uploads/2017/10/19-1508374636.png" alt="sourcemap"></a></p>
+
+<ul>
+<li><a href="http://efcl.info/2014/0622/res3933/" title="Source Mapを扱う関連ライブラリのまとめ | Web Scratch">Source Mapを扱う関連ライブラリのまとめ | Web Scratch</a></li>
+</ul>
+
+<p>これの形態素解析版があると良さそうと思いました。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">これの形態素解析版ほしいな  &quot;source-map-visualization&quot;  <a href="https://t.co/PZuGwXdYIQ">https://t.co/PZuGwXdYIQ</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/920646507254050822?ref_src=twsrc%5Etfw">October 18, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>ここで、既にJavaScriptとそのパース結果からECMAScriptのバージョンをToken毎に割り出すツールを作ってたのを思い出しました。</p>
+
+<p><a href="https://azu.github.io/ecmascript-version-detector/"><img src="http://efcl.info/wp-content/uploads/2016/08/04-1470309082.png" alt="image"></a></p>
+
+<ul>
+<li><a href="http://efcl.info/2016/08/04/ecmascript-version-detector/" title="そのコードが標準化されてるJavaScriptなのかを判定する方法 | Web Scratch">そのコードが標準化されてるJavaScriptなのかを判定する方法 | Web Scratch</a></li>
+</ul>
+
+<p>これをforkして<a href="https://github.com/takuyaa/kuromoji.js#api" title="kuromoji.js">kuromoji.js</a>で形態素解析してその結果をビジュアライズするものを作りました。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://t.co/zypZDjn20j">https://t.co/zypZDjn20j</a><a href="https://t.co/UOhjzSxMhI">https://t.co/UOhjzSxMhI</a><br><br>kuromojiで形態素解析した結果をビジュアライズするやつできた。<br>テキストをクリックすると対応した位置のトークン情報が表示される。 <a href="https://t.co/AqrbhMJFBm">pic.twitter.com/AqrbhMJFBm</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/920676180797173762?ref_src=twsrc%5Etfw">October 18, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<ul>
+<li>サイト: <a href="https://azu.github.io/text-map-kuromoji/">text-map-kuromoji</a></li>
+<li>ソースコード:<a href="https://github.com/azu/text-map-kuromoji">azu/text-map-kuromoji: テキストを形態素解析した結果とテキストの関係をビジュアライズするエディタ</a></li>
+</ul>
+
+<p>それで目的だった壊れた日本語は未知語として検出されるのかを確かめてみましたが、てにをはを間違えただけとかその程度だとやっぱり未知語として検出されないということがわかりました。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">日本語の文章ってやっぱり普通に書くと未知語が結構出にくいっぽい気がする。<br><br>変換ミスだとアルファベットが混ざってくるので未知語 = 壊れた文章の検出ができる可能性はありそう。<br>壊れた日本語は検出するの難しいかもなー。パースが失敗しない問題 <a href="https://t.co/EhpmHv34LD">pic.twitter.com/EhpmHv34LD</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/920678011141201920?ref_src=twsrc%5Etfw">October 18, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>一方、ローマ字入力のIME特有のtypoはアルファベットが不自然に混ざるからか未知な言葉として検出されやすくかったです(論文誌の形状が似てる言葉もこういうタイプ)</p>
+
+<ul>
+<li><a href="https://github.com/textlint-ja/textlint-rule-ja-unnatural-alphabet" title="textlint-ja/textlint-rule-ja-unnatural-alphabet: 不自然なアルファベットを検知するtextlintルール">textlint-ja/textlint-rule-ja-unnatural-alphabet: 不自然なアルファベットを検知するtextlintルール</a></li>
+</ul>
+
+<p>やっぱり形態素解析に失敗するパーサの必要性を感じました。</p>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>Clean ArchitectureとBuilding Evolutionary Architecturesを読んだ</title>
@@ -2066,140 +2151,6 @@ UseCaseExecutor#onCompleteExecuteEachUseCase
 <li><a href="https://www.reaktor.com/blog/refactoring-30000-lines-js-types/" title="Refactoring 30000 lines of JS with types - Reaktor.com">Refactoring 30000 lines of JS with types - Reaktor.com</a></li>
 <li><a href="https://slack.engineering/typescript-at-slack-a81307fa288d" title="TypeScript at Slack – Several People Are Coding">TypeScript at Slack – Several People Are Coding</a></li>
 </ul>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>Array.prototypeのImmutable版メソッドを個別のパッケージで使えるものを作った</title>
-   <link href="http://efcl.info/2017/07/11/immutable-array/"/>
-   <updated>2017-07-11T20:03:00+09:00</updated>
-   <id>http://efcl.info/2017/07/11/immutable-array</id>
-   <content type="html"><![CDATA[ <p>JavaScriptの配列には破壊的なものと非破壊的なものが混在しています。
-例えば<code>Arrray.prototype.push</code>は破壊的ですが、<code>Array.prototype.concat</code>は結合した新しい配列を返すので非破壊的です。
-破壊的か非破壊的かは、基本的には覚えることでしか区別できません。</p>
-
-<p>配列のメソッドの使い方については次の記事やjs-primerで今書いています。</p>
-
-<ul>
-<li><a href="http://efcl.info/2016/10/11/array-patterns/" title="JavaScriptの配列のパターン | Web Scratch">JavaScriptの配列のパターン | Web Scratch</a></li>
-<li><a href="https://asciidwango.github.io/js-primer/basic/array/" title="配列 · JavaScriptの入門書 #jsprimer">配列 · JavaScriptの入門書 #jsprimer</a></li>
-</ul>
-
-<p>それらの破壊的メソッドの非破壊的なバージョン - Immutableバージョンのライブラリを作成しました。</p>
-
-<ul>
-<li><a href="https://github.com/azu/immutable-array-prototype" title="azu/immutable-array-prototype: A collection of Immutable Array prototype methods(Per method packages).">azu/immutable-array-prototype: A collection of Immutable Array prototype methods(Per method packages).</a></li>
-</ul>
-
-<h2 id="インストール">インストール</h2>
-
-<p>すべてのImmutable版をまとめたものは次のパッケージでインストールできます。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">npm install @immutable-array/prototype
-</code></pre></div>
-<p>また、<code>push</code>のImmutable版だけ欲しいなどもあると思うので、それぞれのメソッド毎に別々のパッケージとしてインストールすることができます。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">npm install @immutable-array/pop
-npm install @immutable-array/push
-npm install @immutable-array/shift
-npm install @immutable-array/unshift
-npm install @immutable-array/sort
-npm install @immutable-array/reverse
-npm install @immutable-array/fill
-npm install @immutable-array/splice
-npm install @immutable-array/copy-within
-</code></pre></div>
-<p>対応してるメソッドは次の通りです。</p>
-
-<p><img src="http://efcl.info/wp-content/uploads/2017/07/11-1499771177.png" alt="method table"></p>
-
-<p>それぞれのメソッドの使い方は第一引数が対象の配列となるだけで他の引数や挙動はECMAScriptに合わせています。</p>
-
-<p>例えば<code>reverse</code>なら次のように書くことができます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span>
-    <span class="nx">reverse</span>
-<span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@immutable-array/prototype&quot;</span><span class="p">;</span>
-
-<span class="kd">var</span> <span class="nx">array</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">];</span>
-<span class="kd">var</span> <span class="nx">reversedArrray</span> <span class="o">=</span> <span class="nx">reverse</span><span class="p">(</span><span class="nx">array</span><span class="p">);</span> <span class="c1">// [&quot;e&quot;, &quot;d&quot;, &quot;c&quot;, &quot;b&quot;, &quot;a&quot;]</span>
-</code></pre></div>
-<p>またよくある<a href="https://github.com/azu/immutable-array-prototype#related">Immutableライブラリのように</a>独自のImmutableメソッドは追加していません。
-あくまで、JavaScriptの配列における破壊的なメソッドの非破壊的なバージョンを提供するという立ち位置にしています。</p>
-
-<h2 id="作った理由">作った理由</h2>
-
-<p>すでにいくつか同じ試みはありますが、このmonorepoな<a href="https://github.com/azu/immutable-array-prototype#benchmarks" title="immutable-array-prototype">immutable-array-prototype</a>を作った理由としては次の通りです。</p>
-
-<ul>
-<li>TypeScriptに対応してるものがない</li>
-<li><code>Array#fill</code>など新しいメソッドに対応していない</li>
-<li><code>Array#splice</code>のImmutable実装が正しくできているものがない…
-
-<ul>
-<li><a href="https://github.com/azu/immutable-array-prototype/blob/d9654c9d23178df7a4bc417d67341478d9292193/packages/splice/test/splice-test.ts#L97-L111">この<code>-1</code>`をindexに受け取るテストケース</a>が殆どのライブラリで落ちます…</li>
-</ul></li>
-<li>独自のメソッドを追加しているケースが多い
-
-<ul>
-<li><code>update()</code>など独自のメソッドはいらない</li>
-</ul></li>
-</ul>
-
-<p><a href="https://github.com/azu/immutable-array-prototype#benchmarks" title="immutable-array-prototype">immutable-array-prototype</a>は基本的にドキュメントを見ないで<code>import</code>したら普通に使えるようにすることが目的なので、使い方はネイティブのArrayと同じです。</p>
-
-<h2 id="おわりに">おわりに</h2>
-
-<p><a href="https://github.com/azu/immutable-array-prototype#benchmarks">Benchmark</a>(参考値)を見る限り、このImmutable版で配列を作り直してもそこまで急激な差はでませんでした。</p>
-
-<p>原理的にネイティブのメソッドのステップ + コピーなので、ネイティブのものより早くなりません。(勝ってる部分があるように見えますが恐らくそれは誤差です。)
-Lodashのように、エッジケースのステップを省略して早くすることは目的ではありません</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Native `Array.prototype`          |    @immutable-array
-&gt; node src/array.js |                  &gt; immutable-array.js
-                                  |
-# pop 200000 times               &gt;&gt;&gt;   # pop 200000 times
-ok ~330 ms (0 s + 330397151 ns)  &gt;&gt;&gt;   ok ~267 ms (0 s + 267348617 ns)
-                              |
-# push 200000 times              &gt;&gt;&gt;   # push 200000 times
-ok ~169 ms (0 s + 168738061 ns)  &gt;&gt;&gt;   ok ~141 ms (0 s + 140502324 ns)
-                              |
-# shift 200000 times             &lt;&lt;&lt;   # shift 200000 times
-ok ~296 ms (0 s + 295892983 ns)  &lt;&lt;&lt;   ok ~419 ms (0 s + 418852725 ns)
-                              |
-# unshift 200000 times           &lt;&lt;&lt;   # unshift 200000 times
-ok ~51 ms (0 s + 50817590 ns)    &lt;&lt;&lt;   ok ~191 ms (0 s + 191329502 ns)
-                              |
-# sort 2000 times                &gt;&gt;&gt;   # sort 2000 times
-ok ~933 ms (0 s + 932551400 ns)  &gt;&gt;&gt;   ok ~611 ms (0 s + 610748601 ns)
-                              |
-# reverse 200000 times           &gt;&gt;&gt;   # reverse 200000 times
-ok ~555 ms (0 s + 554921645 ns)  &gt;&gt;&gt;   ok ~455 ms (0 s + 455068191 ns)
-                              |
-# fill 200000 times              &gt;&gt;&gt;   # fill 200000 times
-ok ~782 ms (0 s + 782159758 ns)  &gt;&gt;&gt;   ok ~699 ms (0 s + 698677543 ns)
-                              |
-# splice 200000 times            &lt;&lt;&lt;   # splice 200000 times
-ok ~287 ms (0 s + 286547242 ns)  &lt;&lt;&lt;   ok ~391 ms (0 s + 391294720 ns)
-                              |
-# copyWithin 200000 times        &lt;&lt;&lt;   # copyWithin 200000 times
-ok ~237 ms (0 s + 236837575 ns)  &lt;&lt;&lt;   ok ~275 ms (0 s + 275267401 ns)
-                              |
-all benchmarks completed         &gt;&gt;&gt;   all benchmarks completed
-ok ~3.64 s (3 s + 638863405 ns)  &gt;&gt;&gt;   ok ~3.45 s (3 s + 449089624 ns)
-</code></pre></div>
-<p>今のReactやRedux、Alminなどを使ってアプリケーションを書くと、オブジェクトはImmutableでやることが多いです。</p>
-
-<p>ある程度の規模のJavaScriptアプリケーションを作ったときに、ドメイン層やStateをImmutableにすることがボトルネックになることはそこまで多くありません(巨大なリストとは別ですが)
-Reactなどで作るアプリケーションは、配列などを作るよりも、値を比較する回数の方が圧倒的に多くなるため、作るコストよりも比較するコストを気にすることが多いです。</p>
-
-<p>次のスライドでもそういう話をしてます。</p>
-
-<ul>
-<li><a href="https://github.com/azu/large-scale-javascript" title="azu/large-scale-javascript: 複雑なJavaScriptアプリケーションを作るために考えること">azu/large-scale-javascript: 複雑なJavaScriptアプリケーションを作るために考えること</a></li>
-<li><a href="http://azu.github.io/slide/2017/teppeis-sushi/client-side-ddd-on-github.html" title="Faao - ドメイン駆動設計で作るGitHub Issue Client -">Faao - ドメイン駆動設計で作るGitHub Issue Client -</a></li>
-</ul>
-
-<p>Immutable.jsのような速度も兼ね備えたものを使うと便利ですが、通常の配列とは使い方やサイズも大きいので使うのに躊躇します。
-サイズが小さくて、配列と同じ使い方ができるものがほしかったので作りました。</p>
-
-<p>あとTypeScriptの型定義ファイルも入っています。</p>
  ]]></content>
  </entry>
  
