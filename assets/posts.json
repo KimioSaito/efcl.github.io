@@ -2,6 +2,12 @@
     "posts": [
         
         {
+            "title": "Alfred上で自分のはてなブックマークを検索できるWorkflow",
+            "url": "http://efcl.info/2017/10/20/alfred-hatenabookmark/",
+            "date": "2017-10-20T19:48:00+09:00"
+        },
+        
+        {
             "title": "kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする",
             "url": "http://efcl.info/2017/10/19/text-map-kuromoji/",
             "date": "2017-10-19T09:45:00+09:00"

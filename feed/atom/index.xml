@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-10-20T10:09:00+09:00</updated>
+ <updated>2017-10-20T20:05:32+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,54 @@
  </author>
  
 
+ 
+ <entry>
+   <title>Alfred上で自分のはてなブックマークを検索できるWorkflow</title>
+   <link href="http://efcl.info/2017/10/20/alfred-hatenabookmark/"/>
+   <updated>2017-10-20T19:48:00+09:00</updated>
+   <id>http://efcl.info/2017/10/20/alfred-hatenabookmark</id>
+   <content type="html"><![CDATA[ <p>Alfredで自分のはてブデータを取得して絞り込んで検索できるWorkflowを書きました。</p>
+
+<ul>
+<li><a href="https://github.com/azu/alfred-hantebookmark-mydata" title="azu/alfred-hantebookmark-mydata: Search My HatenaBookmark in Alfred">azu/alfred-hantebookmark-mydata: Search My HatenaBookmark in Alfred</a></li>
+</ul>
+
+<p><img src="https://media.giphy.com/media/3ov9k8YySjxOsxvNHW/giphy.gif" alt="screenshot"></p>
+
+<p>このWorkflowはNode.jsでAlfred Workflowを書ける<a href="https://github.com/sindresorhus/alfy" title="alfy">alfy</a>というフレームワークを使っています。
+そのため、npmでWorkflowをインストール、更新できます。
+(必然的にNode.js環境が必要です)</p>
+
+<h2 id="インストール">インストール</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">npm install --global alfred-hantebookmark-mydata
+</code></pre></div>
+<h2 id="設定">設定</h2>
+
+<p>どのはてなアカウントのブックマークを検索するかの設定が必要なので、Workflowの設定から<code>HATENA_ACCOUNT_NAME</code>という変数に自分のアカウント名を入れる必要があります。</p>
+
+<ol>
+<li>Open workflow settings</li>
+<li>Set Your hatena account name to <code>HATENA_ACCOUNT_NAME</code></li>
+</ol>
+
+<p><img src="https://monosnap.com/file/cTzt4ieHD2wGDYb2ANoUh5IXeS6SQA.png" alt="setting"></p>
+
+<h2 id="制限">制限</h2>
+
+<p><a href="https://github.com/sindresorhus/alfy" title="alfy">alfy</a>は基本的に一度きりの実行を想定した作りになっているようです。
+なので、入力 -&gt; Nodeでスクリプトを実行 -&gt; 結果を表示の一回だけで終わってる感じです。</p>
+
+<p>ほしかったのは、スクリプトを実行 -&gt; 結果をAlfredで絞り込み という感じのものでした。</p>
+
+<p><code>Script Filter</code>の<a href="https://www.alfredapp.com/help/workflows/inputs/script-filter/#alfred-filters-results" title="Match Mode">Match Mode</a>を使うとそれが実現できる(このWorkflowもこれ)のですが、このMatch Modeのフィルタリングは日本語に対応してない感じがします。</p>
+
+<p>境界となる文字列が記号やスペースのみとなっていて、その結果に対して先頭からのマッチのみなので、必然的に日本語だと上手くマッチしない問題があります。形態素解析とかして分解すればいいのですが、処理時間的に現実的じゃない感じがしました。(差分更新、キャッシュを上手く使えばできそうな気がするけど、PR歓迎)</p>
+
+<blockquote class="twitter-video" data-lang="en"><p lang="ja" dir="ltr">自分のはてなブックマークをAlfredから検索してして絞り込むやつ書いた。<br>もっと早く動くようにできないかな?(後マッチングが日本語不安定な気はする)<a href="https://t.co/8z3GzWGzwW">https://t.co/8z3GzWGzwW</a> <a href="https://t.co/DmhYJ8Dh6v">pic.twitter.com/DmhYJ8Dh6v</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/921017924898275328?ref_src=twsrc%5Etfw">October 19, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする</title>
@@ -2000,151 +2048,6 @@ UseCaseExecutor#onCompleteExecuteEachUseCase
 
 <ul>
 <li><a href="https://github.com/almin/almin/issues?q=is%3Aissue+is%3Aopen+label%3A%22Good+for+beginners%22" title="Issues · almin/almin"><code>Good for beginners</code>: Issues · almin/almin</a></li>
-</ul>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>JavaScriptのライブラリを徐々にTypeScriptに移行する</title>
-   <link href="http://efcl.info/2017/07/17/JavaScript-to-TypeScript/"/>
-   <updated>2017-07-17T22:27:00+09:00</updated>
-   <id>http://efcl.info/2017/07/17/JavaScript-to-TypeScript</id>
-   <content type="html"><![CDATA[ <p><a href="https://github.com/almin/almin" title="Almin">Almin</a>というライブラリは元々JavaScript(+Babel)で書かれていましたが、今年の2月に<code>src/</code>下のソースコードはTypeScriptに移行しました。</p>
-
-<p>その時のコミットログは次のPRに残っているため、コミットログを1コづつ見ていけばどのように行われていったが分かると思います。</p>
-
-<p><a href="https://github.com/almin/almin/pull/68/commits"><img src="http://efcl.info/wp-content/uploads/2017/07/17-1500298209.png" alt="コミットログ"></a></p>
-
-<ul>
-<li><a href="https://github.com/almin/almin/pull/68" title="Convert src/ to TypeScript by saneyuki · Pull Request #68 · almin/almin">Convert src/ to TypeScript by saneyuki · Pull Request #68 · almin/almin</a></li>
-</ul>
-
-<p>この時取った方法は大まかに次のような手順でした</p>
-
-<h2 id="src-の-typescript化"><code>src/</code> の TypeScript化</h2>
-
-<ol>
-<li>Babel -&gt; JS(js -&gt; js)だったものをTypeScript -&gt; Babel -&gt; JSに<a href="https://github.com/almin/almin/pull/68/commits/7afc5a9d5ed2aa2f45da497f07c881a8c13767f6">ビルドスクリプトを変更</a>
-
-<ul>
-<li>TypeScriptは<code>target</code>を<code>esnext</code>にすることで単純に型を取り除くだけの変換にする</li>
-<li>ES2015 -&gt; ES5を実際にやるのは既存のBabelのまま</li>
-<li>空のtsファイルを一つおいて実際にコンパイルが通るかを検証</li>
-</ul></li>
-<li><a href="https://github.com/almin/almin/pull/68/commits/721d9fec6066fdc4b091b851f962c1d3ef60ace9">既存のテストを1で変換したソースで動くようにパスを変える</a></li>
-<li><a href="https://github.com/almin/almin/pull/68/commits/d83ccc11cf69f807e99b54add0de7ba469953cfb">1つ</a>づつ<code>.js</code>を<code>.ts</code>へ<a href="https://github.com/almin/almin/pull/68/commits/27520ff7eecb834870d2095d6050e33983cefd06">変換</a>していく
-
-<ul>
-<li>一時的に型が解決できないものは<code>any</code>にして後から型を直す</li>
-<li>コンパイルが通ってテストが通るなら動作的に問題ない</li>
-<li>実際に変換後のリリースではこれに起因するバグはなかったと思います</li>
-<li><a href="http://efcl.info/2017/03/08/almim0.10/" title="Inroducing Almin 0.10.0: TypeScript, FlowType, Logger | Web Scratch">Inroducing Almin 0.10.0: TypeScript, FlowType, Logger | Web Scratch</a></li>
-</ul></li>
-</ol>
-
-<p>という手順でJavaScript to TypeScriptを行いました。
-この時の変更では、<code>test/</code>下のテストファイルはJavaScriptのままでした。</p>
-
-<p>テストの方も複雑なケースが色々増えてきたので、TypeScriptに移行したいなーと思って最近移行できる環境を作りました。</p>
-
-<h2 id="test-のtypescript化"><code>test/</code> のTypeScript化</h2>
-
-<p><code>src/</code>下はまとめて移行するスタイルでしたが、<code>test/</code>下は徐々に必要なタイミングで移行できるような形にしています。</p>
-
-<p>テストコードは<code>src/</code>下とは違い、テストコード同士が互いに依存することはないため、1つのテストファイルごとに移行していけるはずです。</p>
-
-<p>そのため、<code>src/</code>のやり方とは異なりTypeScriptの<code>allowJs</code>機能を使って移行しています。
-次のPRで移行した手順が見られます(試行錯誤したのでキレイなコミットではない)</p>
-
-<ul>
-<li><a href="https://github.com/almin/almin/pull/232" title="test(almin): setup TypeScript testing env by azu · Pull Request #232 · almin/almin">test(almin): setup TypeScript testing env by azu · Pull Request #232 · almin/almin</a></li>
-</ul>
-
-<p>実際にまとめると次のような方法で移行しています。</p>
-
-<ol>
-<li><code>test/</code>以下にテスト用の<a href="https://github.com/almin/almin/blob/8a52b440b68693151b589415825fd6a26ebb6ada/packages/almin/test/tsconfig.json"><code>tsconfig.json</code></a>を追加する
-
-<ul>
-<li><code>src/</code>用のコンパイル設定を<code>&quot;extends&quot;: &quot;../tsconfig.json&quot;</code>で継承し、<code>&quot;allowJs&quot;: true</code>の設定を追加したものを利用</li>
-<li><code>&quot;allowJs&quot;: true</code>にすることで<code>.js</code>もTypeScriptがコンパイルできるようになる</li>
-<li><code>src/**/*</code>と<code>test/**/*</code>をincludesし、テスト向けにテストコードとソースコードを一緒にコンパイルする</li>
-<li>コンパイル結果、 <code>src</code>は<code>lib/src</code>へ、 <code>test/</code>は<code>lib/test</code>へ出力する</li>
-</ul></li>
-<li>テストファイルが<code>import {Store} from &quot;../lib/&quot;</code>のソースコードをみているのを、<code>import {Store} from &quot;../src/&quot;</code>のソースコードを見るようにする
-
-<ul>
-<li>コンパイル前は<code>src/*.ts</code>を見るが、コンパイル後は<code>lib/src/*.js</code>を見ることになる</li>
-<li>出力先は<code>lib/{src,test}/</code>となっていて、<code>lib/test</code>から<code>../src</code>を見ると<code>lib/src</code>をみる状態を作れる</li>
-<li>これでコンパイル結果は全てただのJSなので、後は普通にmochaなどでJavaScriptのテストとして<code>lib/test</code>を実行する</li>
-</ul></li>
-<li>テストの実行前に<code>test/tsconfig.json</code>を使ってコンパイルする
-
-<ul>
-<li><code>&quot;test&quot;: &quot;npm run build:test &amp;&amp; npm run test:js&quot;</code>という感じ</li>
-</ul></li>
-</ol>
-
-<p><code>test/tsconfig.json</code>:</p>
-<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
-  <span class="nt">&quot;extends&quot;</span><span class="p">:</span> <span class="s2">&quot;../tsconfig.json&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;compilerOptions&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;allowJs&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nt">&quot;declaration&quot;</span><span class="p">:</span> <span class="kc">false</span>
-  <span class="p">},</span>
-  <span class="nt">&quot;include&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="s2">&quot;../src/**/*&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;./**/*&quot;</span>
-  <span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><code>./tsconfig.json</code>に<code>&quot;rootDir&quot;: &quot;./&quot;,</code>を設定しておけば、テスト用と普段の設定で出力先が同じになる。</p>
-
-<p>これで<code>.ts</code>と<code>.js</code>のテストファイルが混在している状態でもテストが実行できるので、必要なタイミングで<code>.js</code>を<code>.ts</code>に変更していけます。</p>
-
-<ul>
-<li><a href="https://github.com/almin/almin/pull/248" title="test(almin): cleanup by azu · Pull Request #248 · almin/almin">test(almin): cleanup by azu · Pull Request #248 · almin/almin</a></li>
-</ul>
-
-<blockquote class="twitter-tweet" data-partner="tweetdeck"><p lang="ja" dir="ltr">alminのテスト TypeScriptに移行できる環境作ってあったけど、TypeScriptって(というかWebStormって)こんな混在してる状態でもちゃんと動くんだ<br>(TypeScript的にはAllowJSしてる、WebStorm普通に補完効いてて面白い) <a href="https://t.co/OUBcmOYjZv">pic.twitter.com/OUBcmOYjZv</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/886935717393215489">July 17, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<p>またすべてのテストがTypeScriptにはなってないのでコントリビュート待ってます。
-基本的には<code>.ts</code>にして型エラーを潰していくだけの作業だと思います。</p>
-
-<ul>
-<li><a href="https://github.com/almin/almin/issues/144" title="Convert test/ to TypeScript · Issue #144 · almin/almin">Convert test/ to TypeScript · Issue #144 · almin/almin</a></li>
-</ul>
-
-<p>すべてのテストが<code>.ts</code>になった後は、<a href="https://github.com/TypeStrong/ts-node" title="ts-node/register">ts-node/register</a>などを使ってruntime hookで変換できるので<code>npm run build:test</code>が必要なくなります。</p>
-
-<h2 id="おわり">おわり</h2>
-
-<p><code>src/</code>のように依存関係があるものは<a href="https://github.com/almin/almin/pull/68">一気に</a>TypeScriptへ変換した方が良いです。</p>
-
-<p>一方、<code>test/</code>のようにそれぞれのファイルが独立しているものは、<code>--allowJs</code>を使うことで既存のJavaScriptを混ぜた状態でTypeScriptへ移行できるようになりました。</p>
-
-<ul>
-<li><a href="https://www.typescriptlang.org/docs/handbook/compiler-options.html" title="Compiler Options · TypeScript">Compiler Options · TypeScript</a></li>
-</ul>
-
-<p>最近だと<code>--checkJs</code>と<code>--allowJs</code>を使うことでJavaScriptファイルに対してJSDocを使ったType Checkができるようになっています。
-これを上手く使えば、もっと緩やかに移行することができるかもしれません(JSDoc全部のパターン対応してないので今の所限定的)</p>
-
-<ul>
-<li><a href="https://blog.mariusschulz.com/2017/06/16/typescript-2-3-type-checking-javascript-files-with-checkjs" title="TypeScript 2.3: Type-Checking JavaScript Files with --checkJs | Marius Schulz">TypeScript 2.3: Type-Checking JavaScript Files with --checkJs | Marius Schulz</a></li>
-<li><a href="https://github.com/Microsoft/TypeScript/wiki/Type-Checking-JavaScript-Files" title="Type Checking JavaScript Files · Microsoft/TypeScript Wiki">Type Checking JavaScript Files · Microsoft/TypeScript Wiki</a></li>
-</ul>
-
-<p>今回はライブラリだったので、テストカバレッジがかなり高い状態でした。
-なのでテストがある程度保証してくれるので、一気にやっても壊れにくい状態でした。</p>
-
-<p>UIなどテストがしにくい部分を含む実際のアプリケーションに後から型付けしていく場合は、次の記事などが参考になるかもしれません。</p>
-
-<ul>
-<li><a href="https://www.reaktor.com/blog/refactoring-30000-lines-js-types/" title="Refactoring 30000 lines of JS with types - Reaktor.com">Refactoring 30000 lines of JS with types - Reaktor.com</a></li>
-<li><a href="https://slack.engineering/typescript-at-slack-a81307fa288d" title="TypeScript at Slack – Several People Are Coding">TypeScript at Slack – Several People Are Coding</a></li>
 </ul>
  ]]></content>
  </entry>

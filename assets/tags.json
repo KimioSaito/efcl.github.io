@@ -805,7 +805,9 @@
         
         "vue",
         
-        "Architecture"
+        "Architecture",
+        
+        "alfred"
         
     ]
 }
