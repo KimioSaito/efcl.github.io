@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-10-19T10:20:33+09:00</updated>
+ <updated>2017-10-20T10:09:00+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -35,7 +35,7 @@
 <p>この辺のスラング的な単語もクローリングしたデータから辞書を作ることで扱える量が多い辞書として<a href="https://github.com/neologd/mecab-ipadic-neologd" title="mecab-ipadic-NEologd">mecab-ipadic-NEologd</a>が有名です。</p>
 
 <p>で、話を戻して形態素解析をした結果の未知語となるパターンってどれぐらいあるのかなーと思いました。
-普通に形態素解析した結果を見ればいいのですが、それは品詞付きの情報が並ぶだけだったり、JSONだったりして、テキストのこの部分が未知語というのがあま見やすくはありませんでした。</p>
+普通に形態素解析した結果を見ればいいのですが、それは品詞付きの情報が並ぶだけだったり、JSONだったりして、テキストのこの部分が未知語というのがあまり見やすくはありませんでした。</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">今日もしないとね。
 今日    名詞,副詞可能,*,*,*,*,今日,キョウ,キョー
 も      助詞,係助詞,*,*,*,*,も,モ,モ
