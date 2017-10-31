@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-10-20T20:10:46+09:00</updated>
+ <updated>2017-10-31T20:49:41+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,270 @@
  </author>
  
 
+ 
+ <entry>
+   <title>自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた</title>
+   <link href="http://efcl.info/2017/10/31/nlp-pattern-match/"/>
+   <updated>2017-10-31T11:23:00+09:00</updated>
+   <id>http://efcl.info/2017/10/31/nlp-pattern-match</id>
+   <content type="html"><![CDATA[ <p><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>のルールを色々書いていて自然言語のマッチの問題がいくつかありました。</p>
+
+<p><a href="https://github.com/textlint-ja/textlint-rule-preset-JTF-style" title="textlint-ja/textlint-rule-preset-JTF-style: JTF日本語標準スタイルガイド for textlint.">textlint-ja/textlint-rule-preset-JTF-style: JTF日本語標準スタイルガイド for textlint.</a>は基本的に正規表現をベースに実装していました。
+正規表現で自然言語に対してマッチするのは簡単でいいのですが、意図しない範囲にマッチすることもあるためfalse-positiveになりやすい問題がありました。</p>
+
+<p>一方、ですます or である調の混在をチェックする<a href="https://github.com/textlint-ja/textlint-rule-no-mix-dearu-desumasu" title="textlint-rule-no-mix-dearu-desumasu">textlint-rule-no-mix-dearu-desumasu</a>では、<a href="https://github.com/takuyaa/kuromoji.js#api" title="kuromoji.js">kuromoji.js</a>などで形態素解析した結果を使っています。
+形態素解析をすることで(正しい日本語なら)より正確にマッチできます。</p>
+
+<p>しかし、形態素解析のトークンに対してマッチする処理やその情報を元に置換するのは結構面倒です。
+kuromojiが出力するトークンにマッチするライブラリなどを書いて使っていますが、それでもそこそこ面倒です。</p>
+
+<ul>
+<li><a href="https://github.com/azu/morpheme-match">azu/morpheme-match: match function that match token(形態素解析) with sentence.</a></li>
+<li><a href="https://github.com/azu/morpheme-match-all">azu/morpheme-match-all: A wrapper of morpheme-match API. Match all kuromoji&#39;s tokens.</a></li>
+</ul>
+
+<p>また、<a href="https://github.com/textlint-ja/textlint-rule-ja-no-abusage" title="textlint-ja/textlint-rule-ja-no-abusage: よくある日本語の誤用をチェックするtextlintルール">textlint-ja/textlint-rule-ja-no-abusage: よくある日本語の誤用をチェックするtextlintルール</a>などはマッチする範囲もトークンで指定するため、コードとしてもあまり読みやすくありません(単語が分解された大きなJSONを持つ形)</p>
+
+<p>この簡単にマッチできるが誤判定し易い正規表現と正確にマッチできるが面倒臭いトークンベースの中間なライブラリをつくりました。</p>
+
+<h2 id="nlp-pattern-match"><a href="https://github.com/azu/nlp-pattern-match" title="azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.">nlp-pattern-match</a></h2>
+
+<p><a href="https://github.com/azu/nlp-pattern-match" title="azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.">azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.</a>というリポジトリはmonorepoなのでいろんなライブラリが入っていますが、大きく分けて二種類のライブラリがあります。</p>
+
+<h3 id="パーサ">パーサ</h3>
+
+<p>一つは正確にマッチするのに必要な自然言語を分解するパーサ(形態素解析レベル)です。</p>
+
+<ul>
+<li><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-parse-english" title="nlcst-parse-english">nlcst-parse-english</a>
+
+<ul>
+<li>英語のテキストを単語に分解してPart-of-speech(POS)情報を付加したNLCST</li>
+</ul></li>
+<li><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-parse-japanese" title="nlcst-parse-japanese">nlcst-parse-japanese</a>
+
+<ul>
+<li>日本語のテキストを形態素解析したNLCST</li>
+</ul></li>
+</ul>
+
+<p><a href="https://github.com/syntax-tree/nlcst">NLCST</a>はNatural Language Concrete Syntax Treeのことで、自然言語のCST(スペースなどの位置情報も扱うASTみたいなもの)フォーマットです。
+NLCSTは<a href="https://github.com/wooorm/retext">retext</a>などが使っている形式で、ParagraphやSentence、WordなどのNodeから構成されます。</p>
+
+<p>たとえば、<code>&quot;ようこそ、日本へ。&quot;</code>のようなテキストをNLCSTにすると次のような巨大なNodeになります。(長いの省略)</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span><span class="nx">JapaneseParser</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-parse-japanese&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">japaneseParse</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">JapaneseParser</span><span class="p">();</span>
+<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;ようこそ、日本へ。&quot;</span><span class="p">;</span>
+<span class="nx">japaneseParse</span><span class="p">.</span><span class="nx">ready</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">CST</span> <span class="o">=</span> <span class="nx">japaneseParse</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">CST</span><span class="p">)</span>
+<span class="p">});</span>
+<span class="cm">/*</span>
+<span class="cm">{</span>
+<span class="cm">  &quot;type&quot;: &quot;RootNode&quot;,</span>
+<span class="cm">  &quot;children&quot;: [</span>
+<span class="cm">    {</span>
+<span class="cm">      &quot;type&quot;: &quot;ParagraphNode&quot;,</span>
+<span class="cm">      &quot;children&quot;: [</span>
+<span class="cm">        {</span>
+<span class="cm">          &quot;type&quot;: &quot;SentenceNode&quot;,</span>
+<span class="cm">          &quot;children&quot;: [</span>
+<span class="cm">            {</span>
+<span class="cm">              &quot;type&quot;: &quot;WordNode&quot;,</span>
+<span class="cm">              &quot;children&quot;: [</span>
+<span class="cm">                {</span>
+<span class="cm">                  &quot;type&quot;: &quot;TextNode&quot;,</span>
+<span class="cm">                  &quot;value&quot;: &quot;ようこそ&quot;,</span>
+<span class="cm">                  &quot;position&quot;: {</span>
+<span class="cm">                    &quot;start&quot;: {</span>
+<span class="cm">                      &quot;line&quot;: 1,</span>
+<span class="cm">                      &quot;column&quot;: 1,</span>
+<span class="cm">                      &quot;offset&quot;: 0</span>
+<span class="cm">                    },</span>
+<span class="cm">                    &quot;end&quot;: {</span>
+<span class="cm">                      &quot;line&quot;: 1,</span>
+<span class="cm">                      &quot;column&quot;: 5,</span>
+<span class="cm">                      &quot;offset&quot;: 4</span>
+<span class="cm">                    }</span>
+<span class="cm">                  },</span>
+<span class="cm">                  &quot;data&quot;: {</span>
+<span class="cm">                    &quot;word_id&quot;: 34120,</span>
+<span class="cm">                    &quot;word_type&quot;: &quot;KNOWN&quot;,</span>
+<span class="cm">                    &quot;word_position&quot;: 1,</span>
+<span class="cm">                    &quot;surface_form&quot;: &quot;ようこそ&quot;,</span>
+<span class="cm">                    &quot;pos&quot;: &quot;感動詞&quot;,</span>
+<span class="cm">                    &quot;pos_detail_1&quot;: &quot;*&quot;,</span>
+<span class="cm">                    &quot;pos_detail_2&quot;: &quot;*&quot;,</span>
+<span class="cm">                    &quot;pos_detail_3&quot;: &quot;*&quot;,</span>
+<span class="cm">                    &quot;conjugated_type&quot;: &quot;*&quot;,</span>
+<span class="cm">                    &quot;conjugated_form&quot;: &quot;*&quot;,</span>
+<span class="cm">                    &quot;basic_form&quot;: &quot;ようこそ&quot;,</span>
+<span class="cm">                    &quot;reading&quot;: &quot;ヨウコソ&quot;,</span>
+<span class="cm">                    &quot;pronunciation&quot;: &quot;ヨーコソ&quot;</span>
+<span class="cm">                  }</span>
+<span class="cm">                }</span>
+<span class="cm">              ],</span>
+<span class="cm">     ...</span>
+<span class="cm">}</span>
+<span class="cm">*/</span>
+</code></pre></div>
+<p>これらのパーサは、あるセンテンスの長さが100文字以下といった単語だけではわからない情報などを扱うのに利用できます。また単語の品詞などの情報もあります。</p>
+
+<h3 id="matcher">Matcher</h3>
+
+<p><a href="https://github.com/azu/nlp-pattern-match" title="azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.">nlp-pattern-match</a>に含んでいるもう一方はマッチングライブラリです。</p>
+
+<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-pattern-match" title="nlcst-pattern-match">nlcst-pattern-match</a>というmatcherは先ほどのパース結果のNodeを使った厳密なマッチをするライブラリです。</p>
+
+<p>タグ関数を使って、厳密にマッチしたい部分だけをNodeとして表現できます。 
+次の例では英語の<code>Bob &lt;動詞&gt; it.</code>にマッチする結果を取得できます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">PatternMatcher</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-pattern-match&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">EnglishParser</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-parse-english&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">englishParser</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EnglishParser</span><span class="p">();</span>
+<span class="kr">const</span> <span class="nx">patternMatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PatternMatcher</span><span class="p">({</span>
+    <span class="nx">parser</span><span class="o">:</span> <span class="nx">englishParser</span>
+<span class="p">});</span>
+<span class="kr">const</span> <span class="nx">pattern</span> <span class="o">=</span> <span class="nx">patternMatcher</span><span class="p">.</span><span class="nx">tag</span><span class="err">`</span><span class="nx">Bob</span> <span class="nx">$</span><span class="p">{</span> <span class="p">{</span>
+    <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span>
+    <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">pos</span><span class="o">:</span> <span class="sr">/^VB/</span> <span class="c1">// verb</span>
+    <span class="p">}</span>
+<span class="p">}</span> <span class="p">}</span> <span class="nx">it</span><span class="p">.</span><span class="err">`</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;Bob does it.&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">patternMatcher</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">pattern</span><span class="p">);</span>
+<span class="kr">const</span> <span class="p">[</span><span class="nx">result</span><span class="p">]</span> <span class="o">=</span> <span class="nx">results</span><span class="p">;</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">position</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">index</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">end</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">column</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="nx">line</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">offset</span><span class="o">:</span> <span class="mi">12</span>
+    <span class="p">},</span>
+    <span class="nx">start</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">column</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">line</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">offset</span><span class="o">:</span> <span class="mi">0</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-pattern-match" title="nlcst-pattern-match">nlcst-pattern-match</a>はより厳密なマッチをDSL的に書けるようにする趣旨のライブラリでしたが、もっと必要に応じて簡単に書けるライブラリとして<a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>があります。</p>
+
+<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>は名前の通り、とりまえず<code>match</code>して、実際にそれが対象なのかを<code>test</code>し、最後に<code>replace</code>するという三段階のライブラリです。
+正規表現で処理を書く場合に何でも一発の正規表現でやると難しくなるので、段階に分けてしまえばもっと簡単に書けるのではというコンセプトのライブラリです。</p>
+
+<p>最小のコードは、ほぼ<code>String#replace</code>と同じです。</p>
+
+<blockquote>
+<p>Match -&gt; Replace</p>
+</blockquote>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">replaceAll</span><span class="p">,</span> <span class="nx">matchTestReplace</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;match-test-replace&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;Hello&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">matchTestReplace</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">pattern</span><span class="o">:</span> <span class="sr">/hello/i</span><span class="p">,</span>
+    <span class="nx">replace</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">&quot;Hello&quot;</span>
+<span class="p">});</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">ok</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">ok</span><span class="p">,</span> <span class="s2">&quot;should be ok: true&quot;</span><span class="p">);</span>
+<span class="c1">// 返り値はコマンドオブジェクト</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;1 replace&quot;</span><span class="p">);</span>
+<span class="cm">/**</span>
+<span class="cm">[ { index: 0, match: &#39;Hello&#39;, replace: &#39;Hello&#39;, message: undefined } ]</span>
+<span class="cm">*/</span>
+</code></pre></div>
+<p>少し複雑にして<code>/webkit/i</code>という文字列を<code>WebKit</code>に統一したいという例です。
+単純に<code>/webkit/i</code>でマッチすると<code>node-webkit</code>も含まれてしまうため、<code>node-</code>から始まる<code>webkit</code>は除外するというルールを<code>test</code>に追加しています。</p>
+
+<blockquote>
+<p>Match -&gt; Test -&gt; Replace</p>
+</blockquote>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">replaceAll</span><span class="p">,</span> <span class="nx">matchTestReplace</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;match-test-replace&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;webkit is matched,but node-webkit is not match&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">matchTestReplace</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">pattern</span><span class="o">:</span> <span class="sr">/(\S*?)webkit/g</span><span class="p">,</span>
+    <span class="nx">test</span><span class="o">:</span> <span class="p">({</span> <span class="nx">captures</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">captures</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!==</span> <span class="s2">&quot;node-&quot;</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="nx">replace</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">&quot;WebKit&quot;</span>
+<span class="p">});</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">ok</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">ok</span> <span class="o">===</span> <span class="kc">true</span><span class="p">,</span> <span class="s2">&quot;should be ok: false&quot;</span><span class="p">);</span>
+<span class="c1">// 返り値はコマンドオブジェクト</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;no replace&quot;</span><span class="p">);</span>
+<span class="c1">// 実際に置換を適応する</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">replaceAll</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">res</span><span class="p">.</span><span class="nx">results</span><span class="p">).</span><span class="nx">output</span><span class="p">,</span> <span class="s2">&quot;WebKit is matched,but node-webkit is not match&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p>先ほどの<a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-pattern-match" title="nlcst-pattern-match">nlcst-pattern-match</a>を組み合わせると、適当にマッチした文字列の品詞をチェックしてから、それが意図した品詞なら置換するという処理が書けます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">assert</span> <span class="nx">from</span> <span class="s2">&quot;assert&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">replaceAll</span><span class="p">,</span> <span class="nx">matchTestReplace</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;match-test-replace&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">PatternMatcher</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-pattern-match&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">EnglishParser</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-parse-english&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">englishParser</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EnglishParser</span><span class="p">();</span>
+<span class="kr">const</span> <span class="nx">matcher</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PatternMatcher</span><span class="p">({</span> <span class="nx">parser</span><span class="o">:</span> <span class="nx">englishParser</span> <span class="p">});</span>
+<span class="c1">// https://developers.google.com/style/clause-order</span>
+<span class="c1">// NG: Click Delete if you want to delete the entire document.</span>
+<span class="c1">// OK: To delete the entire document, click Delete.</span>
+<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s1">&#39;Click Delete if you want to delete the entire document.&#39;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">matchTestReplace</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">pattern</span><span class="o">:</span> <span class="sr">/Click (\w+) if you want to (.+)./</span><span class="p">,</span>
+    <span class="nx">replace</span><span class="o">:</span> <span class="p">({</span> <span class="nx">captures</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">captures</span><span class="p">);</span>
+        <span class="k">return</span> <span class="err">`</span><span class="nx">To</span> <span class="nx">$</span><span class="p">{</span><span class="nx">captures</span><span class="p">[</span><span class="mi">1</span><span class="p">]},</span> <span class="nx">click</span> <span class="nx">$</span><span class="p">{</span><span class="nx">captures</span><span class="p">[</span><span class="mi">0</span><span class="p">]}.</span><span class="err">`</span>
+    <span class="p">},</span>
+    <span class="nx">test</span><span class="o">:</span> <span class="p">({</span> <span class="nx">all</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kr">const</span> <span class="nx">pattern</span> <span class="o">=</span> <span class="nx">matcher</span><span class="p">.</span><span class="nx">tag</span><span class="err">`</span><span class="nx">Click</span> <span class="nx">$</span><span class="p">{</span> <span class="p">{</span>
+            <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;WordNode&quot;</span><span class="p">,</span>
+            <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
+                <span class="c1">// Verb</span>
+                <span class="nx">pos</span><span class="o">:</span> <span class="sr">/^VB/</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="p">}</span><span class="err">`</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">matcher</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">all</span><span class="p">,</span> <span class="nx">pattern</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">ok</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">ok</span> <span class="o">===</span> <span class="kc">true</span><span class="p">,</span> <span class="s2">&quot;should be ok: true&quot;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="nx">replaceAll</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">res</span><span class="p">.</span><span class="nx">results</span><span class="p">).</span><span class="nx">output</span><span class="p">;</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">output</span><span class="p">,</span> <span class="s2">&quot;To delete the entire document, click Delete.&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>は大雑把に正規表現でマッチして、testで本当に意図したものかをチェックしてから置換するという工程を書くためのものです。</p>
+
+<p>このアプローチだと結構正規表現の気軽さを持ちつつ必要な部分で詳細な指定ができるため便利です。
+一方、今わかってる問題として大雑把に一度マッチするため、後からマッチする範囲を狭めることができない(無駄な範囲をReplaceしてしまう)という問題があります。</p>
+
+<p>いい案がある方はIssueとかPRを待ってます。</p>
+
+<h2 id="ユースケース">ユースケース</h2>
+
+<p>今このライブラリなどを使ってGoogleの<a href="https://developers.google.com/style/" title="About this guide  |  Google Developer Documentation Style Guide  |  Google Developers">Google Developer Documentation Style Guide</a>という開発者向けのドキュメントスタイルガイドを<a href="https://github.com/textlint/textlint" title="textlint">textlint</a>のルールとして実装しています。</p>
+
+<ul>
+<li><a href="https://github.com/textlint-rule/textlint-rule-preset-google%22textlint-rule/textlint-rule-preset-google:%20%5BWIP%5D%20Google%20Developer%20Documentation%20Style%20Guide%20for%20textlint.%22">textlint-rule/textlint-rule-preset-google: [WIP] Google Developer Documentation Style Guide for textlint.</a></li>
+</ul>
+
+<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>や<a href="https://github.com/finnlp/en-pos" title="en-pos">en-pos</a>を中心に使って実装しています。
+感触としては30分~1時間ぐらいで1つのルール(1つのページ)を実装できているので、まあまあ効率的に実装できているかなーと思います。</p>
+
+<p>自分が英文法がよく分かってなかったり、係り受け解析ができない問題、そもそも主観的なルールなどもあるのですべてが実装できるわけではないですが、大雑把にマッチして意図して結果へ置換する処理を書けている感じがします。</p>
+
+<p>興味がある人は<a href="https://github.com/textlint-rule/textlint-rule-preset-google#rules" title="textlint-rule/textlint-rule-preset-google: [WIP] Google Developer Documentation Style Guide for textlint.">textlint-rule/textlint-rule-preset-google</a>にPull Request待っています。</p>
+
+<h2 id="おわりに">おわりに</h2>
+
+<p>textlintのルールなどを書くときに使える<a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-pattern-match" title="nlcst-pattern-match">nlcst-pattern-match</a>というライブラリ群について紹介しました。</p>
+
+<p>文字列処理は色々文脈に依存したり、そもそも自然言語は壊れた文字列がエラーにならないなどの問題があるため難しいです。完璧な方法はないため目的にあった方法を使う必要があります。
+たとえば、今回作った<a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>は平面的に文字列マッチするだけなので、文字列を構造として捉えるならば色々不足している感じがします。</p>
+
+<p>これ以外にもセンテンス分解やピリオドの位置チェック、ですます・である調の分析などいろんなライブラリを書いています。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/wiki/Collection-of-textlint-rule#global" title="Collection of textlint rule · textlint/textlint Wiki">Collection of textlint rule · textlint/textlint Wiki</a></li>
+</ul>
+
+<p>textlintをコマンド一発で作り始めることができる<code>create-textlint-rule</code>というコマンドもあるので、色々作って見ると面白いかもしれません。</p>
+
+<ul>
+<li><a href="http://efcl.info/2016/12/14/create-textlint-rule/" title="textlintのルールを簡単に作り始めることができるツールを作りました | Web Scratch">textlintのルールを簡単に作り始めることができるツールを作りました | Web Scratch</a></li>
+</ul>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>Alfred上で自分のはてなブックマークを検索できるWorkflow</title>
@@ -1646,409 +1910,6 @@ Examples
 <p>クライアント側はどうにでもなる気がするので、サーバ側をServerlessな感じにしたものがあればコスト少なくて済むのかなと思ったけど、LDRのようなサービスはクローラーとその結果の保存データで容量食うのであんまり向いて無さそう。<a href="https://firebase.google.com/pricing/?hl=ja">Firebase</a>みたいなところでやったほうがコスト的には良さそう。</p>
 
 <p>あとは<a href="http://cappuccinoapp.com/" title="Cappuccino">Cappuccino</a>とかみたいなクライアント側だけでどうにかするパターンかな。(未読管理的な問題はありそうだけど)</p>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>Almin 0.13リリース - アプリケーションレイヤーのトランザクション</title>
-   <link href="http://efcl.info/2017/07/24/almin-0.13/"/>
-   <updated>2017-07-24T10:35:00+09:00</updated>
-   <id>http://efcl.info/2017/07/24/almin-0.13</id>
-   <content type="html"><![CDATA[ <p><a href="https://github.com/almin/almin" title="Almin">Almin</a> 0.13.xのStable版をリリースしました。
-今後に向けて下地となる基盤部分をかなり書き換えたのと、Strict modeや試験的にTransactionを追加しました。</p>
-
-<p><a href="https://github.com/almin/almin/compare/almin%400.12.0...almin%400.13.10"><img src="http://efcl.info/wp-content/uploads/2017/07/24-1500860504.png" alt="Diff 12.x...13"></a></p>
-
-<ul>
-<li><a href="https://github.com/almin/almin/releases/tag/almin%400.13.10" title="Release Almin 0.13.10 · almin/almin">Release Almin 0.13.10 · almin/almin</a></li>
-</ul>
-
-<h2 id="まとめ">まとめ</h2>
-
-<p>0.12xからの<a href="https://github.com/almin/almin/releases/tag/almin%400.13.10" title="Release Almin 0.13.10 · almin/almin">0.13.10</a>の変更をまとめると次の通りです。</p>
-
-<ul>
-<li>🔥 Breaking Changes
-
-<ul>
-<li>IE9/IE10のサポート終了
-
-<ul>
-<li>CIから落としただけなのでまだ動くかもしれないですが</li>
-</ul></li>
-<li>一部Deprecatedはありますが基本的にコードは変更しなくても動くはずです</li>
-</ul></li>
-<li>⚠️ Deprecated
-
-<ul>
-<li>リネーム <code>context.onWillExecuteEachUseCase</code> -&gt; <code>context.events.onWillExecuteEachUseCase</code></li>
-<li><a href="https://github.com/almin/migration-tools" title="almin/migration-tools">almin/migration-tools</a>を使うことで自動的にマイグレーションできます。</li>
-</ul></li>
-<li>🆕 Features
-
-<ul>
-<li>Strict mode</li>
-<li>Transaction(strict modeでのみ有効)</li>
-<li><code>executor</code> - <code>execute</code>のType Safe版です
-
-<ul>
-<li>意見募集中: <a href="https://github.com/almin/almin/issues/107" title="TypeScript: improve UseCase#execute typing · Issue #107 · almin/almin">TypeScript: improve UseCase#execute typing · Issue #107 · almin/almin</a></li>
-</ul></li>
-</ul></li>
-<li>:house: Internal
-
-<ul>
-<li>Unit of Work(作業単位)が内部的な実装として追加され、データフローなどがコードとしてきちんと管理されるように(Transactionなどもこれを利用)</li>
-</ul></li>
-</ul>
-
-<p>詳しくは<a href="https://github.com/almin/almin/releases/tag/almin%400.13.10" title="Release Almin 0.13.10 · almin/almin">Release Almin 0.13.10 · almin/almin</a>をみてください。</p>
-
-<hr>
-
-<h2 id="breaking-change-🔥">Breaking Change 🔥</h2>
-
-<p>Almin 0.13は幾つか破壊的な変更がありますが、殆どの場合コードは変更しなくても動くと思います。</p>
-
-<h3 id="drop-ie9-and-ie10">Drop IE9 and IE10</h3>
-
-<p>IE 9/10のサポートは終了しました。</p>
-
-<ul>
-<li><a href="https://www.microsoft.com/en-us/windowsforbusiness/end-of-ie-support" title="Internet Explorer End of Support">Internet Explorer End of Support</a></li>
-</ul>
-
-<h3 id="store-ondispatch-receive-only-dispatched-the-payload-by-usecase-dispatch-224-254-255">Store#onDispatch receive only dispatched the Payload by UseCase#dispatch #224 #254 #255</h3>
-
-<p><code>Store#onDispatch</code>は今まで<code>UseCase#dispatch</code>以外の内部的なpayloadを受け取っていました。
-今回からは<code>Store#onDispatch</code>は<code>UseCase#dispatch</code>のみ、つまりユーザー自身が<code>dispatch</code>したpayloadのみを受け取ります。</p>
-
-<p>他のAlminのライフサイクルイベントを受け取り対場合は<code>context.events</code>(<code>LifeCycleEventHub</code>)を参照してください。</p>
-
-<ul>
-<li><a href="https://almin.js.org/docs/tips/usecase-lifecycle.html" title="LifeCycle of UseCase · Almin.js">LifeCycle of UseCase · Almin.js</a></li>
-</ul>
-
-<p><strong>Recommened</strong>: 基本的にはStoreの更新は<code>Store#receivePayload</code>で行うことを推奨しています。(Strict modeはこれをチェックできます)</p>
-
-<p><code>Store#receivePayload</code>でのStore更新のパターン</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">class</span> <span class="nx">YourStore</span> <span class="kr">extends</span> <span class="nx">Store</span> <span class="p">{</span>
-   <span class="nx">constructor</span><span class="p">(){</span>
-      <span class="kr">super</span><span class="p">();</span>
-      <span class="c1">// Initialize state</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
-         <span class="nx">foo</span> <span class="o">:</span> <span class="s2">&quot;bar&quot;</span>
-      <span class="p">};</span>
-   <span class="p">}</span>
-
-   <span class="c1">// Update code here</span>
-   <span class="nx">receivePayload</span><span class="p">(</span><span class="nx">payload</span><span class="p">){</span>
-     <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="nx">payload</span><span class="p">));</span>
-   <span class="p">}</span>
-
-   <span class="nx">getState</span><span class="p">(){</span>
-     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">;</span>
-   <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="automatically-catch-throwing-error-from-usecase-execute-193-194">Automatically catch  throwing Error from <code>UseCase#execute()</code> #193 #194</h3>
-
-<p>0.12までは<code>UseCase#execute</code>で同期的なエラーが発生すると突き抜けて、<code>window.onerror</code>まで到達していました。</p>
-
-<p>0.13からは、同期的なエラーであっても<code>catch</code>できるようになっています。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">class</span> <span class="nx">ThrowUseCase</span> <span class="kr">extends</span> <span class="nx">UseCase</span> <span class="p">{</span>
-  <span class="nx">execute</span><span class="p">()</span> <span class="p">{</span>
-     <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="nx">context</span><span class="p">.</span><span class="nx">useCase</span><span class="p">(</span><span class="k">new</span> <span class="nx">ThrowUseCase</span><span class="p">).</span><span class="k">catch</span><span class="p">(</span><span class="nx">error</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;It can catch&quot;</span><span class="p">)</span>
-<span class="p">});</span>
-</code></pre></div>
-<h3 id="new-store-throw-error"><code>new Store()</code> throw Error</h3>
-
-<p><code>Store</code>はabstract classなので継承してください。
-<code>new Store()</code>は単純に<code>getState</code>時に例外を投げます。</p>
-
-<h2 id="notable-changes">Notable Changes</h2>
-
-<h3 id="renaming-context-on-to-context-events-on-239">Renaming: <code>context.on*</code> to <code>context.events.on*</code> #239</h3>
-
-<p><code>context.on*</code>などのライフサイクルイベントを検知するイベントを<code>context.events.on*</code>に移動しました。</p>
-
-<p>ただし、<code>Context#onChange</code>はライフサイクルイベントという扱いではなく、UI更新のためのハンドラを登録するAPIなのでそのまま<code>Context</code>に残っています。
-他のAPIは非推奨となっています。</p>
-
-<p>今はまだ<code>@deprecated</code>タグがついただけですが、もうちょっとしたらコンソールにも警告が出るようになります。そして次のメジャーアップデートで削除します。</p>
-
-<ul>
-<li><a href="https://github.com/almin/almin/issues/258" title="almin: Deprecated warning should be print · Issue #258 · almin/almin">almin: Deprecated warning should be print · Issue #258 · almin/almin</a></li>
-</ul>
-
-<p>これを移行するマイグレーションツールも用意してあるのでご利用ください。</p>
-
-<ul>
-<li><a href="https://github.com/almin/migration-tools#migrate-012-to-013" title="almin/migration-tools: Migration scripts for Almin.">almin/migration-tools: Migration scripts for Almin.</a></li>
-</ul>
-
-<h3 id="migration">Migration</h3>
-
-<p><a href="https://github.com/almin/migration-tools" title="almin/migration-tools">almin/migration-tools</a>はつぎのようにnpmでインストールできます。
-後は移行したファイルを指定して対話に従って選択すれば完了です。</p>
-
-<p><strong>Notes</strong> 先にバージョン管理システムにコミットしてバックアップしてから実行してください。</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">npm install -g @almin/migration-tools
-almin-migration-tools <span class="o">[</span>&lt;file<span class="p">|</span>glob&gt; ...<span class="o">]</span>
-</code></pre></div>
-<p><strong>Before</strong>:</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">context</span><span class="p">.</span><span class="nx">onWillExecuteEachUseCase</span><span class="p">((</span><span class="nx">payload</span><span class="p">,</span> <span class="nx">meta</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{});</span>
-<span class="nx">context</span><span class="p">.</span><span class="nx">onDispatch</span><span class="p">((</span><span class="nx">payload</span><span class="p">,</span> <span class="nx">meta</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{});</span>
-<span class="nx">context</span><span class="p">.</span><span class="nx">onDidExecuteEachUseCase</span><span class="p">((</span><span class="nx">payload</span><span class="p">,</span> <span class="nx">meta</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{});</span>
-<span class="nx">context</span><span class="p">.</span><span class="nx">onCompleteEachUseCase</span><span class="p">((</span><span class="nx">payload</span><span class="p">,</span> <span class="nx">meta</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{});</span>
-<span class="nx">context</span><span class="p">.</span><span class="nx">onErrorDispatch</span><span class="p">((</span><span class="nx">payload</span><span class="p">,</span> <span class="nx">meta</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{});</span>
-</code></pre></div>
-<p><strong>After</strong>:</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">context</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onWillExecuteEachUseCase</span><span class="p">((</span><span class="nx">payload</span><span class="p">,</span> <span class="nx">meta</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{});</span>
-<span class="nx">context</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onDispatch</span><span class="p">((</span><span class="nx">payload</span><span class="p">,</span> <span class="nx">meta</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{});</span>
-<span class="nx">context</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onDidExecuteEachUseCase</span><span class="p">((</span><span class="nx">payload</span><span class="p">,</span> <span class="nx">meta</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{});</span>
-<span class="nx">context</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onCompleteEachUseCase</span><span class="p">((</span><span class="nx">payload</span><span class="p">,</span> <span class="nx">meta</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{});</span>
-<span class="nx">context</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onErrorDispatch</span><span class="p">((</span><span class="nx">payload</span><span class="p">,</span> <span class="nx">meta</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{});</span>
-</code></pre></div>
-<h3 id="undocumentなapiであるusecaseexecutor-on-が削除-243">UndocumentなAPIである<code>UseCaseExecutor#on*</code>が削除 #243</h3>
-
-<p>Remove</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">UseCaseExecutor#onWillExecuteEachUseCase
-UseCaseExecutor#onDidExecuteEachUseCase
-UseCaseExecutor#onCompleteExecuteEachUseCase
-</code></pre></div>
-<h2 id="feature-🆕">Feature 🆕</h2>
-
-<h2 id="strict-mode">Strict mode</h2>
-
-<p>詳しくはドキュメントを見てください。</p>
-
-<p><strong>ドキュメント</strong>: <a href="https://almin.js.org/docs/tips/strict-mode.html">https://almin.js.org/docs/tips/strict-mode.html</a></p>
-
-<p>Strict modeは<code>Store#receivePayload</code>以外のタイミングで、<code>Store</code>を更新シていると警告を出すようにするモードです。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// enable strict mode</span>
-<span class="kr">const</span> <span class="nx">context</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Context</span><span class="p">({</span> 
-   <span class="nx">dispatcher</span><span class="p">,</span> 
-   <span class="nx">store</span><span class="p">,</span> 
-   <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
-     <span class="nx">strict</span><span class="o">:</span> <span class="kc">true</span>
-   <span class="p">}</span>
-<span class="p">});</span>
-</code></pre></div>
-<p>関連:</p>
-
-<ul>
-<li><a href="https://vuex.vuejs.org/en/strict.html">Strict Mode · Vuex</a></li>
-<li><a href="https://github.com/mobxjs/mobx/blob/gh-pages/docs/refguide/api.md#usestrict">mobx/api.md at gh-pages · mobxjs/mobx</a></li>
-</ul>
-
-<h3 id="context-transaction-226"><code>Context#transaction</code> #226</h3>
-
-<ul>
-<li><strong>Stability</strong>: Experimental</li>
-<li><strong>この機能はstrict modeではないと警告がでます</strong></li>
-</ul>
-
-<p><code>Context#transaction</code>はUseCaseをトランザクション的に実行するAPIです。
-<code>Context#useCase</code>は一つのUseCaseを一個ずつ実行して、そのUseCaseの実行終了毎にViewの更新が行われます。(具体的にはStoreが一つでも変更されているなら<code>Context#onChange</code>が呼び出されます)</p>
-
-<p>一方、<code>Context#transaction</code>は<code>TransactionContext</code>というトランザクション用のコンテキストを作り、<code>transactionContext.useCase</code>でUseCaseを実行してもすぐにはViewの更新は行われません。</p>
-
-<p>幾つかのUseCaseを<code>transactionContext.useCase</code>で実行した後に、確定したいタイミングで、<code>transactionContext.commit()</code>を実行するとそれまでに実行していたUseCaseからの<code>dispatch</code>やライフサイクルなどはまとめてStoreに伝わります。</p>
-
-<p><code>Context#transaction</code>の中でUseCaseを何度実行しても結果として起きるViewの更新は<code>commit()</code>したタイミングの一回だけになります。</p>
-
-<p><a href="http://www.nomnoml.com/#view/%23padding%3A%2010%0A%0A%5BContext%23useCase%7C%0A%20%20%20%5B%3Cusecase%3E%20UseCase%20A%5D%0A%5D%0A%5BContext%23transaction%7C%0A%20%20%5BUnit%20of%20Work%7C%0A%20%20%20%5B%3Cusecase%3E%20UseCase%20A%5D%0A%20%20%20%5B%3Cusecase%3E%20UseCase%20B%5D%0A%20%20%20%5B%3Cusecase%3E%20UseCase%20C%5D%0A%20%20%5D%0A%5D" title="nomnoml"><img src="https://user-images.githubusercontent.com/19714/28418288-245d9786-6d96-11e7-87af-611682a18dec.png" alt="UseCase vs. Transaction">
-</a></p>
-
-<p><strong>サンプルコード</strong>:</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">context</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Context</span><span class="p">({</span>
-    <span class="nx">dispatcher</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Dispatcher</span><span class="p">(),</span>
-    <span class="nx">store</span><span class="o">:</span> <span class="nx">storeGroup</span><span class="p">,</span>
-    <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">strict</span><span class="o">:</span> <span class="kc">true</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-<span class="c1">// then - called change handler a one-time</span>
-<span class="kd">let</span> <span class="nx">onChangeCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="nx">context</span><span class="p">.</span><span class="nx">onChange</span><span class="p">(</span><span class="nx">stores</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">onChangeCount</span><span class="o">++</span><span class="p">;</span>
-<span class="p">});</span>
-<span class="c1">// when</span>
-<span class="nx">context</span>
-    <span class="p">.</span><span class="nx">transaction</span><span class="p">(</span><span class="s2">&quot;transaction name&quot;</span><span class="p">,</span> <span class="nx">transactionContext</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">transactionContext</span>
-            <span class="p">.</span><span class="nx">useCase</span><span class="p">(</span><span class="k">new</span> <span class="nx">ChangeAUseCase</span><span class="p">())</span>
-            <span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">transactionContext</span><span class="p">.</span><span class="nx">useCase</span><span class="p">(</span><span class="k">new</span> <span class="nx">ChangeAUseCase</span><span class="p">()).</span><span class="nx">execute</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-            <span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">transactionContext</span><span class="p">.</span><span class="nx">useCase</span><span class="p">(</span><span class="k">new</span> <span class="nx">ChangeAUseCase</span><span class="p">()).</span><span class="nx">execute</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
-            <span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">transactionContext</span><span class="p">.</span><span class="nx">useCase</span><span class="p">(</span><span class="k">new</span> <span class="nx">ChangeAUseCase</span><span class="p">()).</span><span class="nx">execute</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-            <span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">transactionContext</span><span class="p">.</span><span class="nx">useCase</span><span class="p">(</span><span class="k">new</span> <span class="nx">ChangeAUseCase</span><span class="p">()).</span><span class="nx">execute</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
-            <span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-                <span class="c1">// commit the result to StoreGroup</span>
-                <span class="nx">transactionContext</span><span class="p">.</span><span class="nx">commit</span><span class="p">();</span>
-            <span class="p">});</span>
-    <span class="p">})</span>
-    <span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="c1">// finish the transation</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">onChangeCount</span><span class="p">);</span> <span class="c1">// =&gt; 1</span>
-    <span class="p">});</span>
-</code></pre></div>
-<p>名前の通り大量のUseCaseを連続して実行する必要がある際に利用できます。
-初期画面に必要なUseCaseが複数があるが、その途中で何度もViewを更新する必要がないといった際に、一つのトランザクションとしてまとめることができます。</p>
-
-<p>例えばReactにも<a href="https://github.com/facebook/react/issues/10231#issuecomment-316644950" title="ReactDOM.unstable_batchedUpdates">ReactDOM.unstable_batchedUpdates</a>という隠しAPIみたいなものがありますが、そういうのをState管理側でやるための仕組みです。</p>
-
-<p>Reduxにも似たようなBatch updatingの仕組みを持ったmiddlewareがあります。</p>
-
-<ul>
-<li><a href="https://github.com/reactjs/redux/issues/542">Idea: Batching actions · Issue #542 · reactjs/redux</a></li>
-<li><a href="https://github.com/acdlite/redux-batched-updates">acdlite/redux-batched-updates: Batch React updates that occur as a result of Redux dispatches, to prevent cascading renders. See https://github.com/gaearon/redux/issues/125 for more details.</a></li>
-</ul>
-
-<p>Alminの<code>Context#transaction</code>はstrict modeじゃないと正しく動きません。
-簡単にいうと、Alminの範囲外でStoreが更新されているとそのトランザクションが正しくても結果が正しくないことがおこるのでそういうケースを防止するためです。</p>
-
-<ul>
-<li><a href="https://github.com/almin/almin/issues/219" title="almin: Transaction of UseCase · Issue #219 · almin/almin">almin: Transaction of UseCase · Issue #219 · almin/almin</a></li>
-</ul>
-
-<p>現在の実装は1つのトランザクションで1回の<code>commit()</code>または<code>exit()</code>のみができます。<code>exit()</code>した場合はそのトランザクションで実行したUseCaseのイベントを破棄します。</p>
-
-<p>また、今はあるUseCaseの中から<code>commit()</code>したい！やサブトランザクションのような概念はありません。<strong>Stability</strong>: Experimentalなのでその辺に意見ある人は意見ください。</p>
-
-<h3 id="add-fluent-style-executor-193">Add Fluent style <code>executor</code> #193</h3>
-
-<ul>
-<li><strong>Stability</strong>: Experimental</li>
-<li>This feature is subject to change. It may change or be removed in future versions.</li>
-<li>See #193 </li>
-</ul>
-
-<p>TypeScriptで<code>UseCase#execute</code>をする際に型チェックがちゃんとできるバージョンです。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">context</span><span class="p">.</span><span class="nx">useCase</span><span class="p">(</span><span class="k">new</span> <span class="nx">MyUseCase</span><span class="p">())</span>
-    <span class="p">.</span><span class="nx">executor</span><span class="p">(</span><span class="nx">useCase</span> <span class="o">=&gt;</span> <span class="nx">useCase</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">))</span>
-    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">value</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
-    <span class="p">});</span>
-</code></pre></div>
-<p><code>context.useCase(useCase).execute()</code>は<code>context.useCase(useCase).executor(useCase =&gt; useCase.execute())</code>の糖衣構文です。</p>
-
-<p>もっとこうした方がよさそうという意見がある場合は次のIssueに意見をください。</p>
-
-<ul>
-<li><a href="https://github.com/almin/almin/issues/193" title="UseCase: Fluent style UseCase · Issue #193 · almin/almin">UseCase: Fluent style UseCase · Issue #193 · almin/almin</a></li>
-</ul>
-
-<h2 id="documentation">Documentation</h2>
-
-<p>APIドキュメントが更新されているので <a href="https://almin.js.org/">https://almin.js.org/</a> をみてください。</p>
-
-<h2 id="almin-logger">Almin-logger</h2>
-
-<ul>
-<li><a href="https://github.com/almin/almin/releases/tag/almin-logger%405.0.0" title="almin-logger@5.0.0">almin-logger@5.0.0</a>は Almin 0.13.x をサポートしています。</li>
-</ul>
-
-<h2 id="internals">Internals</h2>
-
-<p><a href="http://efcl.info/2017/07/17/JavaScript-to-TypeScript/" title="JavaScriptのライブラリを徐々にTypeScriptに移行する | Web Scratch">JavaScriptのライブラリを徐々にTypeScriptに移行する | Web Scratch</a>で書いたようにAlminのテストをTypeScriptに少しづつ移行しています。</p>
-
-<p>まだ全部は移行できてないので、Pull Request待ってます！</p>
-
-<h2 id="notes-📝">Notes 📝</h2>
-
-<h3 id="unit-of-work">Unit of Work</h3>
-
-<p>Almin 0.13から<a href="https://github.com/almin/almin/blob/master/packages/almin/src/UnitOfWork/UnitOfWork.ts" title="UnitOfWork">UnitOfWork</a>という内部的なクラスが追加されました。
-簡単にいうと通常はUseCaseの実行をそのままStoreに流してくれますが、トランザクション時はUseCaseの実行を止めたり進めたりできるものです。</p>
-
-<p><code>Context#transaction</code>はこれの上に作られています。</p>
-
-<p><a href="http://www.nomnoml.com/#view/%23padding%3A%2010%0A%0A%5BUseCase%7C%0A%20%20%20%20%5BUseCase%20Executor%20A%7C%0A%20%20%20%20%20%20%20%20%5B%3Cusecase%3EChild%20UseCase%5D%0A%20%20%20%20%5D%20--%3E%20%5BUseCase%20Executor%20B%5D%0A%20%20%20%20%5BUseCase%20Executor%20B%7C%0A%20%20%20%20%20%20%20%20%5B%3Cusecase%3EUseCase%5D%0A%20%20%20%20%5D%0A%5D%0A%5BUnit%20of%20Work%7C%0A%20%20%20%20%5BCommitments%7C%0A%20%20%20%20%20%20%20%20%5BDispatched%20Payload%5D%0A%20%20%20%20%20%20%20%20%5BSystem%20Payload%5D%0A%20%20%20%20%5D%0A%5D%0A%5BStoreGroup%7C%0A%20%20%20%20%5BStore%5D%0A%20%20%20%20%5B%3Cnote%3Eif%20any%20store%20is%20change%2C%20it%20emit%20changed%5D%0A%5D%0A%5BUseCase%5D%20payload%20--%3E%20%5BLifeCycleEventHub%7C%0A%09%5BDispatcher%5D%0A%5D%0A%5BUseCase%5D%20payload%20--%3E%20%5B%3Creadonly%3EUnit%20of%20Work%5D%0A%5BUnit%20of%20Work%5D%20%3Ctransaction%20event%3E%20--%3E%20%5BLifeCycleEventHub%5D%0A%5BUnit%20of%20Work%5D%20Commitment%20--%3E%20%5BStoreGroup%5D%20%0A%5BStoreGroup%5D%20changes%20--%3E%20%5BLifeCycleEventHub%5D%0A%5BLifeCycleEventHub%5D%20%3C-%20%5BContext%5D%0A" title="nomnoml"><img src="https://user-images.githubusercontent.com/19714/28418164-c121b12a-6d95-11e7-90e8-057ad12b6620.png" alt="Unit of Work">
-</a></p>
-
-<h2 id="サンプルコード">サンプルコード</h2>
-
-<p>サンプルコードにTypeScript + AlminでのTodoMVCの実装を追加しました。</p>
-
-<ul>
-<li><a href="https://github.com/almin/almin/tree/master/examples/todomvc-typescript" title="almin/examples/todomvc-typescript at master · almin/almin">almin/examples/todomvc-typescript at master · almin/almin</a></li>
-</ul>
-
-<p><a href="https://github.com/almin/almin/tree/master/examples/todomvc">JavaScript版</a>や<a href="https://github.com/almin/almin/tree/master/examples/todomvc-flow">FlowType版</a>などもあります。</p>
-
-<p>個人的には<a href="https://github.com/almin/almin/tree/master/examples/shopping-cart" title="shopping-cart">shopping-cart</a>の方がらしく書けているかなと思います。</p>
-
-<p>触ってみて何かおかしなサンプルがある可能性はあるので、そのときはIssueを立ててください。</p>
-
-<ul>
-<li><a href="https://github.com/almin/almin/issues/256" title="example: update svg-feeling&amp;#39;s postcss config · Issue #256 · almin/almin">example: update svg-feeling&#39;s postcss config · Issue #256 · almin/almin</a></li>
-</ul>
-
-<p>もっと実際のアプリケーション的なコードを見たい場合は<a href="https://github.com/azu/faao" title="Faao">Faao</a>などを見てみてください。
-これはプロダクションのレベル感で書いているので、そこそこ複雑です。</p>
-
-<ul>
-<li><a href="https://github.com/azu/faao">azu/faao: Faao is a GitHub issue/pull-request client on Electron.</a></li>
-<li><a href="http://azu.github.io/slide/2017/teppeis-sushi/client-side-ddd-on-github.html">Faao - ドメイン駆動設計で作るGitHub Issue Client -</a></li>
-</ul>
-
-<h2 id="おわり">おわり</h2>
-
-<p><a href="https://github.com/almin/almin" title="Almin">Almin</a>は大抵の人が読んで分かるコードを書けるようにデザインしています。
-ありふれたクラスベースにしているのもそうですが、
-<a href="https://github.com/reactjs/react-redux" title="react-redux">react-redux</a>の<code>connect([mapStateToProps], [mapDispatchToProps], [mergeProps], [options])</code>みたいにいきなり厳しい感じになったしないように気をつけています。</p>
-
-<p><a href="https://github.com/reactjs/redux" title="Redux">Redux</a>はドキュメントも充実してるし、やっぱり基盤的な部分はよくできるてるのでReduxもちゃんと理解した方がいいと思います。ミドルウェアや拡張部分が複雑になったりしてるだけでコアはしっかりしてます。</p>
-
-<ul>
-<li><a href="https://azu.gitbooks.io/javascript-plugin-architecture/content/ja/Redux/" title="Redux · JavaScript Plugin Architecture">Redux · JavaScript Plugin Architecture</a></li>
-</ul>
-
-<p>Alminは<a href="https://almin.js.org/docs/tutorial/counter/">ReduxやFluxのようなこと</a>もできますが、ドメイン層をクライアントサイドどう扱うかという部分に焦点を置いています。
-逆をいえば、Alminが扱わない領域(ドメイン/インフラ)と扱う領域(アプリケーションレイヤー/Viewの連携)をはっきり区別するということにつながります。</p>
-
-<p>たとえば、Fluxだとドメイン(ロジック)をどこに置くかを考えると、Storeの中を構造化していくことになることが多いです。</p>
-
-<ul>
-<li><a href="http://blog.j5ik2o.me/entry/2016/09/09/200643">FluxとDDDの統合方法 - かとじゅんの技術日誌</a></li>
-<li><a href="http://qiita.com/Takepepe/items/1ce54a9564d5a6d4939d">Reduxにドメイン層を導入する - Qiita</a></li>
-<li><a href="http://embryo.hatenadiary.com/entry/2016/12/16/011446">FluxとDDD(レイヤードアーキテクチャ)について考えてみた - embryo</a></li>
-</ul>
-
-<p><img src="http://efcl.info/wp-content/uploads/2017/07/24-1500900273.png" alt="Flux"></p>
-
-<p>Storeの中だとドメイン側がライブラリの都合に引っ張られてしまいがちです。(強い意志が必要)
-なので、Alminは扱う領域をアプリケーションレイヤーのみにして、その他のドメインレイヤーなどはユーザー側で扱う領域としています。</p>
-
-<p><img src="http://efcl.info/wp-content/uploads/2017/07/24-1500900453.png" alt="Almin"></p>
-
-<p>この構造によってドメインのロジックはPureなJavaScriptとして書けることを期待しています。
-この辺については次のスライドで書いています。</p>
-
-<ul>
-<li><a href="http://azu.github.io/slide/2016/react-meetup/large-scale-javascript.html">複雑なJavaScriptアプリケーションを考えながら作る話</a></li>
-<li><a href="https://github.com/azu/large-scale-javascript">azu/large-scale-javascript: 複雑なJavaScriptアプリケーションを作るために考えること</a></li>
-<li><a href="http://azu.github.io/slide/2017/teppeis-sushi/client-side-ddd-on-github.html" title="Faao - ドメイン駆動設計で作るGitHub Issue Client -">Faao - ドメイン駆動設計で作るGitHub Issue Client -</a></li>
-</ul>
-
-<p>実際に<a href="http://niconare.nicovideo.jp/watch/kn2499">ある程度の規模感</a>のものもちゃんと書けるようです。</p>
-
-<p>今後の予定としては、トランザクション周りをもう少し考えたいのと、結局ライブラリの中として上手くできていてもプロジェクトの中で上手く動くかは別なのでその辺を上手くナビゲーションできる仕組みを考えたい気がします。</p>
-
-<p>例えば、AlminのUseCase実装から<a href="https://azu.github.io/faao/meta/use-case.html" title="Faao - UseCase architecture">ユースケース図を自動生成</a>とかは現実的にできます。このようなプロジェクトが目指すべき構造からずれていないかを可視化できたりチェックできるような仕組みを提供できると、ユーザーは書くことに集中できてモチベーションが維持しやすいのではないかなと思ったりします。</p>
-
-<p>そういう視点のContributeも待ってますし、それとは別にPRが送りやすそうなIssueは<code>Good for beginners</code>ラベルが付けてあります。</p>
-
-<ul>
-<li><a href="https://github.com/almin/almin/issues?q=is%3Aissue+is%3Aopen+label%3A%22Good+for+beginners%22" title="Issues · almin/almin"><code>Good for beginners</code>: Issues · almin/almin</a></li>
-</ul>
  ]]></content>
  </entry>
  

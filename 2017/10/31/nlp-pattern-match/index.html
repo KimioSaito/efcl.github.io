@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+    <title>
+        
+        自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた | Web Scratch
+        
+    </title>
+    <meta name="description" content="textlintのルールを色々書いていて自然言語のマッチの問題がいくつかありました。">
+    
+    <meta name="keywords" content="自然言語,JavaScript,library" />
+    
+    <meta name="author" content="azu">
+    <!-- Icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="/public/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="/public/favicon.ico">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/public/css/main.css">
+    <!-- JavaScript -->
+    <!-- Open graph tags -->
+<meta property="og:title" content="自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://efcl.info/2017/10/31/nlp-pattern-match/">
+<meta property="og:image" content="http://efcl.info">
+
+<meta property="og:description" content="textlintのルールを色々書いていて自然言語のマッチの問題がいくつかありました。">
+<meta property="og:site_name" content="Web Scratch">
+
+
+
+
+<meta property="article:published_time" content="2017-10-31T11:23:00+09:00">
+<meta property="article:author" content="https://www.facebook.com/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/10/20/alfred-hatenabookmark/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/10/19/text-map-kuromoji/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/10/09/clean-architecture-and-building-evolutionary-architectures/">
+
+
+
+
+
+<meta property="article:section" content="javascript">
+
+
+
+
+
+<meta property="article:tag" content="自然言語">
+
+<meta property="article:tag" content="JavaScript">
+
+<meta property="article:tag" content="library">
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-2184335-8', 'auto');
+    ga('send', 'pageview');
+</script>
+    <script>
+var blog_categories = [
+{
+    "title" : "greasemonkey",
+    "count" : 61
+},{
+    "title" : "ニコニコ動画",
+    "count" : 16
+},{
+    "title" : "小説電子化",
+    "count" : 3
+},{
+    "title" : "vista",
+    "count" : 12
+},{
+    "title" : "firefox",
+    "count" : 55
+},{
+    "title" : "その他",
+    "count" : 13
+},{
+    "title" : "webサービス",
+    "count" : 22
+},{
+    "title" : "software",
+    "count" : 59
+},{
+    "title" : "雑記",
+    "count" : 36
+},{
+    "title" : "まとめ",
+    "count" : 11
+},{
+    "title" : "zaurus",
+    "count" : 3
+},{
+    "title" : "ハードウェア",
+    "count" : 8
+},{
+    "title" : "アドオン",
+    "count" : 31
+},{
+    "title" : "wordpress",
+    "count" : 6
+},{
+    "title" : "javascript",
+    "count" : 188
+},{
+    "title" : "インストール設定",
+    "count" : 12
+},{
+    "title" : "iphone",
+    "count" : 10
+},{
+    "title" : "loox u",
+    "count" : 1
+},{
+    "title" : "tombloo",
+    "count" : 3
+},{
+    "title" : "イベント",
+    "count" : 91
+},{
+    "title" : "userchome.js",
+    "count" : 8
+},{
+    "title" : "jetpack",
+    "count" : 7
+},{
+    "title" : "onenote",
+    "count" : 2
+},{
+    "title" : "nilscript",
+    "count" : 4
+},{
+    "title" : "keysnail",
+    "count" : 3
+},{
+    "title" : "ios",
+    "count" : 15
+},{
+    "title" : "shell",
+    "count" : 3
+},{
+    "title" : "r言語",
+    "count" : 2
+},{
+    "title" : "node.js",
+    "count" : 3
+},{
+    "title" : "mac",
+    "count" : 2
+},{
+    "title" : "github",
+    "count" : 11
+},{
+    "title" : "jekyll",
+    "count" : 1
+},{
+    "title" : "golang",
+    "count" : 1
+},{
+    "title" : "web",
+    "count" : 1
+},{
+    "title" : "スライド",
+    "count" : 1
+},{
+    "title" : "ie",
+    "count" : 1
+},{
+    "title" : "書籍",
+    "count" : 2
+},{
+    "title" : "textlint",
+    "count" : 8
+}
+];
+    blog_categories = blog_categories.filter(function(categoryObject){
+        return !/^\d+$/.test(categoryObject.title);
+    });
+</script>
+</head>
+
+
+<body class="layout-reverse theme-base-0d">
+<a href="https://github.com/efcl/efcl.github.io" class="github-ribbon">
+    <img style="position: fixed; z-index:100; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+<header>
+    <div class="site-header">
+    <img src="/public/img/reimu-right.png" class="header-logo">
+
+    <h1 class="site-title">
+        <a href="/">
+            Web Scratch
+        </a>
+    </h1>
+    <p class="lead">ブラウザ/JavaScript等についてのブログ</p>
+
+</div>
+</header>
+<aside>
+    <div class="sidebar">
+    <div class="container">
+        <div class="profile">
+            <a href="/about/" title="About"><img src="/public/img/azu.png" alt="Profile"></a>
+
+            <h2><a href="/about/" title="About">azu</a></h2>
+        </div>
+        <div class="social">
+            <a class="twitter" href="http://twitter.com/azu_re" title="Twitter">
+                <img src="/public/svg/twitter.svg" alt="twitter" width="32" height="32"/>
+            </a>
+            <a class="github" href="https://github.com/azu" title="GitHub">
+                <img src="/public/svg/github.svg" alt="GitHub" width="32" height="32"/>
+            </a>
+            <a class="rss" href="/feed/" title="RSS Feed">
+                <img src="/public/svg/feed.svg" alt="RSS" width="32" height="32"/>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="search">
+                <form class="search-box" method="get" action="https://www.google.co.jp/search">
+                    <label for="search-box-label">検索:</label>
+                    <input type="hidden" name="q" value="site:efcl.info">
+                    <input id="search-box-label" type="search" name="q">
+                    <input type="submit" value="search">
+                </form>
+            </div>
+            <div class="recent">
+    <h3 class="recent-posts-list-title">
+        <a href="/">最近の投稿</a>
+    </h3>
+    <ul class="recent-posts">
+        
+        <li>
+            <a href="/2017/10/31/nlp-pattern-match/">
+                自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/10/20/alfred-hatenabookmark/">
+                Alfred上で自分のはてなブックマークを検索できるWorkflow
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/10/19/text-map-kuromoji/">
+                kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/10/09/clean-architecture-and-building-evolutionary-architectures/">
+                Clean ArchitectureとBuilding Evolutionary Architecturesを読んだ
+            </a>
+        </li>
+        
+    </ul>
+</div>
+            <div class="recent">
+    <h3 class="categories-list-title"><a href="/categories">カテゴリ一覧</a></h3>
+
+    <div class="categories-list" id="js-categories-list">
+
+    </div>
+    <script>
+        (function () {
+            var categoriesList = window.blog_categories;
+            var appendPoint = document.getElementById("js-categories-list");
+            // big ... small
+            var sortedCategories = categoriesList.sort(function (a, b) {
+                return a.count < b.count ? 1 : -1;
+            });
+            var ulTag = document.createElement("ul");
+            var displayCount = sortedCategories.length < 3 ? sortedCategories.length : 3;
+            for (var i = 0; i < displayCount; i++) {
+                var category = sortedCategories[i];
+                var liTag = document.createElement("li");
+                var aTag = document.createElement("a");
+                aTag.href = "/categories#" + category.title;
+                aTag.textContent = category.title;
+                var spanTag = document.createElement("span");
+                spanTag.appendChild(document.createTextNode("[" + category.count + "]"));
+                liTag.appendChild(aTag);
+                liTag.appendChild(spanTag);
+                ulTag.appendChild(liTag);
+            }
+            var lastLiTag = document.createElement("li");
+            var lastATag = document.createElement("a");
+            lastATag.href = "/categories";
+            lastATag.textContent = "その他のタグ…";
+            lastLiTag.appendChild(lastATag);
+            ulTag.appendChild(lastATag);
+            appendPoint.appendChild(ulTag);
+        })();
+    </script>
+</div>
+        </nav>
+    </div>
+</div>
+
+</aside>
+<article>
+    <div class="content container">
+        <div class="post" id="js-post-url" data-post-url="/2017/10/31/nlp-pattern-match/">
+    <h1 class="post-title">自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた</h1>
+
+    <div class="pre-post-toolbar">
+        <span class="post-date">2017年10月31日</span>
+        <a class="btn edit-on-github" href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-10-31-nlp-pattern-match.md"><span class="edito-on-github-label"></span>Edit on GitHub</a>
+
+    </div>
+    <div class="post-content">
+        <p><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>のルールを色々書いていて自然言語のマッチの問題がいくつかありました。</p>
+
+<p><a href="https://github.com/textlint-ja/textlint-rule-preset-JTF-style" title="textlint-ja/textlint-rule-preset-JTF-style: JTF日本語標準スタイルガイド for textlint.">textlint-ja/textlint-rule-preset-JTF-style: JTF日本語標準スタイルガイド for textlint.</a>は基本的に正規表現をベースに実装していました。
+正規表現で自然言語に対してマッチするのは簡単でいいのですが、意図しない範囲にマッチすることもあるためfalse-positiveになりやすい問題がありました。</p>
+
+<p>一方、ですます or である調の混在をチェックする<a href="https://github.com/textlint-ja/textlint-rule-no-mix-dearu-desumasu" title="textlint-rule-no-mix-dearu-desumasu">textlint-rule-no-mix-dearu-desumasu</a>では、<a href="https://github.com/takuyaa/kuromoji.js#api" title="kuromoji.js">kuromoji.js</a>などで形態素解析した結果を使っています。
+形態素解析をすることで(正しい日本語なら)より正確にマッチできます。</p>
+
+<p>しかし、形態素解析のトークンに対してマッチする処理やその情報を元に置換するのは結構面倒です。
+kuromojiが出力するトークンにマッチするライブラリなどを書いて使っていますが、それでもそこそこ面倒です。</p>
+
+<ul>
+<li><a href="https://github.com/azu/morpheme-match">azu/morpheme-match: match function that match token(形態素解析) with sentence.</a></li>
+<li><a href="https://github.com/azu/morpheme-match-all">azu/morpheme-match-all: A wrapper of morpheme-match API. Match all kuromoji&#39;s tokens.</a></li>
+</ul>
+
+<p>また、<a href="https://github.com/textlint-ja/textlint-rule-ja-no-abusage" title="textlint-ja/textlint-rule-ja-no-abusage: よくある日本語の誤用をチェックするtextlintルール">textlint-ja/textlint-rule-ja-no-abusage: よくある日本語の誤用をチェックするtextlintルール</a>などはマッチする範囲もトークンで指定するため、コードとしてもあまり読みやすくありません(単語が分解された大きなJSONを持つ形)</p>
+
+<p>この簡単にマッチできるが誤判定し易い正規表現と正確にマッチできるが面倒臭いトークンベースの中間なライブラリをつくりました。</p>
+
+<h2 id="nlp-pattern-match"><a href="https://github.com/azu/nlp-pattern-match" title="azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.">nlp-pattern-match</a></h2>
+
+<p><a href="https://github.com/azu/nlp-pattern-match" title="azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.">azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.</a>というリポジトリはmonorepoなのでいろんなライブラリが入っていますが、大きく分けて二種類のライブラリがあります。</p>
+
+<h3 id="パーサ">パーサ</h3>
+
+<p>一つは正確にマッチするのに必要な自然言語を分解するパーサ(形態素解析レベル)です。</p>
+
+<ul>
+<li><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-parse-english" title="nlcst-parse-english">nlcst-parse-english</a>
+
+<ul>
+<li>英語のテキストを単語に分解してPart-of-speech(POS)情報を付加したNLCST</li>
+</ul></li>
+<li><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-parse-japanese" title="nlcst-parse-japanese">nlcst-parse-japanese</a>
+
+<ul>
+<li>日本語のテキストを形態素解析したNLCST</li>
+</ul></li>
+</ul>
+
+<p><a href="https://github.com/syntax-tree/nlcst">NLCST</a>はNatural Language Concrete Syntax Treeのことで、自然言語のCST(スペースなどの位置情報も扱うASTみたいなもの)フォーマットです。
+NLCSTは<a href="https://github.com/wooorm/retext">retext</a>などが使っている形式で、ParagraphやSentence、WordなどのNodeから構成されます。</p>
+
+<p>たとえば、<code>&quot;ようこそ、日本へ。&quot;</code>のようなテキストをNLCSTにすると次のような巨大なNodeになります。(長いの省略)</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span><span class="nx">JapaneseParser</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-parse-japanese&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">japaneseParse</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">JapaneseParser</span><span class="p">();</span>
+<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;ようこそ、日本へ。&quot;</span><span class="p">;</span>
+<span class="nx">japaneseParse</span><span class="p">.</span><span class="nx">ready</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">CST</span> <span class="o">=</span> <span class="nx">japaneseParse</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">CST</span><span class="p">)</span>
+<span class="p">});</span>
+<span class="cm">/*</span>
+<span class="cm">{</span>
+<span class="cm">  &quot;type&quot;: &quot;RootNode&quot;,</span>
+<span class="cm">  &quot;children&quot;: [</span>
+<span class="cm">    {</span>
+<span class="cm">      &quot;type&quot;: &quot;ParagraphNode&quot;,</span>
+<span class="cm">      &quot;children&quot;: [</span>
+<span class="cm">        {</span>
+<span class="cm">          &quot;type&quot;: &quot;SentenceNode&quot;,</span>
+<span class="cm">          &quot;children&quot;: [</span>
+<span class="cm">            {</span>
+<span class="cm">              &quot;type&quot;: &quot;WordNode&quot;,</span>
+<span class="cm">              &quot;children&quot;: [</span>
+<span class="cm">                {</span>
+<span class="cm">                  &quot;type&quot;: &quot;TextNode&quot;,</span>
+<span class="cm">                  &quot;value&quot;: &quot;ようこそ&quot;,</span>
+<span class="cm">                  &quot;position&quot;: {</span>
+<span class="cm">                    &quot;start&quot;: {</span>
+<span class="cm">                      &quot;line&quot;: 1,</span>
+<span class="cm">                      &quot;column&quot;: 1,</span>
+<span class="cm">                      &quot;offset&quot;: 0</span>
+<span class="cm">                    },</span>
+<span class="cm">                    &quot;end&quot;: {</span>
+<span class="cm">                      &quot;line&quot;: 1,</span>
+<span class="cm">                      &quot;column&quot;: 5,</span>
+<span class="cm">                      &quot;offset&quot;: 4</span>
+<span class="cm">                    }</span>
+<span class="cm">                  },</span>
+<span class="cm">                  &quot;data&quot;: {</span>
+<span class="cm">                    &quot;word_id&quot;: 34120,</span>
+<span class="cm">                    &quot;word_type&quot;: &quot;KNOWN&quot;,</span>
+<span class="cm">                    &quot;word_position&quot;: 1,</span>
+<span class="cm">                    &quot;surface_form&quot;: &quot;ようこそ&quot;,</span>
+<span class="cm">                    &quot;pos&quot;: &quot;感動詞&quot;,</span>
+<span class="cm">                    &quot;pos_detail_1&quot;: &quot;*&quot;,</span>
+<span class="cm">                    &quot;pos_detail_2&quot;: &quot;*&quot;,</span>
+<span class="cm">                    &quot;pos_detail_3&quot;: &quot;*&quot;,</span>
+<span class="cm">                    &quot;conjugated_type&quot;: &quot;*&quot;,</span>
+<span class="cm">                    &quot;conjugated_form&quot;: &quot;*&quot;,</span>
+<span class="cm">                    &quot;basic_form&quot;: &quot;ようこそ&quot;,</span>
+<span class="cm">                    &quot;reading&quot;: &quot;ヨウコソ&quot;,</span>
+<span class="cm">                    &quot;pronunciation&quot;: &quot;ヨーコソ&quot;</span>
+<span class="cm">                  }</span>
+<span class="cm">                }</span>
+<span class="cm">              ],</span>
+<span class="cm">     ...</span>
+<span class="cm">}</span>
+<span class="cm">*/</span>
+</code></pre></div>
+<p>これらのパーサは、あるセンテンスの長さが100文字以下といった単語だけではわからない情報などを扱うのに利用できます。また単語の品詞などの情報もあります。</p>
+
+<h3 id="matcher">Matcher</h3>
+
+<p><a href="https://github.com/azu/nlp-pattern-match" title="azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.">nlp-pattern-match</a>に含んでいるもう一方はマッチングライブラリです。</p>
+
+<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-pattern-match" title="nlcst-pattern-match">nlcst-pattern-match</a>というmatcherは先ほどのパース結果のNodeを使った厳密なマッチをするライブラリです。</p>
+
+<p>タグ関数を使って、厳密にマッチしたい部分だけをNodeとして表現できます。 
+次の例では英語の<code>Bob &lt;動詞&gt; it.</code>にマッチする結果を取得できます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">PatternMatcher</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-pattern-match&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">EnglishParser</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-parse-english&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">englishParser</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EnglishParser</span><span class="p">();</span>
+<span class="kr">const</span> <span class="nx">patternMatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PatternMatcher</span><span class="p">({</span>
+    <span class="nx">parser</span><span class="o">:</span> <span class="nx">englishParser</span>
+<span class="p">});</span>
+<span class="kr">const</span> <span class="nx">pattern</span> <span class="o">=</span> <span class="nx">patternMatcher</span><span class="p">.</span><span class="nx">tag</span><span class="err">`</span><span class="nx">Bob</span> <span class="nx">$</span><span class="p">{</span> <span class="p">{</span>
+    <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span>
+    <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">pos</span><span class="o">:</span> <span class="sr">/^VB/</span> <span class="c1">// verb</span>
+    <span class="p">}</span>
+<span class="p">}</span> <span class="p">}</span> <span class="nx">it</span><span class="p">.</span><span class="err">`</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;Bob does it.&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">patternMatcher</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">pattern</span><span class="p">);</span>
+<span class="kr">const</span> <span class="p">[</span><span class="nx">result</span><span class="p">]</span> <span class="o">=</span> <span class="nx">results</span><span class="p">;</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">position</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">index</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">end</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">column</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="nx">line</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">offset</span><span class="o">:</span> <span class="mi">12</span>
+    <span class="p">},</span>
+    <span class="nx">start</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">column</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">line</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">offset</span><span class="o">:</span> <span class="mi">0</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-pattern-match" title="nlcst-pattern-match">nlcst-pattern-match</a>はより厳密なマッチをDSL的に書けるようにする趣旨のライブラリでしたが、もっと必要に応じて簡単に書けるライブラリとして<a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>があります。</p>
+
+<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>は名前の通り、とりまえず<code>match</code>して、実際にそれが対象なのかを<code>test</code>し、最後に<code>replace</code>するという三段階のライブラリです。
+正規表現で処理を書く場合に何でも一発の正規表現でやると難しくなるので、段階に分けてしまえばもっと簡単に書けるのではというコンセプトのライブラリです。</p>
+
+<p>最小のコードは、ほぼ<code>String#replace</code>と同じです。</p>
+
+<blockquote>
+<p>Match -&gt; Replace</p>
+</blockquote>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">replaceAll</span><span class="p">,</span> <span class="nx">matchTestReplace</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;match-test-replace&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;Hello&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">matchTestReplace</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">pattern</span><span class="o">:</span> <span class="sr">/hello/i</span><span class="p">,</span>
+    <span class="nx">replace</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">&quot;Hello&quot;</span>
+<span class="p">});</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">ok</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">ok</span><span class="p">,</span> <span class="s2">&quot;should be ok: true&quot;</span><span class="p">);</span>
+<span class="c1">// 返り値はコマンドオブジェクト</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;1 replace&quot;</span><span class="p">);</span>
+<span class="cm">/**</span>
+<span class="cm">[ { index: 0, match: &#39;Hello&#39;, replace: &#39;Hello&#39;, message: undefined } ]</span>
+<span class="cm">*/</span>
+</code></pre></div>
+<p>少し複雑にして<code>/webkit/i</code>という文字列を<code>WebKit</code>に統一したいという例です。
+単純に<code>/webkit/i</code>でマッチすると<code>node-webkit</code>も含まれてしまうため、<code>node-</code>から始まる<code>webkit</code>は除外するというルールを<code>test</code>に追加しています。</p>
+
+<blockquote>
+<p>Match -&gt; Test -&gt; Replace</p>
+</blockquote>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">replaceAll</span><span class="p">,</span> <span class="nx">matchTestReplace</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;match-test-replace&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;webkit is matched,but node-webkit is not match&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">matchTestReplace</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">pattern</span><span class="o">:</span> <span class="sr">/(\S*?)webkit/g</span><span class="p">,</span>
+    <span class="nx">test</span><span class="o">:</span> <span class="p">({</span> <span class="nx">captures</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">captures</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!==</span> <span class="s2">&quot;node-&quot;</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="nx">replace</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">&quot;WebKit&quot;</span>
+<span class="p">});</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">ok</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">ok</span> <span class="o">===</span> <span class="kc">true</span><span class="p">,</span> <span class="s2">&quot;should be ok: false&quot;</span><span class="p">);</span>
+<span class="c1">// 返り値はコマンドオブジェクト</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;no replace&quot;</span><span class="p">);</span>
+<span class="c1">// 実際に置換を適応する</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">replaceAll</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">res</span><span class="p">.</span><span class="nx">results</span><span class="p">).</span><span class="nx">output</span><span class="p">,</span> <span class="s2">&quot;WebKit is matched,but node-webkit is not match&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p>先ほどの<a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-pattern-match" title="nlcst-pattern-match">nlcst-pattern-match</a>を組み合わせると、適当にマッチした文字列の品詞をチェックしてから、それが意図した品詞なら置換するという処理が書けます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">assert</span> <span class="nx">from</span> <span class="s2">&quot;assert&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">replaceAll</span><span class="p">,</span> <span class="nx">matchTestReplace</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;match-test-replace&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">PatternMatcher</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-pattern-match&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">EnglishParser</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-parse-english&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">englishParser</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EnglishParser</span><span class="p">();</span>
+<span class="kr">const</span> <span class="nx">matcher</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PatternMatcher</span><span class="p">({</span> <span class="nx">parser</span><span class="o">:</span> <span class="nx">englishParser</span> <span class="p">});</span>
+<span class="c1">// https://developers.google.com/style/clause-order</span>
+<span class="c1">// NG: Click Delete if you want to delete the entire document.</span>
+<span class="c1">// OK: To delete the entire document, click Delete.</span>
+<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s1">&#39;Click Delete if you want to delete the entire document.&#39;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">matchTestReplace</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">pattern</span><span class="o">:</span> <span class="sr">/Click (\w+) if you want to (.+)./</span><span class="p">,</span>
+    <span class="nx">replace</span><span class="o">:</span> <span class="p">({</span> <span class="nx">captures</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">captures</span><span class="p">);</span>
+        <span class="k">return</span> <span class="err">`</span><span class="nx">To</span> <span class="nx">$</span><span class="p">{</span><span class="nx">captures</span><span class="p">[</span><span class="mi">1</span><span class="p">]},</span> <span class="nx">click</span> <span class="nx">$</span><span class="p">{</span><span class="nx">captures</span><span class="p">[</span><span class="mi">0</span><span class="p">]}.</span><span class="err">`</span>
+    <span class="p">},</span>
+    <span class="nx">test</span><span class="o">:</span> <span class="p">({</span> <span class="nx">all</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kr">const</span> <span class="nx">pattern</span> <span class="o">=</span> <span class="nx">matcher</span><span class="p">.</span><span class="nx">tag</span><span class="err">`</span><span class="nx">Click</span> <span class="nx">$</span><span class="p">{</span> <span class="p">{</span>
+            <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;WordNode&quot;</span><span class="p">,</span>
+            <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
+                <span class="c1">// Verb</span>
+                <span class="nx">pos</span><span class="o">:</span> <span class="sr">/^VB/</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="p">}</span><span class="err">`</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">matcher</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">all</span><span class="p">,</span> <span class="nx">pattern</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">ok</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">ok</span> <span class="o">===</span> <span class="kc">true</span><span class="p">,</span> <span class="s2">&quot;should be ok: true&quot;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="nx">replaceAll</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">res</span><span class="p">.</span><span class="nx">results</span><span class="p">).</span><span class="nx">output</span><span class="p">;</span>
+<span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">output</span><span class="p">,</span> <span class="s2">&quot;To delete the entire document, click Delete.&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>は大雑把に正規表現でマッチして、testで本当に意図したものかをチェックしてから置換するという工程を書くためのものです。</p>
+
+<p>このアプローチだと結構正規表現の気軽さを持ちつつ必要な部分で詳細な指定ができるため便利です。
+一方、今わかってる問題として大雑把に一度マッチするため、後からマッチする範囲を狭めることができない(無駄な範囲をReplaceしてしまう)という問題があります。</p>
+
+<p>いい案がある方はIssueとかPRを待ってます。</p>
+
+<h2 id="ユースケース">ユースケース</h2>
+
+<p>今このライブラリなどを使ってGoogleの<a href="https://developers.google.com/style/" title="About this guide  |  Google Developer Documentation Style Guide  |  Google Developers">Google Developer Documentation Style Guide</a>という開発者向けのドキュメントスタイルガイドを<a href="https://github.com/textlint/textlint" title="textlint">textlint</a>のルールとして実装しています。</p>
+
+<ul>
+<li><a href="https://github.com/textlint-rule/textlint-rule-preset-google%22textlint-rule/textlint-rule-preset-google:%20%5BWIP%5D%20Google%20Developer%20Documentation%20Style%20Guide%20for%20textlint.%22">textlint-rule/textlint-rule-preset-google: [WIP] Google Developer Documentation Style Guide for textlint.</a></li>
+</ul>
+
+<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>や<a href="https://github.com/finnlp/en-pos" title="en-pos">en-pos</a>を中心に使って実装しています。
+感触としては30分~1時間ぐらいで1つのルール(1つのページ)を実装できているので、まあまあ効率的に実装できているかなーと思います。</p>
+
+<p>自分が英文法がよく分かってなかったり、係り受け解析ができない問題、そもそも主観的なルールなどもあるのですべてが実装できるわけではないですが、大雑把にマッチして意図して結果へ置換する処理を書けている感じがします。</p>
+
+<p>興味がある人は<a href="https://github.com/textlint-rule/textlint-rule-preset-google#rules" title="textlint-rule/textlint-rule-preset-google: [WIP] Google Developer Documentation Style Guide for textlint.">textlint-rule/textlint-rule-preset-google</a>にPull Request待っています。</p>
+
+<h2 id="おわりに">おわりに</h2>
+
+<p>textlintのルールなどを書くときに使える<a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-pattern-match" title="nlcst-pattern-match">nlcst-pattern-match</a>というライブラリ群について紹介しました。</p>
+
+<p>文字列処理は色々文脈に依存したり、そもそも自然言語は壊れた文字列がエラーにならないなどの問題があるため難しいです。完璧な方法はないため目的にあった方法を使う必要があります。
+たとえば、今回作った<a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>は平面的に文字列マッチするだけなので、文字列を構造として捉えるならば色々不足している感じがします。</p>
+
+<p>これ以外にもセンテンス分解やピリオドの位置チェック、ですます・である調の分析などいろんなライブラリを書いています。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/wiki/Collection-of-textlint-rule#global" title="Collection of textlint rule · textlint/textlint Wiki">Collection of textlint rule · textlint/textlint Wiki</a></li>
+</ul>
+
+<p>textlintをコマンド一発で作り始めることができる<code>create-textlint-rule</code>というコマンドもあるので、色々作って見ると面白いかもしれません。</p>
+
+<ul>
+<li><a href="http://efcl.info/2016/12/14/create-textlint-rule/" title="textlintのルールを簡単に作り始めることができるツールを作りました | Web Scratch">textlintのルールを簡単に作り始めることができるツールを作りました | Web Scratch</a></li>
+</ul>
+
+    </div>
+    <div class="post-post-toolbar">
+        <a class="btn edit-on-github"
+           href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-10-31-nlp-pattern-match.md"><span
+                class="edit-on-github-label"></span>修正リクエストをする</a>
+        <nav class="tags"
+             id="js-post-tags"
+             data-post-tags='["自然言語","JavaScript","library"]'>
+            <span>タグ:</span>
+            <ul>
+                
+                <li><a href="/tags/?q=自然言語">自然言語</a></li>
+                
+                <li><a href="/tags/?q=JavaScript">JavaScript</a></li>
+                
+                <li><a href="/tags/?q=library">library</a></li>
+                
+            </ul>
+        </nav>
+    </div>
+    <div class="announce-area">
+        <h3>お知らせ欄</h3>
+        <div class="announce-text">
+            <!--お知らせ-->
+JavaScriptに関する最新情報は週一で<a href="http://jser.info/" title="JSer.info">JSer.info</a>を更新しています。
+
+        </div>
+        <h3>次に書くかもしれない記事候補</h3>
+        <p>興味がありましたら<a href="https://github.com/efcl/efcl.github.io/labels/%E8%A8%98%E4%BA%8B%E5%80%99%E8%A3%9C" title="Issues · efcl/efcl.github.io">Issues · efcl/efcl.github.io</a>からご意見下さい</p>
+        <div class="announce-text">
+            <iframe src="https://azu.github.io/github-issue-widget/?owner=efcl&repo=efcl.github.io&labels=記事候補&limit=4&random"
+                    allowtransparency="true" frameborder="0" scrolling="0" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+    <div class="related-articles" id="js-related-articles">
+        <h3>関連記事</h3>
+    </div>
+</div>
+<div class="zenback-embed">
+    <!-- X:S ZenBackWidget --><div id="zenback-widget-loader"></div><script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var r=Math.ceil((new Date()*1)*Math.random());var j=d.createElement("script");j.id=i;j.async=true;j.src="//w.zenback.jp/v1/?base_uri=http%3A//efcl.info/&nsid=89229392978401102%3A%3A89229398078677080&rand="+r;d.body.appendChild(j);}}(document,"zenback-widget-js");</script><!-- X:E ZenBackWidget -->
+</div>
+<div class="disqus-embed" id="js-disqus-embed">
+    <button class="comment-button" id="js-comment-button">コメントを表示</button>
+</div>
+
+<script type="text/javascript" src="/public/js/tag-fetcher.js"></script>
+<script type="text/javascript" src="/public/js/show-related-article.js"></script>
+<script type="text/javascript" src="/public/js/show-disqus.js"></script>
+
+    </div>
+</article>
+</body>
+</html>
