@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-06T22:52:46+09:00</updated>
+ <updated>2017-11-06T23:41:27+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -150,7 +150,8 @@ textlint 9.0.0では<a href="https://github.com/textlint/textlint/tree/master/pa
 </ul></li>
 </ul>
 
-<p><a href="https://github.com/textlint/textlint/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+for+beginner%22" title="Issues · textlint/textlint"><code>label:&quot;good for beginner&quot;</code></a>というラベルが付いてるやつは比較的やることがはっきりしてるので手が出しやすいので、ここから見るといいかもしれません。</p>
+<p><a href="https://github.com/textlint/textlint/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+for+beginner%22" title="Issues · textlint/textlint"><code>label:&quot;good for beginner&quot;</code></a>というラベルが付いてるものは、比較的やることがはっきりしています。
+そのため最初のコントビューションとして手が出しやすいかもしれません。</p>
 
 <p>また、textlintはあまりパフォーマンスの最適化がまだ行われていません。<a href="https://github.com/textlint/textlint/blob/master/packages/markdown-to-ast/src/markdown-parser.js" title="markdown-parser">markdown-parser</a>など明らかに無駄な処理をしている部分があります。
 一方、500以上のユニットテストや典型的なユースケースの<a href="http://efcl.info/2015/07/29/example-test-on-npm/" title="Exampleテスト">Exampleテスト</a>、実際の文章を使った<a href="https://github.com/textlint/textlint/tree/master/test/integration-test" title="Integration test">Integration test</a>などが書かれています。
@@ -222,6 +223,12 @@ textlint 9.0.0では<a href="https://github.com/textlint/textlint/tree/master/pa
 <li><a href="https://github.com/textlint/create-textlint-rule">textlint/create-textlint-rule: Create textlint rule project with no configuration.</a></li>
 <li><a href="https://github.com/textlint-ja/technological-book-corpus-ja" title="textlint-ja/technological-book-corpus-ja: 日本語で書かれた技術書のコーパス">textlint-ja/technological-book-corpus-ja: 日本語で書かれた技術書のコーパス</a></li>
 </ul>
+
+<h2 id="ウェブサイト">ウェブサイト</h2>
+
+<p>textlintのウェブサイト兼オンラインデモとして<a href="https://textlint.github.io/" title="textlint - pluggable linting tool for text and markdown">textlint - pluggable linting tool for text and markdown</a>があります。</p>
+
+<p>こちらも<a href="https://github.com/textlint/textlint.github.io/labels/good%20first%20issue" title="Issues · textlint/textlint.github.io"><code>label:&quot;good for beginner&quot;</code></a>のラベルがついたIssueがあります。</p>
 
 <h2 id="その他">その他</h2>
 
