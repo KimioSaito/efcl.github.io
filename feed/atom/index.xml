@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-06T22:37:54+09:00</updated>
+ <updated>2017-11-06T22:44:38+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -34,7 +34,7 @@ textlint 9.0.0では<a href="https://github.com/textlint/textlint/tree/master/pa
 
 <p>アドホックに対応するならブラウザ向けのbundleを<a href="https://qiita.com/shinout/items/911e024368e2cb29fd3d" title="browser field">browser field</a>などで提供すれば終わりですが、長期的なことを考えるとモジュールを分けたほうが建設的です。</p>
 
-<p><a href="https://github.com/textlint" title="textlint">textlint organization</a>を見ると分かるように<a href="https://github.com/textlint" title="textlint">textlint</a>はMarkdownパーサやトラバーサ、フォーマッターなどがモジュールとして各リポジトリに分けられていました。部品となるモジュールとリポジトリを1対1で分けると、Aをアップデートすると、Aに依存BやCを更新するといったアップデートの連鎖反応が起きる問題があります。
+<p><a href="https://github.com/textlint" title="textlint">textlint organization</a>を見ると分かるように<a href="https://github.com/textlint" title="textlint">textlint</a>はMarkdownパーサやトラバーサ、フォーマッターなどがモジュールとして各リポジトリに分けられていました。部品となるモジュールとリポジトリを1対1で分けると、Aをアップデートすると、Aに依存するBやCを更新するといったアップデートの連鎖反応が起きる問題があります。
 また、新しいモジュールを切り出す心理的なコストがありました。</p>
 
 <p>そのため、まずは<code>textlint</code>を構成するモジュールを1つのリポジトリにまとめたmonorepo化をすることにしました。</p>
