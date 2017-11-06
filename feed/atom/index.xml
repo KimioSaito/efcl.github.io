@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-06T22:44:38+09:00</updated>
+ <updated>2017-11-06T22:52:46+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -198,6 +198,13 @@ textlint 9.0.0では<a href="https://github.com/textlint/textlint/tree/master/pa
 <li>その他のルール: <a href="https://github.com/textlint-rule/" title="textlint-rule">textlint-rule</a></li>
 </ul>
 
+<p><a href="https://github.com/textlint/textlint/releases/tag/textlint%409.1.1" title="textlint@9.1.1">textlint@9.1.1</a>でscoped moduleのサポートを拡張したのもこういったOrganizationでのルール管理のしやすさを改善するためでもあります。</p>
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
+  <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;@textlint-rule/preset-google&quot;</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="ツールを良くする">ツールを良くする</h2>
 
 <p>textlintのElectronアプリがありますがそこまで作り込まれてません。</p>
