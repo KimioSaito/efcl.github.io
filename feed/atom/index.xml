@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-06T23:41:27+09:00</updated>
+ <updated>2017-11-07T00:25:33+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -206,6 +206,10 @@ textlint 9.0.0では<a href="https://github.com/textlint/textlint/tree/master/pa
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<h2 id="ルールを紹介する">ルールを紹介する</h2>
+
+<p>自分が使っているルールや設定をブログなどで紹介するのも貢献です。</p>
+
 <h2 id="ツールを良くする">ツールを良くする</h2>
 
 <p>textlintのElectronアプリがありますがそこまで作り込まれてません。</p>
