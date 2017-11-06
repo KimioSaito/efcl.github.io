@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+    <title>
+        
+        textlintのコアをTypeScriptで書き直した、textlintの今後について | Web Scratch
+        
+    </title>
+    <meta name="description" content="textlint 9.0.0をリリースしました。textlint 9.0.0では@textlint/kernelという内部的に使うコアモジュールをTypeScriptで書き直したバージョンが使われています。">
+    
+    <meta name="keywords" content="textlint,JavaScript,TypeScript" />
+    
+    <meta name="author" content="azu">
+    <!-- Icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="/public/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="/public/favicon.ico">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/public/css/main.css">
+    <!-- JavaScript -->
+    <!-- Open graph tags -->
+<meta property="og:title" content="textlintのコアをTypeScriptで書き直した、textlintの今後について">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://efcl.info/2017/11/06/textlint-core-refactoring/">
+<meta property="og:image" content="http://efcl.info">
+
+<meta property="og:description" content="textlint 9.0.0をリリースしました。textlint 9.0.0では@textlint/kernelという内部的に使うコアモジュールをTypeScriptで書き直したバージョンが使われています。">
+<meta property="og:site_name" content="Web Scratch">
+
+
+
+
+<meta property="article:published_time" content="2017-11-06T10:43:00+09:00">
+<meta property="article:author" content="https://www.facebook.com/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/10/31/nlp-pattern-match/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/10/20/alfred-hatenabookmark/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/10/19/text-map-kuromoji/">
+
+
+
+
+
+<meta property="article:section" content="javascript">
+
+
+
+
+
+<meta property="article:tag" content="textlint">
+
+<meta property="article:tag" content="JavaScript">
+
+<meta property="article:tag" content="TypeScript">
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-2184335-8', 'auto');
+    ga('send', 'pageview');
+</script>
+    <script>
+var blog_categories = [
+{
+    "title" : "greasemonkey",
+    "count" : 61
+},{
+    "title" : "ニコニコ動画",
+    "count" : 16
+},{
+    "title" : "小説電子化",
+    "count" : 3
+},{
+    "title" : "vista",
+    "count" : 12
+},{
+    "title" : "firefox",
+    "count" : 55
+},{
+    "title" : "その他",
+    "count" : 13
+},{
+    "title" : "webサービス",
+    "count" : 22
+},{
+    "title" : "software",
+    "count" : 59
+},{
+    "title" : "雑記",
+    "count" : 36
+},{
+    "title" : "まとめ",
+    "count" : 11
+},{
+    "title" : "zaurus",
+    "count" : 3
+},{
+    "title" : "ハードウェア",
+    "count" : 8
+},{
+    "title" : "アドオン",
+    "count" : 31
+},{
+    "title" : "wordpress",
+    "count" : 6
+},{
+    "title" : "javascript",
+    "count" : 189
+},{
+    "title" : "インストール設定",
+    "count" : 12
+},{
+    "title" : "iphone",
+    "count" : 10
+},{
+    "title" : "loox u",
+    "count" : 1
+},{
+    "title" : "tombloo",
+    "count" : 3
+},{
+    "title" : "イベント",
+    "count" : 91
+},{
+    "title" : "userchome.js",
+    "count" : 8
+},{
+    "title" : "jetpack",
+    "count" : 7
+},{
+    "title" : "onenote",
+    "count" : 2
+},{
+    "title" : "nilscript",
+    "count" : 4
+},{
+    "title" : "keysnail",
+    "count" : 3
+},{
+    "title" : "ios",
+    "count" : 15
+},{
+    "title" : "shell",
+    "count" : 3
+},{
+    "title" : "r言語",
+    "count" : 2
+},{
+    "title" : "node.js",
+    "count" : 3
+},{
+    "title" : "mac",
+    "count" : 2
+},{
+    "title" : "github",
+    "count" : 11
+},{
+    "title" : "jekyll",
+    "count" : 1
+},{
+    "title" : "golang",
+    "count" : 1
+},{
+    "title" : "web",
+    "count" : 1
+},{
+    "title" : "スライド",
+    "count" : 1
+},{
+    "title" : "ie",
+    "count" : 1
+},{
+    "title" : "書籍",
+    "count" : 2
+},{
+    "title" : "textlint",
+    "count" : 8
+}
+];
+    blog_categories = blog_categories.filter(function(categoryObject){
+        return !/^\d+$/.test(categoryObject.title);
+    });
+</script>
+</head>
+
+
+<body class="layout-reverse theme-base-0d">
+<a href="https://github.com/efcl/efcl.github.io" class="github-ribbon">
+    <img style="position: fixed; z-index:100; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+<header>
+    <div class="site-header">
+    <img src="/public/img/reimu-right.png" class="header-logo">
+
+    <h1 class="site-title">
+        <a href="/">
+            Web Scratch
+        </a>
+    </h1>
+    <p class="lead">ブラウザ/JavaScript等についてのブログ</p>
+
+</div>
+</header>
+<aside>
+    <div class="sidebar">
+    <div class="container">
+        <div class="profile">
+            <a href="/about/" title="About"><img src="/public/img/azu.png" alt="Profile"></a>
+
+            <h2><a href="/about/" title="About">azu</a></h2>
+        </div>
+        <div class="social">
+            <a class="twitter" href="http://twitter.com/azu_re" title="Twitter">
+                <img src="/public/svg/twitter.svg" alt="twitter" width="32" height="32"/>
+            </a>
+            <a class="github" href="https://github.com/azu" title="GitHub">
+                <img src="/public/svg/github.svg" alt="GitHub" width="32" height="32"/>
+            </a>
+            <a class="rss" href="/feed/" title="RSS Feed">
+                <img src="/public/svg/feed.svg" alt="RSS" width="32" height="32"/>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="search">
+                <form class="search-box" method="get" action="https://www.google.co.jp/search">
+                    <label for="search-box-label">検索:</label>
+                    <input type="hidden" name="q" value="site:efcl.info">
+                    <input id="search-box-label" type="search" name="q">
+                    <input type="submit" value="search">
+                </form>
+            </div>
+            <div class="recent">
+    <h3 class="recent-posts-list-title">
+        <a href="/">最近の投稿</a>
+    </h3>
+    <ul class="recent-posts">
+        
+        <li>
+            <a href="/2017/11/06/textlint-core-refactoring/">
+                textlintのコアをTypeScriptで書き直した、textlintの今後について
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/10/31/nlp-pattern-match/">
+                自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/10/20/alfred-hatenabookmark/">
+                Alfred上で自分のはてなブックマークを検索できるWorkflow
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/10/19/text-map-kuromoji/">
+                kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする
+            </a>
+        </li>
+        
+    </ul>
+</div>
+            <div class="recent">
+    <h3 class="categories-list-title"><a href="/categories">カテゴリ一覧</a></h3>
+
+    <div class="categories-list" id="js-categories-list">
+
+    </div>
+    <script>
+        (function () {
+            var categoriesList = window.blog_categories;
+            var appendPoint = document.getElementById("js-categories-list");
+            // big ... small
+            var sortedCategories = categoriesList.sort(function (a, b) {
+                return a.count < b.count ? 1 : -1;
+            });
+            var ulTag = document.createElement("ul");
+            var displayCount = sortedCategories.length < 3 ? sortedCategories.length : 3;
+            for (var i = 0; i < displayCount; i++) {
+                var category = sortedCategories[i];
+                var liTag = document.createElement("li");
+                var aTag = document.createElement("a");
+                aTag.href = "/categories#" + category.title;
+                aTag.textContent = category.title;
+                var spanTag = document.createElement("span");
+                spanTag.appendChild(document.createTextNode("[" + category.count + "]"));
+                liTag.appendChild(aTag);
+                liTag.appendChild(spanTag);
+                ulTag.appendChild(liTag);
+            }
+            var lastLiTag = document.createElement("li");
+            var lastATag = document.createElement("a");
+            lastATag.href = "/categories";
+            lastATag.textContent = "その他のタグ…";
+            lastLiTag.appendChild(lastATag);
+            ulTag.appendChild(lastATag);
+            appendPoint.appendChild(ulTag);
+        })();
+    </script>
+</div>
+        </nav>
+    </div>
+</div>
+
+</aside>
+<article>
+    <div class="content container">
+        <div class="post" id="js-post-url" data-post-url="/2017/11/06/textlint-core-refactoring/">
+    <h1 class="post-title">textlintのコアをTypeScriptで書き直した、textlintの今後について</h1>
+
+    <div class="pre-post-toolbar">
+        <span class="post-date">2017年11月06日</span>
+        <a class="btn edit-on-github" href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-11-06-textlint-core-refactoring.md"><span class="edito-on-github-label"></span>Edit on GitHub</a>
+
+    </div>
+    <div class="post-content">
+        <p><a href="https://github.com/textlint/textlint/releases/tag/textlint%409.0.0" title="textlint 9.0.0">textlint 9.0.0</a>をリリースしました。
+textlint 9.0.0では<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel" title="@textlint/kernel">@textlint/kernel</a>という内部的に使うコアモジュールをTypeScriptで書き直したバージョンが使われています。</p>
+
+<p>元々textlintはNode.jsで動くように作られたため、<code>fs</code>モジュールなどNode.jsに依存しています。
+そのため、ブラウザなどで動かす場合などはビルド時に色々工夫しないと動きません。</p>
+
+<ul>
+<li><a href="http://io-monad.hatenablog.com/entry/2016/03/14/225800" title="文書校正ツール textlint の Chrome 拡張を作った - もなでぃっく">文書校正ツール textlint の Chrome 拡張を作った - もなでぃっく</a></li>
+<li><a href="https://muunyblue.github.io/823b2d10224a6a29f91fc7c0f46f1b8e.html" title="LocalStorageで誰でも安全にMarkdownでスライドやメモ作れるサービス作ったよ">LocalStorageで誰でも安全にMarkdownでスライドやメモ作れるサービス作ったよ</a></li>
+</ul>
+
+<p>この問題をどうにかするためには、<code>textlint</code>というモジュールからロジックやLint処理部分だけをNode.jsなどに依存しない純粋なJavaScriptとして切り出す必要があります。</p>
+
+<p>アドホックに対応するならブラウザ向けのbundleを<a href="https://qiita.com/shinout/items/911e024368e2cb29fd3d" title="browser field">browser field</a>などで提供すれば終わりですが、長期的なことを考えるとモジュールを分けたほうが建設的です。</p>
+
+<p><a href="https://github.com/textlint" title="textlint">textlint organization</a>を見ると分かるように<a href="https://github.com/textlint" title="textlint">textlint</a>はMarkdownパーサやトラバーサ、フォーマッターなどがモジュールとして各リポジトリに分けられていました。部品となるモジュールとリポジトリを1対1で分けると、Aをアップデートすると、Aに依存BやCを更新するといったアップデートの連鎖反応が起きる問題があります。
+また、新しいモジュールを切り出す心理的なコストがありました。</p>
+
+<p>そのため、まずは<code>textlint</code>を構成するモジュールを1つのリポジトリにまとめたmonorepo化をすることにしました。</p>
+
+<h2 id="monorepo">monorepo</h2>
+
+<p><a href="https://github.com/textlint" title="textlint">textlint</a>では<a href="https://github.com/lerna/lerna" title="lerna">lerna</a>を使ってmonorepo化しています。これにより、モジュール間の依存のアップデートが1つのPRにまとめられるなどアップデートの連鎖反応がある程度自動化できるメリットがあります。
+また、新しいモジュールを追加するのも単純にディレクトリを切るだけなので心理的なコストは軽減されます。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/issues/255">Setup monorepo · Issue #255 · textlint/textlint</a></li>
+<li><a href="https://github.com/textlint/textlint/issues/270">Import * to monorepo · Issue #270 · textlint/textlint</a></li>
+</ul>
+
+<p>一方、CIにかかる時間やpublishする際のコストは増加する傾向があります。
+また、まだmonorepoにおけるリリースノートの戦略がイマイチ決まっていないという問題もあります。
+これは<a href="https://github.com/almin/almin" title="almin">almin</a>とか<a href="https://github.com/textlint-rule/textlint-rule-preset-google" title="textlint-rule-preset-google">textlint-rule-preset-google</a>など、他にもmonorepoをやっているのでいい方法を見出したいです。</p>
+
+<ul>
+<li><a href="https://qiita.com/azu/items/4b9fc8d4df78f2216901" title="Lerna(monorepo)とCHANGELOG(リリースノート) - Qiita">Lerna(monorepo)とCHANGELOG(リリースノート) - Qiita</a></li>
+</ul>
+
+<h2 id="textlint-kernel"><a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a></h2>
+
+<p>monorepo化がひとまずできたので、<a href="https://github.com/textlint/textlint/releases/tag/textlint%408.1.0" title="textlint@8.1.0">textlint 8.1.0</a>で<code>textlint</code>モジュールから<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a>というコアモジュールを切り出しました。(Coreという名前じゃないのは既にCoreという名前を使ったものがあったため)
+<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a>は<code>fs</code>などNode.js特有のものに依存してないような作りになっているので普通にwebpackやbrowserifyなどでビルドすれば動作します。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/pull/292" title="Carve out textlint core logic into @textlint/kernel by azu · Pull Request #292 · textlint/textlint">Carve out textlint core logic into @textlint/kernel by azu · Pull Request #292 · textlint/textlint</a></li>
+</ul>
+
+<p>今回の<a href="https://github.com/textlint/textlint/releases/tag/textlint%409.0.0" title="textlint 9.0.0">textlint 9.0.0</a>ではさらにこの<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel" title="@textlint/kernel">@textlint/kernel</a>をTypeScriptに書き換えました。理由としては<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a>はロジックの塊であることと今後のリファクタリングのしやすさを考えたためです。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/pull/301" title="refactor(textlint-kernel): Convert JavaScript to TypeScript by azu · Pull Request #301 · textlint/textlint">refactor(textlint-kernel): Convert JavaScript to TypeScript by azu · Pull Request #301 · textlint/textlint</a></li>
+</ul>
+
+<blockquote>
+<p>TL;DR: both Flow and TypeScript are pretty good, and conservatively either of them can prevent about 15% of the bugs that end up in committed code.<br>
+<a href="https://blog.acolyer.org/2017/09/19/to-type-or-not-to-type-quantifying-detectable-bugs-in-javascript/">https://blog.acolyer.org/2017/09/19/to-type-or-not-to-type-quantifying-detectable-bugs-in-javascript/</a></p>
+</blockquote>
+
+<p>JavaScriptに型注釈を加えることで15%程度バグを減らすことができるという話もありますが、IDEなどでリファクタリングがしやすくなるメリットは大きいです。(名前に依存した壊れたリファクタリングが発生しにくい)</p>
+
+<p>JavaScriptからTypeScriptへの移行方法は次の記事で書いてるような手法を取っています。</p>
+
+<ul>
+<li><a href="http://efcl.info/2017/07/17/JavaScript-to-TypeScript/" title="JavaScriptのライブラリを徐々にTypeScriptに移行する | Web Scratch">JavaScriptのライブラリを徐々にTypeScriptに移行する | Web Scratch</a></li>
+</ul>
+
+<p>まだ単に型を付けただけであったり、テストはTypeScriptになってなかったりします。
+本体の<code>textlint</code>の方もTypeScript化したいので興味がある人は次のIssueを参照してください。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/issues/248" title="Use with TypeScript · Issue #248 · textlint/textlint">Use with TypeScript · Issue #248 · textlint/textlint</a></li>
+</ul>
+
+<p>また、まだルール側をTypeScriptで書きやすくなってはいないのでその辺もどうにかしたいですね。</p>
+
+<h2 id="今後">今後</h2>
+
+<p>textlintはルールを気軽に作れるようにする土台を作ることが目的です。</p>
+
+<ul>
+<li><a href="http://efcl.info/2014/12/30/textlint/" title="JavaScriptでルールを書けるテキスト/Markdownの校正ツール textlint を作った | Web Scratch">JavaScriptでルールを書けるテキスト/Markdownの校正ツール textlint を作った | Web Scratch</a></li>
+</ul>
+
+<p>今回色々リファクタリングして、<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a>の分離でLint以外への発展も少し見えてきています。Lintは入力に対して解答(正否)を出さないと行けないですが、<a href="https://github.com/azu/textstat" title="textstat">textstat</a>のように統計データを出したり、<a href="http://www.academia.edu/154001/Glosser_Enhanced_Feedback_for_Student_Writing_Tasks" title="Glosser">Glosser</a>のようなフィードバックエンジンを作ってみたいです。</p>
+
+<p>また、現在textlintに関係する<a href="https://github.com/search?utf8=%E2%9C%93&amp;q=textlint">リポジトリは200以上</a>、textlint<a href="https://github.com/textlint/textlint/wiki/Collection-of-textlint-rule">ルールは100以上</a>あります。
+ただ、半分以上は自分が関連しているものなので、もっと属人性を解消して安定させたいです。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="und" dir="ltr">textlint 200 repositories. <a href="https://t.co/ZpF7DeuSLr">pic.twitter.com/ZpF7DeuSLr</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/924671458898358272?ref_src=twsrc%5Etfw">October 29, 2017</a></blockquote>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>もっと安定して良くしていくために、textlint organizationのコラボレーターを募集しています。最初からコラボレーター(リリース権限とかもてる人)というのも互いに変ではあるので、まずはコントビューションしてくれる人を募集しています。</p>
+
+<p>textlintではどういうところが足りてない、直せるのかなどについて簡単にまとめてみます。</p>
+
+<h2 id="textlintへのコントビューション"><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>へのコントビューション</h2>
+
+<p>相談したいことがある場合はGitterに日本語のchatがあるのでそちらを使ってみてください。
+(これどうやって直せばいいのとか？)</p>
+
+<p><a href="https://gitter.im/textlint-ja/textlint-ja?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/textlint-ja/textlint-ja.svg" alt="Gitter"></a></p>
+
+<h2 id="textlintを直す">textlintを直す</h2>
+
+<p><a href="https://github.com/textlint/textlint/blob/master/.github/CONTRIBUTING.md" title="Contributing Guide">Contributing Guide</a>にコミット方法やテスト方法など一通りのやり方は書いてあります。</p>
+
+<h3 id="ドキュメントを直す">ドキュメントを直す</h3>
+
+<ul>
+<li>適当な英語が多いので修正歓迎</li>
+</ul>
+
+<h3 id="ドキュメントを追加する">ドキュメントを追加する</h3>
+
+<ul>
+<li>ルールの作り方とかもっと具体例のドキュメント増やしたい</li>
+<li>こういうのがわからないというIssueを立てるでもよさそう</li>
+</ul>
+
+<h3 id="コアを直す">コアを直す</h3>
+
+<ul>
+<li>textlintはmonorepoになっているので<a href="https://github.com/textlint/textlint" title="textlint">textlint</a>に色々なパッケージが入っています。
+
+<ul>
+<li>monorepoへの移行が完璧ではないのでそれをなおすのも歓迎です</li>
+<li><a href="https://github.com/textlint/textlint/issues/270" title="Import * to monorepo #270">Import * to monorepo #270</a></li>
+</ul></li>
+</ul>
+
+<p><a href="https://github.com/textlint/textlint/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+for+beginner%22" title="Issues · textlint/textlint"><code>label:&quot;good for beginner&quot;</code></a>というラベルが付いてるやつは比較的やることがはっきりしてるので手が出しやすいので、ここから見るといいかもしれません。</p>
+
+<p>また、textlintはあまりパフォーマンスの最適化がまだ行われていません。<a href="https://github.com/textlint/textlint/blob/master/packages/markdown-to-ast/src/markdown-parser.js" title="markdown-parser">markdown-parser</a>など明らかに無駄な処理をしている部分があります。
+一方、500以上のユニットテストや典型的なユースケースの<a href="http://efcl.info/2015/07/29/example-test-on-npm/" title="Exampleテスト">Exampleテスト</a>、実際の文章を使った<a href="https://github.com/textlint/textlint/tree/master/test/integration-test" title="Integration test">Integration test</a>などが書かれています。
+そのため、壊れるとテストが落ちるはずなのでパフォーマンスの改善やリファクタリングなどはある程度し易いかもしれません。</p>
+
+<p>TypeScriptで書きたいという人は、textlint本体もTypeScript化したり、型定義を整理したりすると良いかもしれません。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/issues/248" title="Use with TypeScript #248">Use with TypeScript #248</a></li>
+</ul>
+
+<p>また、textlintをブラウザでもっと簡単に上手く動かしたいという人は次のIssueにどういうものがあると便利なのかやPOCを作ってみると良いかもしれません。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/issues/299" title="@textlint/browser · Issue #299 · textlint/textlint">@textlint/browser · Issue #299 · textlint/textlint</a></li>
+</ul>
+
+<h2 id="ルールを直す">ルールを直す</h2>
+
+<ul>
+<li>textlintはデフォルトでルールをもっていません</li>
+<li>そのためすべてのルールはプラグイン扱いです</li>
+<li>ルール一覧は<a href="https://github.com/textlint/textlint/wiki/Collection-of-textlint-rule" title="Collection of textlint rule · textlint/textlint Wiki">Collection of textlint rule · textlint/textlint Wiki</a>にあります</li>
+<li>各ルールにPull RequestやIssueを立てるのがよさそうです</li>
+<li><a href="https://github.com/textlint-ja" title="textlint-ja">textlint-ja</a>で管理している日本語専用のルールは、日本語が分かる人じゃないと使わないので、Issueなどは日本語で問題ないです</li>
+</ul>
+
+<h2 id="ルールを追加する">ルールを追加する</h2>
+
+<p>textlintのルールを置く場所には特に制限はありません。また自由にルールを書けます。</p>
+
+<ul>
+<li>ルールの作り方: <a href="https://github.com/textlint/textlint/blob/master/docs/rule.md" title="Creating Rules">Creating Rules</a></li>
+</ul>
+
+<p>ただ一度作ったルールがメンテナンスされなくなってしまうのはもったないので、<a href="https://github.com/textlint-rule/" title="textlint-rule">textlint-rule</a>と<a href="https://github.com/textlint-ja" title="textlint-ja">textlint-ja</a>は<a href="https://maintenance-guidelines-for-organization.github.io/" title="Maintenance Guidelines for Organization">Maintenance Guidelines for Organization</a>というガイドラインの元にしています。</p>
+
+<p>人がボトルネックになることを避けるため、人が正しいことをできるように信用することという原則を元にしてリポジトリやnpmパッケージの権限を共有できるようにするという方針です。
+そのため、textlintルールを作ったはいいけど置き場所や管理が不安というは、Organizationに参加してみるといいかもしれません。</p>
+
+<p>それぞれoranizationも用意してあるので興味がある人は、<a href="https://twitter.com/azu_re">@azu_re</a>か<a href="https://gitter.im/textlint-ja/textlint-ja">Gitter</a>で言ってもらえれば inviteします。</p>
+
+<ul>
+<li>日本語専用のルール: <a href="https://github.com/textlint-ja" title="textlint-ja">textlint-ja</a></li>
+<li>その他のルール: <a href="https://github.com/textlint-rule/" title="textlint-rule">textlint-rule</a></li>
+</ul>
+
+<h2 id="ツールを良くする">ツールを良くする</h2>
+
+<p>textlintのElectronアプリがありますがそこまで作り込まれてません。</p>
+
+<ul>
+<li><a href="http://efcl.info/2017/05/12/textlint-app/">textlintのElectronアプリを作った | Web Scratch</a></li>
+<li><a href="https://github.com/textlint/textlint-app">textlint/textlint-app: textlint standalone application top on Electron.</a></li>
+</ul>
+
+<p>textlintのルールをコマンド一発で作り始めることができるツールがあります。
+コーパスを使ってルールをチェックしやすくするなどもっと色々な工夫をして、ルールづくりを簡単にできると嬉しいです。</p>
+
+<ul>
+<li><a href="http://efcl.info/2016/12/14/create-textlint-rule/">textlintのルールを簡単に作り始めることができるツールを作りました | Web Scratch</a></li>
+<li><a href="https://github.com/textlint/create-textlint-rule">textlint/create-textlint-rule: Create textlint rule project with no configuration.</a></li>
+<li><a href="https://github.com/textlint-ja/technological-book-corpus-ja" title="textlint-ja/technological-book-corpus-ja: 日本語で書かれた技術書のコーパス">textlint-ja/technological-book-corpus-ja: 日本語で書かれた技術書のコーパス</a></li>
+</ul>
+
+<h2 id="その他">その他</h2>
+
+<p><a href="https://gist.github.com/azu/2b482e8e2aa636970f5f6110f6488719" title="textlintの直し方">textlintの直し方</a>に簡単にコントビューション方法についてまとめています。</p>
+
+    </div>
+    <div class="post-post-toolbar">
+        <a class="btn edit-on-github"
+           href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-11-06-textlint-core-refactoring.md"><span
+                class="edit-on-github-label"></span>修正リクエストをする</a>
+        <nav class="tags"
+             id="js-post-tags"
+             data-post-tags='["textlint","JavaScript","TypeScript"]'>
+            <span>タグ:</span>
+            <ul>
+                
+                <li><a href="/tags/?q=textlint">textlint</a></li>
+                
+                <li><a href="/tags/?q=JavaScript">JavaScript</a></li>
+                
+                <li><a href="/tags/?q=TypeScript">TypeScript</a></li>
+                
+            </ul>
+        </nav>
+    </div>
+    <div class="announce-area">
+        <h3>お知らせ欄</h3>
+        <div class="announce-text">
+            <!--お知らせ-->
+JavaScriptに関する最新情報は週一で<a href="http://jser.info/" title="JSer.info">JSer.info</a>を更新しています。
+
+        </div>
+        <h3>次に書くかもしれない記事候補</h3>
+        <p>興味がありましたら<a href="https://github.com/efcl/efcl.github.io/labels/%E8%A8%98%E4%BA%8B%E5%80%99%E8%A3%9C" title="Issues · efcl/efcl.github.io">Issues · efcl/efcl.github.io</a>からご意見下さい</p>
+        <div class="announce-text">
+            <iframe src="https://azu.github.io/github-issue-widget/?owner=efcl&repo=efcl.github.io&labels=記事候補&limit=4&random"
+                    allowtransparency="true" frameborder="0" scrolling="0" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+    <div class="related-articles" id="js-related-articles">
+        <h3>関連記事</h3>
+    </div>
+</div>
+<div class="zenback-embed">
+    <!-- X:S ZenBackWidget --><div id="zenback-widget-loader"></div><script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var r=Math.ceil((new Date()*1)*Math.random());var j=d.createElement("script");j.id=i;j.async=true;j.src="//w.zenback.jp/v1/?base_uri=http%3A//efcl.info/&nsid=89229392978401102%3A%3A89229398078677080&rand="+r;d.body.appendChild(j);}}(document,"zenback-widget-js");</script><!-- X:E ZenBackWidget -->
+</div>
+<div class="disqus-embed" id="js-disqus-embed">
+    <button class="comment-button" id="js-comment-button">コメントを表示</button>
+</div>
+
+<script type="text/javascript" src="/public/js/tag-fetcher.js"></script>
+<script type="text/javascript" src="/public/js/show-related-article.js"></script>
+<script type="text/javascript" src="/public/js/show-disqus.js"></script>
+
+    </div>
+</article>
+</body>
+</html>

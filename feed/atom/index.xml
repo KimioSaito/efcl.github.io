@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-10-31T20:49:41+09:00</updated>
+ <updated>2017-11-06T22:37:54+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,214 @@
  </author>
  
 
+ 
+ <entry>
+   <title>textlintのコアをTypeScriptで書き直した、textlintの今後について</title>
+   <link href="http://efcl.info/2017/11/06/textlint-core-refactoring/"/>
+   <updated>2017-11-06T10:43:00+09:00</updated>
+   <id>http://efcl.info/2017/11/06/textlint-core-refactoring</id>
+   <content type="html"><![CDATA[ <p><a href="https://github.com/textlint/textlint/releases/tag/textlint%409.0.0" title="textlint 9.0.0">textlint 9.0.0</a>をリリースしました。
+textlint 9.0.0では<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel" title="@textlint/kernel">@textlint/kernel</a>という内部的に使うコアモジュールをTypeScriptで書き直したバージョンが使われています。</p>
+
+<p>元々textlintはNode.jsで動くように作られたため、<code>fs</code>モジュールなどNode.jsに依存しています。
+そのため、ブラウザなどで動かす場合などはビルド時に色々工夫しないと動きません。</p>
+
+<ul>
+<li><a href="http://io-monad.hatenablog.com/entry/2016/03/14/225800" title="文書校正ツール textlint の Chrome 拡張を作った - もなでぃっく">文書校正ツール textlint の Chrome 拡張を作った - もなでぃっく</a></li>
+<li><a href="https://muunyblue.github.io/823b2d10224a6a29f91fc7c0f46f1b8e.html" title="LocalStorageで誰でも安全にMarkdownでスライドやメモ作れるサービス作ったよ">LocalStorageで誰でも安全にMarkdownでスライドやメモ作れるサービス作ったよ</a></li>
+</ul>
+
+<p>この問題をどうにかするためには、<code>textlint</code>というモジュールからロジックやLint処理部分だけをNode.jsなどに依存しない純粋なJavaScriptとして切り出す必要があります。</p>
+
+<p>アドホックに対応するならブラウザ向けのbundleを<a href="https://qiita.com/shinout/items/911e024368e2cb29fd3d" title="browser field">browser field</a>などで提供すれば終わりですが、長期的なことを考えるとモジュールを分けたほうが建設的です。</p>
+
+<p><a href="https://github.com/textlint" title="textlint">textlint organization</a>を見ると分かるように<a href="https://github.com/textlint" title="textlint">textlint</a>はMarkdownパーサやトラバーサ、フォーマッターなどがモジュールとして各リポジトリに分けられていました。部品となるモジュールとリポジトリを1対1で分けると、Aをアップデートすると、Aに依存BやCを更新するといったアップデートの連鎖反応が起きる問題があります。
+また、新しいモジュールを切り出す心理的なコストがありました。</p>
+
+<p>そのため、まずは<code>textlint</code>を構成するモジュールを1つのリポジトリにまとめたmonorepo化をすることにしました。</p>
+
+<h2 id="monorepo">monorepo</h2>
+
+<p><a href="https://github.com/textlint" title="textlint">textlint</a>では<a href="https://github.com/lerna/lerna" title="lerna">lerna</a>を使ってmonorepo化しています。これにより、モジュール間の依存のアップデートが1つのPRにまとめられるなどアップデートの連鎖反応がある程度自動化できるメリットがあります。
+また、新しいモジュールを追加するのも単純にディレクトリを切るだけなので心理的なコストは軽減されます。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/issues/255">Setup monorepo · Issue #255 · textlint/textlint</a></li>
+<li><a href="https://github.com/textlint/textlint/issues/270">Import * to monorepo · Issue #270 · textlint/textlint</a></li>
+</ul>
+
+<p>一方、CIにかかる時間やpublishする際のコストは増加する傾向があります。
+また、まだmonorepoにおけるリリースノートの戦略がイマイチ決まっていないという問題もあります。
+これは<a href="https://github.com/almin/almin" title="almin">almin</a>とか<a href="https://github.com/textlint-rule/textlint-rule-preset-google" title="textlint-rule-preset-google">textlint-rule-preset-google</a>など、他にもmonorepoをやっているのでいい方法を見出したいです。</p>
+
+<ul>
+<li><a href="https://qiita.com/azu/items/4b9fc8d4df78f2216901" title="Lerna(monorepo)とCHANGELOG(リリースノート) - Qiita">Lerna(monorepo)とCHANGELOG(リリースノート) - Qiita</a></li>
+</ul>
+
+<h2 id="textlint-kernel"><a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a></h2>
+
+<p>monorepo化がひとまずできたので、<a href="https://github.com/textlint/textlint/releases/tag/textlint%408.1.0" title="textlint@8.1.0">textlint 8.1.0</a>で<code>textlint</code>モジュールから<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a>というコアモジュールを切り出しました。(Coreという名前じゃないのは既にCoreという名前を使ったものがあったため)
+<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a>は<code>fs</code>などNode.js特有のものに依存してないような作りになっているので普通にwebpackやbrowserifyなどでビルドすれば動作します。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/pull/292" title="Carve out textlint core logic into @textlint/kernel by azu · Pull Request #292 · textlint/textlint">Carve out textlint core logic into @textlint/kernel by azu · Pull Request #292 · textlint/textlint</a></li>
+</ul>
+
+<p>今回の<a href="https://github.com/textlint/textlint/releases/tag/textlint%409.0.0" title="textlint 9.0.0">textlint 9.0.0</a>ではさらにこの<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel" title="@textlint/kernel">@textlint/kernel</a>をTypeScriptに書き換えました。理由としては<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a>はロジックの塊であることと今後のリファクタリングのしやすさを考えたためです。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/pull/301" title="refactor(textlint-kernel): Convert JavaScript to TypeScript by azu · Pull Request #301 · textlint/textlint">refactor(textlint-kernel): Convert JavaScript to TypeScript by azu · Pull Request #301 · textlint/textlint</a></li>
+</ul>
+
+<blockquote>
+<p>TL;DR: both Flow and TypeScript are pretty good, and conservatively either of them can prevent about 15% of the bugs that end up in committed code.<br>
+<a href="https://blog.acolyer.org/2017/09/19/to-type-or-not-to-type-quantifying-detectable-bugs-in-javascript/">https://blog.acolyer.org/2017/09/19/to-type-or-not-to-type-quantifying-detectable-bugs-in-javascript/</a></p>
+</blockquote>
+
+<p>JavaScriptに型注釈を加えることで15%程度バグを減らすことができるという話もありますが、IDEなどでリファクタリングがしやすくなるメリットは大きいです。(名前に依存した壊れたリファクタリングが発生しにくい)</p>
+
+<p>JavaScriptからTypeScriptへの移行方法は次の記事で書いてるような手法を取っています。</p>
+
+<ul>
+<li><a href="http://efcl.info/2017/07/17/JavaScript-to-TypeScript/" title="JavaScriptのライブラリを徐々にTypeScriptに移行する | Web Scratch">JavaScriptのライブラリを徐々にTypeScriptに移行する | Web Scratch</a></li>
+</ul>
+
+<p>まだ単に型を付けただけであったり、テストはTypeScriptになってなかったりします。
+本体の<code>textlint</code>の方もTypeScript化したいので興味がある人は次のIssueを参照してください。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/issues/248" title="Use with TypeScript · Issue #248 · textlint/textlint">Use with TypeScript · Issue #248 · textlint/textlint</a></li>
+</ul>
+
+<p>また、まだルール側をTypeScriptで書きやすくなってはいないのでその辺もどうにかしたいですね。</p>
+
+<h2 id="今後">今後</h2>
+
+<p>textlintはルールを気軽に作れるようにする土台を作ることが目的です。</p>
+
+<ul>
+<li><a href="http://efcl.info/2014/12/30/textlint/" title="JavaScriptでルールを書けるテキスト/Markdownの校正ツール textlint を作った | Web Scratch">JavaScriptでルールを書けるテキスト/Markdownの校正ツール textlint を作った | Web Scratch</a></li>
+</ul>
+
+<p>今回色々リファクタリングして、<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a>の分離でLint以外への発展も少し見えてきています。Lintは入力に対して解答(正否)を出さないと行けないですが、<a href="https://github.com/azu/textstat" title="textstat">textstat</a>のように統計データを出したり、<a href="http://www.academia.edu/154001/Glosser_Enhanced_Feedback_for_Student_Writing_Tasks" title="Glosser">Glosser</a>のようなフィードバックエンジンを作ってみたいです。</p>
+
+<p>また、現在textlintに関係する<a href="https://github.com/search?utf8=%E2%9C%93&amp;q=textlint">リポジトリは200以上</a>、textlint<a href="https://github.com/textlint/textlint/wiki/Collection-of-textlint-rule">ルールは100以上</a>あります。
+ただ、半分以上は自分が関連しているものなので、もっと属人性を解消して安定させたいです。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="und" dir="ltr">textlint 200 repositories. <a href="https://t.co/ZpF7DeuSLr">pic.twitter.com/ZpF7DeuSLr</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/924671458898358272?ref_src=twsrc%5Etfw">October 29, 2017</a></blockquote>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>もっと安定して良くしていくために、textlint organizationのコラボレーターを募集しています。最初からコラボレーター(リリース権限とかもてる人)というのも互いに変ではあるので、まずはコントビューションしてくれる人を募集しています。</p>
+
+<p>textlintではどういうところが足りてない、直せるのかなどについて簡単にまとめてみます。</p>
+
+<h2 id="textlintへのコントビューション"><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>へのコントビューション</h2>
+
+<p>相談したいことがある場合はGitterに日本語のchatがあるのでそちらを使ってみてください。
+(これどうやって直せばいいのとか？)</p>
+
+<p><a href="https://gitter.im/textlint-ja/textlint-ja?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/textlint-ja/textlint-ja.svg" alt="Gitter"></a></p>
+
+<h2 id="textlintを直す">textlintを直す</h2>
+
+<p><a href="https://github.com/textlint/textlint/blob/master/.github/CONTRIBUTING.md" title="Contributing Guide">Contributing Guide</a>にコミット方法やテスト方法など一通りのやり方は書いてあります。</p>
+
+<h3 id="ドキュメントを直す">ドキュメントを直す</h3>
+
+<ul>
+<li>適当な英語が多いので修正歓迎</li>
+</ul>
+
+<h3 id="ドキュメントを追加する">ドキュメントを追加する</h3>
+
+<ul>
+<li>ルールの作り方とかもっと具体例のドキュメント増やしたい</li>
+<li>こういうのがわからないというIssueを立てるでもよさそう</li>
+</ul>
+
+<h3 id="コアを直す">コアを直す</h3>
+
+<ul>
+<li>textlintはmonorepoになっているので<a href="https://github.com/textlint/textlint" title="textlint">textlint</a>に色々なパッケージが入っています。
+
+<ul>
+<li>monorepoへの移行が完璧ではないのでそれをなおすのも歓迎です</li>
+<li><a href="https://github.com/textlint/textlint/issues/270" title="Import * to monorepo #270">Import * to monorepo #270</a></li>
+</ul></li>
+</ul>
+
+<p><a href="https://github.com/textlint/textlint/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+for+beginner%22" title="Issues · textlint/textlint"><code>label:&quot;good for beginner&quot;</code></a>というラベルが付いてるやつは比較的やることがはっきりしてるので手が出しやすいので、ここから見るといいかもしれません。</p>
+
+<p>また、textlintはあまりパフォーマンスの最適化がまだ行われていません。<a href="https://github.com/textlint/textlint/blob/master/packages/markdown-to-ast/src/markdown-parser.js" title="markdown-parser">markdown-parser</a>など明らかに無駄な処理をしている部分があります。
+一方、500以上のユニットテストや典型的なユースケースの<a href="http://efcl.info/2015/07/29/example-test-on-npm/" title="Exampleテスト">Exampleテスト</a>、実際の文章を使った<a href="https://github.com/textlint/textlint/tree/master/test/integration-test" title="Integration test">Integration test</a>などが書かれています。
+そのため、壊れるとテストが落ちるはずなのでパフォーマンスの改善やリファクタリングなどはある程度し易いかもしれません。</p>
+
+<p>TypeScriptで書きたいという人は、textlint本体もTypeScript化したり、型定義を整理したりすると良いかもしれません。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/issues/248" title="Use with TypeScript #248">Use with TypeScript #248</a></li>
+</ul>
+
+<p>また、textlintをブラウザでもっと簡単に上手く動かしたいという人は次のIssueにどういうものがあると便利なのかやPOCを作ってみると良いかもしれません。</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint/issues/299" title="@textlint/browser · Issue #299 · textlint/textlint">@textlint/browser · Issue #299 · textlint/textlint</a></li>
+</ul>
+
+<h2 id="ルールを直す">ルールを直す</h2>
+
+<ul>
+<li>textlintはデフォルトでルールをもっていません</li>
+<li>そのためすべてのルールはプラグイン扱いです</li>
+<li>ルール一覧は<a href="https://github.com/textlint/textlint/wiki/Collection-of-textlint-rule" title="Collection of textlint rule · textlint/textlint Wiki">Collection of textlint rule · textlint/textlint Wiki</a>にあります</li>
+<li>各ルールにPull RequestやIssueを立てるのがよさそうです</li>
+<li><a href="https://github.com/textlint-ja" title="textlint-ja">textlint-ja</a>で管理している日本語専用のルールは、日本語が分かる人じゃないと使わないので、Issueなどは日本語で問題ないです</li>
+</ul>
+
+<h2 id="ルールを追加する">ルールを追加する</h2>
+
+<p>textlintのルールを置く場所には特に制限はありません。また自由にルールを書けます。</p>
+
+<ul>
+<li>ルールの作り方: <a href="https://github.com/textlint/textlint/blob/master/docs/rule.md" title="Creating Rules">Creating Rules</a></li>
+</ul>
+
+<p>ただ一度作ったルールがメンテナンスされなくなってしまうのはもったないので、<a href="https://github.com/textlint-rule/" title="textlint-rule">textlint-rule</a>と<a href="https://github.com/textlint-ja" title="textlint-ja">textlint-ja</a>は<a href="https://maintenance-guidelines-for-organization.github.io/" title="Maintenance Guidelines for Organization">Maintenance Guidelines for Organization</a>というガイドラインの元にしています。</p>
+
+<p>人がボトルネックになることを避けるため、人が正しいことをできるように信用することという原則を元にしてリポジトリやnpmパッケージの権限を共有できるようにするという方針です。
+そのため、textlintルールを作ったはいいけど置き場所や管理が不安というは、Organizationに参加してみるといいかもしれません。</p>
+
+<p>それぞれoranizationも用意してあるので興味がある人は、<a href="https://twitter.com/azu_re">@azu_re</a>か<a href="https://gitter.im/textlint-ja/textlint-ja">Gitter</a>で言ってもらえれば inviteします。</p>
+
+<ul>
+<li>日本語専用のルール: <a href="https://github.com/textlint-ja" title="textlint-ja">textlint-ja</a></li>
+<li>その他のルール: <a href="https://github.com/textlint-rule/" title="textlint-rule">textlint-rule</a></li>
+</ul>
+
+<h2 id="ツールを良くする">ツールを良くする</h2>
+
+<p>textlintのElectronアプリがありますがそこまで作り込まれてません。</p>
+
+<ul>
+<li><a href="http://efcl.info/2017/05/12/textlint-app/">textlintのElectronアプリを作った | Web Scratch</a></li>
+<li><a href="https://github.com/textlint/textlint-app">textlint/textlint-app: textlint standalone application top on Electron.</a></li>
+</ul>
+
+<p>textlintのルールをコマンド一発で作り始めることができるツールがあります。
+コーパスを使ってルールをチェックしやすくするなどもっと色々な工夫をして、ルールづくりを簡単にできると嬉しいです。</p>
+
+<ul>
+<li><a href="http://efcl.info/2016/12/14/create-textlint-rule/">textlintのルールを簡単に作り始めることができるツールを作りました | Web Scratch</a></li>
+<li><a href="https://github.com/textlint/create-textlint-rule">textlint/create-textlint-rule: Create textlint rule project with no configuration.</a></li>
+<li><a href="https://github.com/textlint-ja/technological-book-corpus-ja" title="textlint-ja/technological-book-corpus-ja: 日本語で書かれた技術書のコーパス">textlint-ja/technological-book-corpus-ja: 日本語で書かれた技術書のコーパス</a></li>
+</ul>
+
+<h2 id="その他">その他</h2>
+
+<p><a href="https://gist.github.com/azu/2b482e8e2aa636970f5f6110f6488719" title="textlintの直し方">textlintの直し方</a>に簡単にコントビューション方法についてまとめています。</p>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた</title>
@@ -1814,102 +2022,6 @@ HTMLの世界では<a href="https://developer.mozilla.org/ja/docs/Web/HTML/Eleme
 <ul>
 <li><a href="https://github.com/azu/textlint-rule-abbr-within-parentheses" title="textlint-rule-abbr-within-parentheses">textlint-rule-abbr-within-parentheses</a></li>
 </ul>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>LDRのフィードをレート情報付きでエクスポートする</title>
-   <link href="http://efcl.info/2017/07/29/ldr-rate-export/"/>
-   <updated>2017-07-29T23:58:00+09:00</updated>
-   <id>http://efcl.info/2017/07/29/ldr-rate-export</id>
-   <content type="html"><![CDATA[ <p>LDRのフィードデータから<strong>レート</strong>（★★★☆☆）をカテゴリとしたOPML(XML)ファイルを作成するコマンドラインツールを作りました。</p>
-
-<ul>
-<li><a href="https://github.com/azu/ldr-export-opml" title="azu/ldr-export-opml: Convert exported json from LDR to opml with Rate.">azu/ldr-export-opml: Convert exported json from LDR to opml with Rate.</a></li>
-</ul>
-
-<p><a href="http://reader.livedoor.com/reader/" title="Live Dwango Reader">Live Dwango Reader</a>から他のRSSリーダへ移行する際に、レートデータを維持して移行する用途です。</p>
-
-<p>fastladderへの移行の場合は別の方法もあります。</p>
-
-<ul>
-<li><a href="http://blog.bulkneets.net/mt/archives/45" title="LDRのレートの保存と復元">LDRのレートの保存と復元</a></li>
-</ul>
-
-<h2 id="必要なもの">必要なもの</h2>
-
-<ul>
-<li>Node.js 6&gt;=</li>
-<li>後述する<code>ldr.json</code></li>
-</ul>
-
-<h2 id="ldr-json">ldr.json</h2>
-
-<p>LDRのopmlエクスポートにはカテゴリ（ディレクトリ）の情報しか含まれていません。
-なので、編集画面に使われてるAPIのレスポンスデータ(<code>ldr.json</code>とここでは呼ぶ)を使います。</p>
-
-<p>ldr.jsonは <code>http://reader.livedoor.com/api/subs?unread=0</code>のレスポンスです。</p>
-
-<p>簡単な方法だと以下の手順で取得できます。
-(ApiKeyがいるので、curlなどだと余計に面倒なので、ログインしてるブラウザでコピーするのが楽)</p>
-
-<p><img src="https://monosnap.com/file/abUjuGNgDfX317alNW0j42p1gxM8SO.png" alt="image"></p>
-
-<ol>
-<li>ブラウザの開発者ツールでネットワークを開く</li>
-<li>&quot;編集&quot;をクリック</li>
-<li><code>http://reader.livedoor.com/api/subs?unread=0</code>へのリクエストを探す</li>
-<li>レスポンスをコピーして <code>ldr.json</code> として保存する</li>
-</ol>
-
-<p><code>ldr.json</code>にはカテゴリ、レートなどの情報が含まれています。
-普通にexportできる<code>export.opml</code>の上位互換なデータなので、閉鎖する前に取得しておくと便利だと思います。</p>
-
-<h2 id="install">Install</h2>
-
-<p>ldr-export-opmlは<code>npm</code>などでインストール出来ます。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">npm install ldr-export-opml -g
-</code></pre></div>
-<p>使い方は書いてないですが普通にモジュールとしても使えるので、適当に使ってください。</p>
-
-<h2 id="使い方">使い方</h2>
-
-<p>取得した <code>ldr.json</code> を引数に渡して実行するopml形式のXMLを出力してくれます。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Usage
-  $ ldr-export-opml ldr.json
-
-Options:
-
-  --output path to output
-
-Examples
-  $ ldr-export-opml path/to/ldr.json
-  $ cat path/to/ldr.json | ldr-export-opml 
-</code></pre></div>
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">LDRのフィードデータからレート（★★★☆☆）をカテゴリとしたOPML(XML)ファイルを作成するツールです。<a href="https://t.co/Be9zyssQyN">https://t.co/Be9zyssQyN</a> <a href="https://t.co/0doJLj9Xb9">pic.twitter.com/0doJLj9Xb9</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/891216584865439744">July 29, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<h2 id="おわり">おわり</h2>
-
-<p>LDRも<a href="http://blog.livedoor.jp/staff_reader/archives/52278396.html" title="サービスを終了">サービス終了</a>です。</p>
-
-<p>乗り換え先をどうするのかがまだ決まってないけど多分必要になるので作りました。(バグってたらPull Requestください)</p>
-
-<ul>
-<li><a href="https://github.com/azu/ldr-export-opml" title="azu/ldr-export-opml: Convert exported json from LDR to opml with Rate.">azu/ldr-export-opml: Convert exported json from LDR to opml with Rate.</a></li>
-</ul>
-
-<p>一日数千エントリ見てるので、<a href="https://gist.github.com/azu/491fa1c5050fc378c746">j, k, n</a>、s, aあたりがどれだけつまらずに動くかが大事になってくるので、乗り換え先の相性が大変。</p>
-
-<p>なので、Feedlyとかのビジュアルよりなマガジン系はあんまり向いてない。
-<a href="https://github.com/fastladder/fastladder" title="Fastladder">Fastladder</a>を使えるといいけど、維持コスト(手間/値段)が高くなるので手を出しにくい。<a href="https://tt-rss.org/" title="Tiny Tiny RSS">Tiny Tiny RSS</a>も同じような理由。</p>
-
-<p><a href="https://www.inoreader.com/" title="inoreader.com">inoreader.com</a>は悪くは無さそうだけど、スムーズスクロールが遅かったり、プリロードがなかったりしてちょっとチューニングが必要そう。(コードを見てたけど結構レガシーな感じだったのでどこまでhookできるんだろ)</p>
-
-<p>クライアント側はどうにでもなる気がするので、サーバ側をServerlessな感じにしたものがあればコスト少なくて済むのかなと思ったけど、LDRのようなサービスはクローラーとその結果の保存データで容量食うのであんまり向いて無さそう。<a href="https://firebase.google.com/pricing/?hl=ja">Firebase</a>みたいなところでやったほうがコスト的には良さそう。</p>
-
-<p>あとは<a href="http://cappuccinoapp.com/" title="Cappuccino">Cappuccino</a>とかみたいなクライアント側だけでどうにかするパターンかな。(未読管理的な問題はありそうだけど)</p>
  ]]></content>
  </entry>
  

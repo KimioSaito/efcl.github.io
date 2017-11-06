@@ -2,6 +2,12 @@
     "posts": [
         
         {
+            "title": "textlintのコアをTypeScriptで書き直した、textlintの今後について",
+            "url": "http://efcl.info/2017/11/06/textlint-core-refactoring/",
+            "date": "2017-11-06T10:43:00+09:00"
+        },
+        
+        {
             "title": "自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた",
             "url": "http://efcl.info/2017/10/31/nlp-pattern-match/",
             "date": "2017-10-31T11:23:00+09:00"
