@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+    <title>
+        
+        performance.markにメタデータを紐付けできるライブラリを書いた | Web Scratch
+        
+    </title>
+    <meta name="description" content="performance.markというパフォーマンス計測に役立つAPIがあります。performance.mark APIを使うと、指定して処理をマーキングでき、その結果を開発者ツールでみれます。とても便利なのですが、そのマーキングとメタデータを紐付ける仕組みがありませんでした。">
+    
+    <meta name="keywords" content="JavaScript,performance,library" />
+    
+    <meta name="author" content="azu">
+    <!-- Icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="/public/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="http://efcl.info/public/favicon.ico">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/public/css/main.css">
+    <!-- JavaScript -->
+    <!-- Open graph tags -->
+<meta property="og:title" content="performance.markにメタデータを紐付けできるライブラリを書いた">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://efcl.info/2017/11/15/performance.mark-metadata/">
+<meta property="og:image" content="http://efcl.info/public/favicon.ico">
+
+<meta property="og:description" content="performance.markというパフォーマンス計測に役立つAPIがあります。performance.mark APIを使うと、指定して処理をマーキングでき、その結果を開発者ツールでみれます。とても便利なのですが、そのマーキングとメタデータを紐付ける仕組みがありませんでした。">
+<meta property="og:site_name" content="Web Scratch">
+
+
+
+
+<meta property="article:published_time" content="2017-11-15T21:58:00+09:00">
+<meta property="article:author" content="https://www.facebook.com/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/11/15/html_module_study/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/11/06/textlint-core-refactoring/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/10/31/nlp-pattern-match/">
+
+
+
+
+
+<meta property="article:section" content="javascript">
+
+
+
+
+
+<meta property="article:tag" content="JavaScript">
+
+<meta property="article:tag" content="performance">
+
+<meta property="article:tag" content="library">
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-2184335-8', 'auto');
+    ga('send', 'pageview');
+</script>
+    <script>
+var blog_categories = [
+{
+    "title" : "greasemonkey",
+    "count" : 61
+},{
+    "title" : "ニコニコ動画",
+    "count" : 16
+},{
+    "title" : "小説電子化",
+    "count" : 3
+},{
+    "title" : "vista",
+    "count" : 12
+},{
+    "title" : "firefox",
+    "count" : 55
+},{
+    "title" : "その他",
+    "count" : 13
+},{
+    "title" : "webサービス",
+    "count" : 22
+},{
+    "title" : "software",
+    "count" : 59
+},{
+    "title" : "雑記",
+    "count" : 36
+},{
+    "title" : "まとめ",
+    "count" : 11
+},{
+    "title" : "zaurus",
+    "count" : 3
+},{
+    "title" : "ハードウェア",
+    "count" : 8
+},{
+    "title" : "アドオン",
+    "count" : 31
+},{
+    "title" : "wordpress",
+    "count" : 6
+},{
+    "title" : "javascript",
+    "count" : 190
+},{
+    "title" : "インストール設定",
+    "count" : 12
+},{
+    "title" : "iphone",
+    "count" : 10
+},{
+    "title" : "loox u",
+    "count" : 1
+},{
+    "title" : "tombloo",
+    "count" : 3
+},{
+    "title" : "イベント",
+    "count" : 92
+},{
+    "title" : "userchome.js",
+    "count" : 8
+},{
+    "title" : "jetpack",
+    "count" : 7
+},{
+    "title" : "onenote",
+    "count" : 2
+},{
+    "title" : "nilscript",
+    "count" : 4
+},{
+    "title" : "keysnail",
+    "count" : 3
+},{
+    "title" : "ios",
+    "count" : 15
+},{
+    "title" : "shell",
+    "count" : 3
+},{
+    "title" : "r言語",
+    "count" : 2
+},{
+    "title" : "node.js",
+    "count" : 3
+},{
+    "title" : "mac",
+    "count" : 2
+},{
+    "title" : "github",
+    "count" : 11
+},{
+    "title" : "jekyll",
+    "count" : 1
+},{
+    "title" : "golang",
+    "count" : 1
+},{
+    "title" : "web",
+    "count" : 1
+},{
+    "title" : "スライド",
+    "count" : 1
+},{
+    "title" : "ie",
+    "count" : 1
+},{
+    "title" : "書籍",
+    "count" : 2
+},{
+    "title" : "textlint",
+    "count" : 8
+}
+];
+    blog_categories = blog_categories.filter(function(categoryObject){
+        return !/^\d+$/.test(categoryObject.title);
+    });
+</script>
+</head>
+
+
+<body class="layout-reverse theme-base-0d">
+<a href="https://github.com/efcl/efcl.github.io" class="github-ribbon">
+    <img style="position: fixed; z-index:100; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+<header>
+    <div class="site-header">
+    <img src="/public/img/reimu-right.png" class="header-logo">
+
+    <h1 class="site-title">
+        <a href="/">
+            Web Scratch
+        </a>
+    </h1>
+    <p class="lead">ブラウザ/JavaScript等についてのブログ</p>
+
+</div>
+</header>
+<aside>
+    <div class="sidebar">
+    <div class="container">
+        <div class="profile">
+            <a href="/about/" title="About"><img src="/public/img/azu.png" alt="Profile"></a>
+
+            <h2><a href="/about/" title="About">azu</a></h2>
+        </div>
+        <div class="social">
+            <a class="twitter" href="http://twitter.com/azu_re" title="Twitter">
+                <img src="/public/svg/twitter.svg" alt="twitter" width="32" height="32"/>
+            </a>
+            <a class="github" href="https://github.com/azu" title="GitHub">
+                <img src="/public/svg/github.svg" alt="GitHub" width="32" height="32"/>
+            </a>
+            <a class="rss" href="/feed/" title="RSS Feed">
+                <img src="/public/svg/feed.svg" alt="RSS" width="32" height="32"/>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="search">
+                <form class="search-box" method="get" action="https://www.google.co.jp/search">
+                    <label for="search-box-label">検索:</label>
+                    <input type="hidden" name="q" value="site:efcl.info">
+                    <input id="search-box-label" type="search" name="q">
+                    <input type="submit" value="search">
+                </form>
+            </div>
+            <div class="recent">
+    <h3 class="recent-posts-list-title">
+        <a href="/">最近の投稿</a>
+    </h3>
+    <ul class="recent-posts">
+        
+        <li>
+            <a href="/2017/11/15/performance.mark-metadata/">
+                performance.markにメタデータを紐付けできるライブラリを書いた
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/11/15/html_module_study/">
+                #html_modules_study アウトラインメモ
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/11/06/textlint-core-refactoring/">
+                textlintのコアをTypeScriptで書き直した、textlintの今後について
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/10/31/nlp-pattern-match/">
+                自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた
+            </a>
+        </li>
+        
+    </ul>
+</div>
+            <div class="recent">
+    <h3 class="categories-list-title"><a href="/categories">カテゴリ一覧</a></h3>
+
+    <div class="categories-list" id="js-categories-list">
+
+    </div>
+    <script>
+        (function () {
+            var categoriesList = window.blog_categories;
+            var appendPoint = document.getElementById("js-categories-list");
+            // big ... small
+            var sortedCategories = categoriesList.sort(function (a, b) {
+                return a.count < b.count ? 1 : -1;
+            });
+            var ulTag = document.createElement("ul");
+            var displayCount = sortedCategories.length < 3 ? sortedCategories.length : 3;
+            for (var i = 0; i < displayCount; i++) {
+                var category = sortedCategories[i];
+                var liTag = document.createElement("li");
+                var aTag = document.createElement("a");
+                aTag.href = "/categories#" + category.title;
+                aTag.textContent = category.title;
+                var spanTag = document.createElement("span");
+                spanTag.appendChild(document.createTextNode("[" + category.count + "]"));
+                liTag.appendChild(aTag);
+                liTag.appendChild(spanTag);
+                ulTag.appendChild(liTag);
+            }
+            var lastLiTag = document.createElement("li");
+            var lastATag = document.createElement("a");
+            lastATag.href = "/categories";
+            lastATag.textContent = "その他のタグ…";
+            lastLiTag.appendChild(lastATag);
+            ulTag.appendChild(lastATag);
+            appendPoint.appendChild(ulTag);
+        })();
+    </script>
+</div>
+        </nav>
+    </div>
+</div>
+
+</aside>
+<article>
+    <div class="content container">
+        <div class="post" id="js-post-url" data-post-url="/2017/11/15/performance.mark-metadata/">
+    <h1 class="post-title">performance.markにメタデータを紐付けできるライブラリを書いた</h1>
+
+    <div class="pre-post-toolbar">
+        <span class="post-date">2017年11月15日</span>
+        <a class="btn edit-on-github" href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-11-15-performance.mark-metadata.md"><span class="edito-on-github-label"></span>Edit on GitHub</a>
+
+    </div>
+    <div class="post-content">
+        <p><code>performance.mark</code>というパフォーマンス計測に役立つAPIがあります。
+<code>performance.mark</code> APIを使うと、指定して処理をマーキングでき、その結果を開発者ツールでみれます。とても便利なのですが、そのマーキングとメタデータを紐付ける仕組みがありませんでした。</p>
+
+<p><a href="https://github.com/almin/almin/releases/tag/almin%400.14.0"><img src="http://efcl.info/wp-content/uploads/2017/09/20-1505888631.png" alt="DevTool timeline"></a></p>
+
+<ul>
+<li><a href="http://efcl.info/2016/08/15/performance.mark/" title="performance.markでパフォーマンス計測する | Web Scratch">performance.markでパフォーマンス計測する | Web Scratch</a></li>
+<li><a href="http://efcl.info/2017/09/20/almin-performance-profile-0.14.0/" title="Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch">Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch</a></li>
+</ul>
+
+<p>TPAC 2017の<a href="https://docs.google.com/presentation/d/1d64Y4rtLCxobGgljVySU2CJpMPK5ksaiZuv3ka1dCVA/edit#slide=id.p" title="User Timing L3 - Google スライド">User Timing L3 - Google スライド</a>では、<code>performance.mark</code> APIでメタデータ(<code>details</code>)を紐付けできる仕組みが提案されています。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">performance</span><span class="p">.</span><span class="nx">mark</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">startTime</span><span class="p">,</span> <span class="nx">details</span><span class="p">)</span>
+</code></pre></div>
+<p>これを使うと「Aという処理でデータを取得」を<code>performance.mark</code>でマーキングする際に、実際に取得したデータをとマーキングをメタデータ(<code>details</code>)によって紐付けられます。</p>
+
+<p>これを速く使いたかったので<code>performance.mark</code>にメタデータを紐付けできる<a href="https://github.com/azu/performance-mark-metadata" title="performance-mark-metadata">performance-mark-metadata</a>というライブラリを書きました。</p>
+
+<ul>
+<li><a href="https://github.com/azu/performance-mark-metadata" title="azu/performance-mark-metadata: `performance.mark` with custom meta data.">azu/performance-mark-metadata: <code>performance.mark</code> with custom meta data.</a></li>
+</ul>
+
+<h2 id="サポート環境">サポート環境</h2>
+
+<ul>
+<li>モダンブラウザ と Node.js &gt;= 8.5.0をサポートしています。</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/mark" title="Performance.mark()">Performance.mark()</a> APIが使える環境ならOKです</li>
+<li>Node.jsも8.5.0で<code>perf_hooks</code>が追加されています。</li>
+<li><a href="https://nodejs.org/api/perf_hooks.html" title="Performance Timing API | Node.js v9.2.0 Documentation">Performance Timing API | Node.js v9.2.0 Documentation</a></li>
+</ul>
+
+<p>それ以外の環境では<code>Performance.mark()</code>のpolyfillが必要です。</p>
+
+<ul>
+<li><a href="https://github.com/nicjansma/usertiming.js" title="nicjansma/usertiming.js: UserTiming polyfill">nicjansma/usertiming.js: UserTiming polyfill</a></li>
+</ul>
+
+<h2 id="インストール">インストール</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">npm install performance-mark-metadata
+</code></pre></div>
+<h2 id="使い方">使い方</h2>
+
+<p>使い方は単純で<code>performance.mark</code>のProposalとよく似た形です。
+<code>marker.mark(name, metadata)</code> を渡すようにしています。(全く同じにしなかったのは仕様変更の可能性もあるため)</p>
+
+<p>メタデータを取り出すときは<code>marker.getEntryMetadata(entry)</code>で<code>entry</code>に紐づく<code>metadata</code>を取り出せます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">PerformanceMetadataMarker</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;performance-mark-metadata&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">marker</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PerformanceMetadataMarker</span><span class="p">();</span>
+<span class="kr">const</span> <span class="nx">metadata</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">details</span><span class="o">:</span> <span class="p">{</span> <span class="nx">key</span><span class="o">:</span> <span class="s2">&quot;value&quot;</span> <span class="p">}</span>
+<span class="p">};</span>
+<span class="kr">const</span> <span class="nx">markerName</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+<span class="c1">// mark with metadata</span>
+<span class="nx">marker</span><span class="p">.</span><span class="nx">mark</span><span class="p">(</span><span class="nx">markerName</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">);</span>
+<span class="nx">performance</span><span class="p">.</span><span class="nx">getEntriesByName</span><span class="p">(</span><span class="nx">markerName</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">entry</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">marker</span><span class="p">.</span><span class="nx">getEntryMetadata</span><span class="p">(</span><span class="nx">entry</span><span class="p">);</span>
+    <span class="cm">/*</span>
+<span class="cm">    {</span>
+<span class="cm">        details: { key: &quot;value&quot; }</span>
+<span class="cm">    };</span>
+<span class="cm">    */</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">,</span> <span class="s2">&quot;should get same metadata&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+<h2 id="おわりに">おわりに</h2>
+
+<p><code>performance.mark</code>はシンプルながら結構便利なAPIです。
+<code>performance.now</code>を使うため負荷的に優しく、とりあえず必要なマーキングをしておき、後から取り出して細かく計測(<code>measure</code>)できます。</p>
+
+<p>単純なパフォーマンスのロギングと違ってブラウザやNode.jsで使える共通の仕様であるため、<a href="http://efcl.info/2017/09/20/almin-performance-profile-0.14.0/" title="Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch">Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch</a>のように他のライブラリと組み合わせ計測もできます。</p>
+
+<p>今までは名前のみであったため処理時間しか取れるデータはありませんでしたが、<a href="https://github.com/azu/performance-mark-metadata" title="performance-mark-metadata">performance-mark-metadata</a>を使うことで任意のメタデータを乗せられるので幅が広がるのかなと思います。
+将来的にUser Timing APIの方にこの仕組みが入ったらそちらに移行していくのがいいかなと思います。</p>
+
+    </div>
+    <div class="post-post-toolbar">
+        <a class="btn edit-on-github"
+           href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-11-15-performance.mark-metadata.md"><span
+                class="edit-on-github-label"></span>修正リクエストをする</a>
+        <nav class="tags"
+             id="js-post-tags"
+             data-post-tags='["JavaScript","performance","library"]'>
+            <span>タグ:</span>
+            <ul>
+                
+                <li><a href="/tags/?q=JavaScript">JavaScript</a></li>
+                
+                <li><a href="/tags/?q=performance">performance</a></li>
+                
+                <li><a href="/tags/?q=library">library</a></li>
+                
+            </ul>
+        </nav>
+    </div>
+    <div class="announce-area">
+        <h3>お知らせ欄</h3>
+        <div class="announce-text">
+            <!--お知らせ-->
+JavaScriptに関する最新情報は週一で<a href="http://jser.info/" title="JSer.info">JSer.info</a>を更新しています。
+
+        </div>
+        <h3>次に書くかもしれない記事候補</h3>
+        <p>興味がありましたら<a href="https://github.com/efcl/efcl.github.io/labels/%E8%A8%98%E4%BA%8B%E5%80%99%E8%A3%9C" title="Issues · efcl/efcl.github.io">Issues · efcl/efcl.github.io</a>からご意見下さい</p>
+        <div class="announce-text">
+            <iframe src="https://azu.github.io/github-issue-widget/?owner=efcl&repo=efcl.github.io&labels=記事候補&limit=4&random"
+                    allowtransparency="true" frameborder="0" scrolling="0" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+    <div class="related-articles" id="js-related-articles">
+        <h3>関連記事</h3>
+    </div>
+</div>
+<div class="zenback-embed">
+    <!-- X:S ZenBackWidget --><div id="zenback-widget-loader"></div><script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var r=Math.ceil((new Date()*1)*Math.random());var j=d.createElement("script");j.id=i;j.async=true;j.src="//w.zenback.jp/v1/?base_uri=http%3A//efcl.info/&nsid=89229392978401102%3A%3A89229398078677080&rand="+r;d.body.appendChild(j);}}(document,"zenback-widget-js");</script><!-- X:E ZenBackWidget -->
+</div>
+<div class="disqus-embed" id="js-disqus-embed">
+    <button class="comment-button" id="js-comment-button">コメントを表示</button>
+</div>
+
+<script type="text/javascript" src="/public/js/tag-fetcher.js"></script>
+<script type="text/javascript" src="/public/js/show-related-article.js"></script>
+<script type="text/javascript" src="/public/js/show-disqus.js"></script>
+
+    </div>
+</article>
+</body>
+</html>

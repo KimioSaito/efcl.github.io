@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-15T21:36:33+09:00</updated>
+ <updated>2017-11-15T22:22:58+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,86 @@
  </author>
  
 
+ 
+ <entry>
+   <title>performance.markにメタデータを紐付けできるライブラリを書いた</title>
+   <link href="http://efcl.info/2017/11/15/performance.mark-metadata/"/>
+   <updated>2017-11-15T21:58:00+09:00</updated>
+   <id>http://efcl.info/2017/11/15/performance.mark-metadata</id>
+   <content type="html"><![CDATA[ <p><code>performance.mark</code>というパフォーマンス計測に役立つAPIがあります。
+<code>performance.mark</code> APIを使うと、指定して処理をマーキングでき、その結果を開発者ツールでみれます。とても便利なのですが、そのマーキングとメタデータを紐付ける仕組みがありませんでした。</p>
+
+<p><a href="https://github.com/almin/almin/releases/tag/almin%400.14.0"><img src="http://efcl.info/wp-content/uploads/2017/09/20-1505888631.png" alt="DevTool timeline"></a></p>
+
+<ul>
+<li><a href="http://efcl.info/2016/08/15/performance.mark/" title="performance.markでパフォーマンス計測する | Web Scratch">performance.markでパフォーマンス計測する | Web Scratch</a></li>
+<li><a href="http://efcl.info/2017/09/20/almin-performance-profile-0.14.0/" title="Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch">Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch</a></li>
+</ul>
+
+<p>TPAC 2017の<a href="https://docs.google.com/presentation/d/1d64Y4rtLCxobGgljVySU2CJpMPK5ksaiZuv3ka1dCVA/edit#slide=id.p" title="User Timing L3 - Google スライド">User Timing L3 - Google スライド</a>では、<code>performance.mark</code> APIでメタデータ(<code>details</code>)を紐付けできる仕組みが提案されています。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">performance</span><span class="p">.</span><span class="nx">mark</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">startTime</span><span class="p">,</span> <span class="nx">details</span><span class="p">)</span>
+</code></pre></div>
+<p>これを使うと「Aという処理でデータを取得」を<code>performance.mark</code>でマーキングする際に、実際に取得したデータをとマーキングをメタデータ(<code>details</code>)によって紐付けられます。</p>
+
+<p>これを速く使いたかったので<code>performance.mark</code>にメタデータを紐付けできる<a href="https://github.com/azu/performance-mark-metadata" title="performance-mark-metadata">performance-mark-metadata</a>というライブラリを書きました。</p>
+
+<ul>
+<li><a href="https://github.com/azu/performance-mark-metadata" title="azu/performance-mark-metadata: `performance.mark` with custom meta data.">azu/performance-mark-metadata: <code>performance.mark</code> with custom meta data.</a></li>
+</ul>
+
+<h2 id="サポート環境">サポート環境</h2>
+
+<ul>
+<li>モダンブラウザ と Node.js &gt;= 8.5.0をサポートしています。</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/mark" title="Performance.mark()">Performance.mark()</a> APIが使える環境ならOKです</li>
+<li>Node.jsも8.5.0で<code>perf_hooks</code>が追加されています。</li>
+<li><a href="https://nodejs.org/api/perf_hooks.html" title="Performance Timing API | Node.js v9.2.0 Documentation">Performance Timing API | Node.js v9.2.0 Documentation</a></li>
+</ul>
+
+<p>それ以外の環境では<code>Performance.mark()</code>のpolyfillが必要です。</p>
+
+<ul>
+<li><a href="https://github.com/nicjansma/usertiming.js" title="nicjansma/usertiming.js: UserTiming polyfill">nicjansma/usertiming.js: UserTiming polyfill</a></li>
+</ul>
+
+<h2 id="インストール">インストール</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">npm install performance-mark-metadata
+</code></pre></div>
+<h2 id="使い方">使い方</h2>
+
+<p>使い方は単純で<code>performance.mark</code>のProposalとよく似た形です。
+<code>marker.mark(name, metadata)</code> を渡すようにしています。(全く同じにしなかったのは仕様変更の可能性もあるため)</p>
+
+<p>メタデータを取り出すときは<code>marker.getEntryMetadata(entry)</code>で<code>entry</code>に紐づく<code>metadata</code>を取り出せます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">PerformanceMetadataMarker</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;performance-mark-metadata&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">marker</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PerformanceMetadataMarker</span><span class="p">();</span>
+<span class="kr">const</span> <span class="nx">metadata</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">details</span><span class="o">:</span> <span class="p">{</span> <span class="nx">key</span><span class="o">:</span> <span class="s2">&quot;value&quot;</span> <span class="p">}</span>
+<span class="p">};</span>
+<span class="kr">const</span> <span class="nx">markerName</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+<span class="c1">// mark with metadata</span>
+<span class="nx">marker</span><span class="p">.</span><span class="nx">mark</span><span class="p">(</span><span class="nx">markerName</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">);</span>
+<span class="nx">performance</span><span class="p">.</span><span class="nx">getEntriesByName</span><span class="p">(</span><span class="nx">markerName</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">entry</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">marker</span><span class="p">.</span><span class="nx">getEntryMetadata</span><span class="p">(</span><span class="nx">entry</span><span class="p">);</span>
+    <span class="cm">/*</span>
+<span class="cm">    {</span>
+<span class="cm">        details: { key: &quot;value&quot; }</span>
+<span class="cm">    };</span>
+<span class="cm">    */</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">,</span> <span class="s2">&quot;should get same metadata&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+<h2 id="おわりに">おわりに</h2>
+
+<p><code>performance.mark</code>はシンプルながら結構便利なAPIです。
+<code>performance.now</code>を使うため負荷的に優しく、とりあえず必要なマーキングをしておき、後から取り出して細かく計測(<code>measure</code>)できます。</p>
+
+<p>単純なパフォーマンスのロギングと違ってブラウザやNode.jsで使える共通の仕様であるため、<a href="http://efcl.info/2017/09/20/almin-performance-profile-0.14.0/" title="Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch">Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch</a>のように他のライブラリと組み合わせ計測もできます。</p>
+
+<p>今までは名前のみであったため処理時間しか取れるデータはありませんでしたが、<a href="https://github.com/azu/performance-mark-metadata" title="performance-mark-metadata">performance-mark-metadata</a>を使うことで任意のメタデータを乗せられるので幅が広がるのかなと思います。
+将来的にUser Timing APIの方にこの仕組みが入ったらそちらに移行していくのがいいかなと思います。</p>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>#html_modules_study アウトラインメモ</title>
@@ -130,7 +210,7 @@
 <li>Template Parts
 
 <ul>
-<li>`` をPartsと呼ぶ</li>
+<li><code>\{\{value\}\}</code> をPartsと呼ぶ</li>
 <li>このpartsを更新することでCapitalizeとかの処理を実装できる</li>
 <li>前後のNodeや親子のNodeの参照などを持つ</li>
 </ul></li>
@@ -169,7 +249,7 @@
 <li>FAQ
 
 <ul>
-<li>`` は変えられない?</li>
+<li><code>\{\{</code>の記号 は変えられない?</li>
 </ul></li>
 </ul>
 
@@ -2089,195 +2169,6 @@ Alminのパフォーマンスプロファイルは、UseCaseの実行、StoreGro
 <li>A. アメブロはSpeedCurveとか</li>
 <li>1000chに聞いて</li>
 </ul>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>LDRがサービス終了のため、Inoreader/Feedlyをバックエンドに動くRSSリーダを書いている</title>
-   <link href="http://efcl.info/2017/08/31/ldr-to-irodr/"/>
-   <updated>2017-08-31T10:03:00+09:00</updated>
-   <id>http://efcl.info/2017/08/31/ldr-to-irodr</id>
-   <content type="html"><![CDATA[ <p>2017年8月31日をもってLDRはサービス終了です。乗り換え先となるRSSリーダを探したりしましたが、求めるものを見つけることができなかったので作ることにしました。</p>
-
-<ul>
-<li><a href="http://blog.livedoor.jp/staff_reader/archives/52278396.html" title="【重要】Live Dwango Reader/LDR Pocketサービス終了のお知らせ｜LDR / LDRポケット 開発日誌">【重要】Live Dwango Reader/LDR Pocketサービス終了のお知らせ｜LDR / LDRポケット 開発日誌</a></li>
-</ul>
-
-<p>次の記事でも書いていましたが、RSSリーダのバックエンドを自前で管理するのはコスト的に難しそうでした。そのため、バックエンドとして<a href="http://www.inoreader.com/developers/">Inoreader</a>や<a href="https://developer.feedly.com/v3/auth/">Feedly</a>のAPI使ったRSSリーダのウェブクライアントを書くことにしました。</p>
-
-<ul>
-<li><a href="http://efcl.info/2017/07/29/ldr-rate-export/" title="LDRのフィードをレート情報付きでエクスポートする | Web Scratch">LDRのフィードをレート情報付きでエクスポートする | Web Scratch</a></li>
-</ul>
-
-<h2 id="irodr">irodr</h2>
-
-<p><a href="https://github.com/azu/irodr" title="Irodr">Irodr</a>は<a href="http://www.inoreader.com/developers/">Inoreader</a>や<a href="https://developer.feedly.com/v3/auth/">Feedly</a>(こっちはまだ対応してない)のAPIを使ったRSSリーダです。</p>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://t.co/xKJF7YUu5D">https://t.co/xKJF7YUu5D</a> の様子 <a href="https://t.co/ERUTFtaP0b">pic.twitter.com/ERUTFtaP0b</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/903085352448962560">August 31, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<p>どちらのRSSリーダサービスもフロントを持っていますが、LDRのような感覚で見ることが難しそうだったので、APIを使ったフロントだけを作っている感じです。</p>
-
-<p>LDRのような感覚というのは個人的な感覚に過ぎなので普遍的なものではないですが、次のようなイメージです。</p>
-
-<ul>
-<li>UI: レート読みができる
-
-<ul>
-<li>★の多い順にフィードを読んでいくスタイル</li>
-<li>多くのRSSリーダではカテゴリで代用できる</li>
-</ul></li>
-<li>UI: 左にフィード一覧、右にコンテンツ</li>
-<li>UI: コンテンツ送りの視線が固定できる
-
-<ul>
-<li>ショートカットで移動した時はタイトルが常に同じに位置に来る</li>
-</ul></li>
-<li>速度: <code>j</code>をおした時にアニメーションなしで次の記事を見れる
-
-<ul>
-<li>Inoreaderは設定はアニメーションをoffできる</li>
-</ul></li>
-<li>速度: <code>s</code>をおした時に300ms以内に次のフィードに切り替わる
-
-<ul>
-<li>LDRはこれを実現するためにprefetchをしている</li>
-</ul></li>
-<li>ショートカットを変更/カスタマイズできる
-
-<ul>
-<li>UserScriptでどうにかするやつ</li>
-<li>Inoreaderは<a href="https://greasyfork.org/ja/scripts/898-inoreader-key-customize">https://greasyfork.org/ja/scripts/898-inoreader-key-customize</a>がよくできている</li>
-</ul></li>
-</ul>
-
-<p>というのが自分的な感覚でのLDRらしい動きを実現するのに必要なものです。</p>
-
-<p><a href="http://www.inoreader.com/" title="Inoreader">Inoreader</a>は大体満たしているのですが、速度だけが問題になっていました。</p>
-
-<ul>
-<li>未読数を表示すると、フィード数に応じて処理が重くなる
-
-<ul>
-<li>フィードを一度すべて表示してからフィルターしている</li>
-<li>DOMの処理が重すぎてハングしてしまう(フィード数は3000弱)</li>
-<li>問い合わせたら、未読数の処理が一番のボトルネックらしく未読数をOFFにすると改善すると解答を貰った</li>
-<li>また、マスターDBはブルガリアのDCにあるらしいとのこと</li>
-<li>via <a href="https://twitter.com/azu_re/status/902083679551348736">https://twitter.com/azu_re/status/902083679551348736</a></li>
-</ul></li>
-<li>フィードから次のフィードに移動するときにリクエストのブロックが起きている
-
-<ul>
-<li>Inoreaderでは&quot;Mark as Read&quot;のAPIを叩いて完了したら、次のフィードのコンテンツを取得している</li>
-<li>つまり次のフィードに移動するときにはAPIを2つ叩いて完了するまで待っている
-
-<ul>
-<li>既読 -&gt; 次のコンテンツ取得</li>
-</ul></li>
-<li>大体300~800msぐらい一度のリクエストにかかっているので、移動に1秒以上かかる</li>
-</ul></li>
-</ul>
-
-<p><a href="https://github.com/azu/irodr" title="Irodr">Irodr</a>ではこの問題を次のようにして回避しています。 </p>
-
-<ul>
-<li>未読数を表示すると、フィード数に応じて処理が重くなる
-
-<ul>
-<li>すべてのフィードは1画面に入ることはないので遅延表示のリストで表示する</li>
-<li><a href="https://dev.office.com/fabric#/components/groupedlist">GroupList</a>を使ってる</li>
-</ul></li>
-<li>フィードから次のフィードに移動するときにリクエストのブロックが起きている
-
-<ul>
-<li>&quot;Mark as Read&quot;のAPIとコンテンツ取得のAPIを独立したタイミングで叩くようにする
-
-<ul>
-<li>次のフィードのコンテンツ取得 -&gt; さっきまでいたフィードを既読する イメージ</li>
-<li>UI上はドメインモデルの未読カウントをすぐ0にするので、すぐ既読になっているように見えるので同じ</li>
-</ul></li>
-<li>prefetch処理を追加
-
-<ul>
-<li>今表示しているフィードから好きな数だけ先読みで取得できるようにしている</li>
-<li>これにより次のフィードへの移動は300ms以内には完了する(リクエスト待たないので)</li>
-</ul></li>
-</ul></li>
-</ul>
-
-<h2 id="既知の問題">既知の問題</h2>
-
-<p><a href="http://www.inoreader.com/" title="Inoreader">Inoreader</a>のAPIはCORSに対応していません！
-つまりブラウザで直接APIを叩けないという問題があります。</p>
-
-<p>これについても<a href="http://disq.us/p/1lpznh0">問い合わせている</a>のですが、今のところサポートされていないだけなのか、今後もサポートする気はないのかについてはまだ返事を貰ってないですが。（誰かつついてくれると助かります）</p>
-
-<ul>
-<li><a href="http://disq.us/p/1lpznh0">http://disq.us/p/1lpznh0</a><br></li>
-</ul>
-
-<p>今のところ、CORSを回避するProxyサーバを組み合わせるか、ブラウザ拡張で特定のAPIだけCORSを無視するワークアラウンドが必要です。</p>
-
-<ul>
-<li><a href="https://github.com/azu/irodr/issues/11" title="Docs: Add workaround for CORS · Issue #11 · azu/irodr">Docs: Add workaround for CORS · Issue #11 · azu/irodr</a></li>
-</ul>
-
-<p>まだ開発中なので、<code>npm start</code>すると自動でCORSを無視できるProxyサーバが立つ仕組みしか用意していません。ブラウザ拡張でCORSを無視させる方法には<a href="https://github.com/azu/irodr/issues/11">まだ問題があるので興味がある人はIssue</a>に日本語でもいいから書き込んでください。</p>
-
-<p><strong>開発用のサーバ</strong>: <code>npm start</code>するとwebpack-dev-serverが立ち上がります。
-<a href="http://localhost:3000">http://localhost:3000</a> は自動的にCORSを無視するProxyも兼ねているので、<a href="http://localhost:3000">http://localhost:3000</a> にアクセスすれば利用できます。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">npm start
-</code></pre></div>
-<p>Electronアプリにすれば簡単に無視できますが、RSSリーダはブラウザで開けるウェブアプリのほうが都合がいいのでそこまでやる気はないです（タブを開きまくるのでアプリよりブラウザの方がいい。PRは歓迎しています）</p>
-
-<p>後gh-pagesに公開したいのですが、 %PUBLIC_URL%が置換されないというcreate-react-app-typescriptの謎っぽい挙動を踏んでいるので、わかる方は次のIssueをみてください。</p>
-
-<ul>
-<li><a href="https://github.com/azu/irodr/issues/16" title="Not working on gh-pages · Issue #16 · azu/irodr">Not working on gh-pages · Issue #16 · azu/irodr</a></li>
-</ul>
-
-<p>他の既知の問題は <a href="https://github.com/azu/irodr/issues">https://github.com/azu/irodr/issues</a> にIssueを立てているので、気になる人は見てみてください。</p>
-
-<h3 id="feedly">Feedly</h3>
-
-<p>DDD的な感じで作っていて、ドメインモデルはInoreaderというサービスには依存しないように書いています。そのため、ちょっとUseCaseの変更は必要ですが、<a href="https://developer.feedly.com/v3/auth/">Feedly</a>など他のRSSリーダサービスにも対応できると思っています。</p>
-
-<p>しかし、<a href="https://developer.feedly.com/v3/auth/">Feedly</a>のAPIの使い方がさっぱり分からなくて手を付けられていません。</p>
-
-<p>どなたか、FeedlyのOAuthクライアントIDを永続的に取得する方法が分かる人は教えてください。
-（TwitterやInoreader、GitHubなどは普通のアプリ登録でClient IDを取得できるので、これのやり方Feedlyだとよくわからない。Sandbox以外の方法はどこにあるのかな?）</p>
-
-<h2 id="使い方">使い方</h2>
-
-<p>2017-08-31現在は開発サーバを建てないと使えないです。
-次の手順で多分<a href="https://github.com/azu/irodr" title="Irodr">Irodr</a>を手元で動かせるようになると思います。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">git clone https://github.com/azu/irodr
-cd irodr
-npm install
-# yarn installの方がlockを使うので推奨
-npm start
-open http://localhost:3000
-</code></pre></div>
-<p>ページを開くと多分TokenがないからInoreaderにログインして認証しろというエラーがでて、認証して戻ってくるとAPIを叩けるようになります。
-（おそらくめちゃくちゃわかりにくいし、CORSの問題とかもあるので、開発者ツールを開いて見れる人じゃないと難しい気はします）</p>
-
-<p>使ってみておかしなところは<a href="https://github.com/azu/irodr/issues">Issue</a>を立ててください。3日前に作り始めたばかりなので、まだちゃんと実装してない部分もありますがとりあえずIssueを立てておけば修正される気がします。</p>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://t.co/xKJF7YUu5D">https://t.co/xKJF7YUu5D</a><br>面倒なのでInoreaderをバックエンドにLDRみたいなRSSリーダ書き始めた。<br>Inoreader CORS対応してないのがネック… FeedlyはOAuthのクライアントIDのとり方がよくわからない… <a href="https://t.co/cdbT55cC6x">pic.twitter.com/cdbT55cC6x</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/901991926676692992">August 28, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<h2 id="おわりに">おわりに</h2>
-
-<p>LDRは2017-08-31でサービス終了なので、次の記事で紹介してるフィード一覧の詳細データが入った <code>ldr.json</code> と呼んでいるものをまだ取得してない人は一応バックアップしておくといいと思います。
-(opmlと違ってレートなど細かいデータも含まれている）</p>
-
-<ul>
-<li><a href="http://efcl.info/2017/07/29/ldr-rate-export/" title="LDRのフィードをレート情報付きでエクスポートする | Web Scratch">LDRのフィードをレート情報付きでエクスポートする | Web Scratch</a></li>
-</ul>
-
-<p>LDRは長いこと使いましたが、livedoor Readerを作った<a href="http://youkoseki.tumblr.com/post/22588852397/mala">方</a>々、LDRを<a href="https://www.youtube.com/watch?v=596ymsCCxbw">AWS</a>に<a href="http://media.amazonwebservices.com/jp/summit2015/docs/ME-02-Tokyo-Summit-2015.pdf">移して</a>運用されたLive Dwango Readerの方々ありがとうございました。</p>
  ]]></content>
  </entry>
  
