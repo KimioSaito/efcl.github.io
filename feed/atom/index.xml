@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-15T22:22:58+09:00</updated>
+ <updated>2017-11-15T22:26:37+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -82,6 +82,14 @@
     <span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">,</span> <span class="s2">&quot;should get same metadata&quot;</span><span class="p">);</span>
 <span class="p">});</span>
 </code></pre></div>
+<p><code>entry</code>オブジェクトは<code>performance.get*</code> APIで取得できます。</p>
+
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/getEntries">Performance.getEntries() - Web APIs | MDN</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/getEntriesByName">Performance.getEntriesByName() - Web APIs | MDN</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/getEntriesByType">Performance.getEntriesByType() - Web APIs | MDN</a></li>
+</ul>
+
 <h2 id="おわりに">おわりに</h2>
 
 <p><code>performance.mark</code>はシンプルながら結構便利なAPIです。
