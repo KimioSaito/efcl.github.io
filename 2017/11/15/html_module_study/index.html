@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+    <title>
+        
+        #html_modules_study アウトラインメモ | Web Scratch
+        
+    </title>
+    <meta name="description" content="html_modules_study - connpass">
+    
+    <meta name="keywords" content="JavaScript,HTML,modules" />
+    
+    <meta name="author" content="azu">
+    <!-- Icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="/public/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="http://efcl.info/public/favicon.ico">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/public/css/main.css">
+    <!-- JavaScript -->
+    <!-- Open graph tags -->
+<meta property="og:title" content="#html_modules_study アウトラインメモ">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://efcl.info/2017/11/15/html_module_study/">
+<meta property="og:image" content="http://efcl.info/public/favicon.ico">
+
+<meta property="og:description" content="html_modules_study - connpass">
+<meta property="og:site_name" content="Web Scratch">
+
+
+
+
+<meta property="article:published_time" content="2017-11-15T20:56:00+09:00">
+<meta property="article:author" content="https://www.facebook.com/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/11/06/textlint-core-refactoring/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/10/31/nlp-pattern-match/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/10/20/alfred-hatenabookmark/">
+
+
+
+
+
+<meta property="article:section" content="イベント">
+
+
+
+
+
+<meta property="article:tag" content="JavaScript">
+
+<meta property="article:tag" content="HTML">
+
+<meta property="article:tag" content="modules">
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-2184335-8', 'auto');
+    ga('send', 'pageview');
+</script>
+    <script>
+var blog_categories = [
+{
+    "title" : "greasemonkey",
+    "count" : 61
+},{
+    "title" : "ニコニコ動画",
+    "count" : 16
+},{
+    "title" : "小説電子化",
+    "count" : 3
+},{
+    "title" : "vista",
+    "count" : 12
+},{
+    "title" : "firefox",
+    "count" : 55
+},{
+    "title" : "その他",
+    "count" : 13
+},{
+    "title" : "webサービス",
+    "count" : 22
+},{
+    "title" : "software",
+    "count" : 59
+},{
+    "title" : "雑記",
+    "count" : 36
+},{
+    "title" : "まとめ",
+    "count" : 11
+},{
+    "title" : "zaurus",
+    "count" : 3
+},{
+    "title" : "ハードウェア",
+    "count" : 8
+},{
+    "title" : "アドオン",
+    "count" : 31
+},{
+    "title" : "wordpress",
+    "count" : 6
+},{
+    "title" : "javascript",
+    "count" : 189
+},{
+    "title" : "インストール設定",
+    "count" : 12
+},{
+    "title" : "iphone",
+    "count" : 10
+},{
+    "title" : "loox u",
+    "count" : 1
+},{
+    "title" : "tombloo",
+    "count" : 3
+},{
+    "title" : "イベント",
+    "count" : 92
+},{
+    "title" : "userchome.js",
+    "count" : 8
+},{
+    "title" : "jetpack",
+    "count" : 7
+},{
+    "title" : "onenote",
+    "count" : 2
+},{
+    "title" : "nilscript",
+    "count" : 4
+},{
+    "title" : "keysnail",
+    "count" : 3
+},{
+    "title" : "ios",
+    "count" : 15
+},{
+    "title" : "shell",
+    "count" : 3
+},{
+    "title" : "r言語",
+    "count" : 2
+},{
+    "title" : "node.js",
+    "count" : 3
+},{
+    "title" : "mac",
+    "count" : 2
+},{
+    "title" : "github",
+    "count" : 11
+},{
+    "title" : "jekyll",
+    "count" : 1
+},{
+    "title" : "golang",
+    "count" : 1
+},{
+    "title" : "web",
+    "count" : 1
+},{
+    "title" : "スライド",
+    "count" : 1
+},{
+    "title" : "ie",
+    "count" : 1
+},{
+    "title" : "書籍",
+    "count" : 2
+},{
+    "title" : "textlint",
+    "count" : 8
+}
+];
+    blog_categories = blog_categories.filter(function(categoryObject){
+        return !/^\d+$/.test(categoryObject.title);
+    });
+</script>
+</head>
+
+
+<body class="layout-reverse theme-base-0d">
+<a href="https://github.com/efcl/efcl.github.io" class="github-ribbon">
+    <img style="position: fixed; z-index:100; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+<header>
+    <div class="site-header">
+    <img src="/public/img/reimu-right.png" class="header-logo">
+
+    <h1 class="site-title">
+        <a href="/">
+            Web Scratch
+        </a>
+    </h1>
+    <p class="lead">ブラウザ/JavaScript等についてのブログ</p>
+
+</div>
+</header>
+<aside>
+    <div class="sidebar">
+    <div class="container">
+        <div class="profile">
+            <a href="/about/" title="About"><img src="/public/img/azu.png" alt="Profile"></a>
+
+            <h2><a href="/about/" title="About">azu</a></h2>
+        </div>
+        <div class="social">
+            <a class="twitter" href="http://twitter.com/azu_re" title="Twitter">
+                <img src="/public/svg/twitter.svg" alt="twitter" width="32" height="32"/>
+            </a>
+            <a class="github" href="https://github.com/azu" title="GitHub">
+                <img src="/public/svg/github.svg" alt="GitHub" width="32" height="32"/>
+            </a>
+            <a class="rss" href="/feed/" title="RSS Feed">
+                <img src="/public/svg/feed.svg" alt="RSS" width="32" height="32"/>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="search">
+                <form class="search-box" method="get" action="https://www.google.co.jp/search">
+                    <label for="search-box-label">検索:</label>
+                    <input type="hidden" name="q" value="site:efcl.info">
+                    <input id="search-box-label" type="search" name="q">
+                    <input type="submit" value="search">
+                </form>
+            </div>
+            <div class="recent">
+    <h3 class="recent-posts-list-title">
+        <a href="/">最近の投稿</a>
+    </h3>
+    <ul class="recent-posts">
+        
+        <li>
+            <a href="/2017/11/15/html_module_study/">
+                #html_modules_study アウトラインメモ
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/11/06/textlint-core-refactoring/">
+                textlintのコアをTypeScriptで書き直した、textlintの今後について
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/10/31/nlp-pattern-match/">
+                自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/10/20/alfred-hatenabookmark/">
+                Alfred上で自分のはてなブックマークを検索できるWorkflow
+            </a>
+        </li>
+        
+    </ul>
+</div>
+            <div class="recent">
+    <h3 class="categories-list-title"><a href="/categories">カテゴリ一覧</a></h3>
+
+    <div class="categories-list" id="js-categories-list">
+
+    </div>
+    <script>
+        (function () {
+            var categoriesList = window.blog_categories;
+            var appendPoint = document.getElementById("js-categories-list");
+            // big ... small
+            var sortedCategories = categoriesList.sort(function (a, b) {
+                return a.count < b.count ? 1 : -1;
+            });
+            var ulTag = document.createElement("ul");
+            var displayCount = sortedCategories.length < 3 ? sortedCategories.length : 3;
+            for (var i = 0; i < displayCount; i++) {
+                var category = sortedCategories[i];
+                var liTag = document.createElement("li");
+                var aTag = document.createElement("a");
+                aTag.href = "/categories#" + category.title;
+                aTag.textContent = category.title;
+                var spanTag = document.createElement("span");
+                spanTag.appendChild(document.createTextNode("[" + category.count + "]"));
+                liTag.appendChild(aTag);
+                liTag.appendChild(spanTag);
+                ulTag.appendChild(liTag);
+            }
+            var lastLiTag = document.createElement("li");
+            var lastATag = document.createElement("a");
+            lastATag.href = "/categories";
+            lastATag.textContent = "その他のタグ…";
+            lastLiTag.appendChild(lastATag);
+            ulTag.appendChild(lastATag);
+            appendPoint.appendChild(ulTag);
+        })();
+    </script>
+</div>
+        </nav>
+    </div>
+</div>
+
+</aside>
+<article>
+    <div class="content container">
+        <div class="post" id="js-post-url" data-post-url="/2017/11/15/html_module_study/">
+    <h1 class="post-title">#html_modules_study アウトラインメモ</h1>
+
+    <div class="pre-post-toolbar">
+        <span class="post-date">2017年11月15日</span>
+        <a class="btn edit-on-github" href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-11-15-html_module_study.md"><span class="edito-on-github-label"></span>Edit on GitHub</a>
+
+    </div>
+    <div class="post-content">
+        <h1 id="html_modules_study-connpass"><a href="https://web-study.connpass.com/event/70731/" title="html_modules_study - connpass">html_modules_study - connpass</a></h1>
+
+<p><a href="https://web-study.connpass.com/event/70731/" title="html_modules_study - connpass">html_modules_study</a>に参加したのでメモ。</p>
+
+<h2 id="webcomponents-updates-1000ch">WebComponents Updates - @1000ch</h2>
+
+<blockquote>
+<p>スライド: <a href="https://1000ch.github.io/slide/webcomponents-2017/#" title="Web Components Updates">Web Components Updates</a></p>
+</blockquote>
+
+<ul>
+<li>Void or Self-closing Element
+
+<ul>
+<li>今は <code>&lt;x-button&gt;&lt;/x-button&gt;</code> なので省略したい</li>
+<li><code>&lt;x-button&gt;</code></li>
+</ul></li>
+<li><code>assignedElements()</code>
+
+<ul>
+<li><code>assignedNodes()</code>はTextも含まれる</li>
+<li>挿入された要素だけをShadom DOM内部で参照したい</li>
+</ul></li>
+<li>Custom Psuedo-elements
+
+<ul>
+<li>疑似要素を独自に定義出来るようにしたいPropsal</li>
+<li><code>&lt;input paseudo=&quot;start-data&quot; type=&quot;data&quot;&gt;</code></li>
+<li><code>data-range-selector::start-data</code></li>
+</ul></li>
+<li>CSS shadow Parts
+
+<ul>
+<li>Shadow Hostを<code>::part()</code>や<code>::theme()</code>で参照するCSSセレクタ</li>
+</ul></li>
+<li>HTML modules
+
+<ul>
+<li><code>import</code>、<code>export</code>でHTMLをロードしていいか</li>
+<li>ESのシンタックスも拡張する必要がある?</li>
+</ul></li>
+<li>(個人の意見) HTML Importsが宣言的に使えば何でもいい</li>
+<li>HTML Template Instantiation
+
+<ul>
+<li><a href="https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Template-Instantiation.md" title="webcomponents/Template-Instantiation.md at gh-pages · w3c/webcomponents">webcomponents/Template-Instantiation.md at gh-pages · w3c/webcomponents</a></li>
+<li><code>&lt;template&gt;</code>の中でMustace的なテンプレート</li>
+<li>記法とその振る舞いを定義</li>
+</ul></li>
+<li><code>&lt;link rel=&quot;modulepreload&quot;&gt;</code>
+
+<ul>
+<li><a href="https://github.com/whatwg/html/pull/2383">Add <link> rel=&quot;modulepreload&quot; by domenic · Pull Request #2383 · whatwg/html</a></li>
+<li><a href="https://docs.google.com/document/d/1ds9EEkcDGnt-iR8SAN-_7nsOfw7gsMfhZjzZ_QAIyjM/edit">Loading Performance with (Many) Modules: Summary as of Oct 7, 2017 - Google ドキュメント</a></li>
+<li>moduleの先までpreloadをしていくpreload</li>
+</ul></li>
+<li>rel=preloadとかas=moduleではだめ?
+
+<ul>
+<li>script要素のcredentialと一致する必要がある</li>
+<li>パースする前にhtml moduleなのかスクリプトなのかわからないと問題に?</li>
+<li>rel=preloadは専用のpreload cacheに保存してる V8</li>
+<li>なので、module cache</li>
+<li>なぜas=moduleではだめ?</li>
+<li><a href="https://github.com/whatwg/fetch/issues/486" title="preload, destinations, and module scripts · Issue #486 · whatwg/fetch">preload, destinations, and module scripts · Issue #486 · whatwg/fetch</a></li>
+</ul></li>
+</ul>
+
+<h2 id="template-instantiation-md-koba04">Template-Instantiation.md: @koba04</h2>
+
+<ul>
+<li><a href="https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Template-Instantiation.md" title="HTML Template Instantiation">HTML Template Instantiation</a></li>
+<li>テンプレートであってコンポーネントではない
+
+<ul>
+<li>mustache syntax</li>
+</ul></li>
+<li>バックグラウンド
+
+<ul>
+<li>いろんなフレームワークが独自のテンプレートを定義していた</li>
+<li>それぞれのテンプレートを組み合わせるのは難しい</li>
+</ul></li>
+<li>mustache syntax
+
+<ul>
+<li>シンプル</li>
+<li>値を代入する所だけはmustache syntax</li>
+<li>他はConfigurableにして柔軟性を作る</li>
+</ul></li>
+<li>Use Cases 9コ
+
+<ul>
+<li>テンプレートからDOM Treeを作れる</li>
+<li>テンプレートの変数へ代入できる</li>
+<li>テンプレートの変数は更新できる</li>
+<li>テンプレートの変数処理には関数を挟むことができる</li>
+<li>テンプレート -&gt; JavaScriptへ値を渡せる = 双方向なバンディング
+ィング</li>
+<li>属性を更新できる</li>
+<li>デフォルトの値を指定できる</li>
+<li>DOMの出し分けに対応する</li>
+<li>ループ処理</li>
+</ul></li>
+<li>Template Parts
+
+<ul>
+<li>`` をPartsと呼ぶ</li>
+<li>このpartsを更新することでCapitalizeとかの処理を実装できる</li>
+<li>前後のNodeや親子のNodeの参照などを持つ</li>
+</ul></li>
+<li>Template Partsの中にTemplate Parts
+
+<ul>
+<li><code>InnterTemplatePart</code></li>
+</ul></li>
+<li>Template Process Callback
+
+<ul>
+<li>createとupdate時に呼ばれるcallbackを指定できる</li>
+<li><code>createCallback</code></li>
+<li><code>processCallback</code></li>
+</ul></li>
+<li>Other libraries
+
+<ul>
+<li><a href="https://github.com/PolymerLabs/lit-html" title="PolymerLabs/lit-html: HTML template literals in JavaScript">PolymerLabs/lit-html: HTML template literals in JavaScript</a>
+
+<ul>
+<li>JavaScriptの中にテンプレートを書く</li>
+<li>Tagged Template</li>
+</ul></li>
+<li><a href="https://glimmerjs.com/" title="Glimmer">Glimmer</a>
+
+<ul>
+<li><a href="https://emberjs.com/blog/2017/10/10/glimmer-progress-report.html" title="Ember.js - Glimmer.js Progress Report">Ember.js - Glimmer.js Progress Report</a></li>
+</ul></li>
+</ul></li>
+<li>出典
+
+<ul>
+<li><a href="https://github.com/whatwg/html/issues/2254" title="Standardize &amp;lt;template&amp;gt; variables and event handlers · Issue #2254 · whatwg/html">Standardize <template> variables and event handlers · Issue #2254 · whatwg/html</a></li>
+</ul></li>
+<li>FAQ
+
+<ul>
+<li>`` は変えられない?</li>
+</ul></li>
+</ul>
+
+<h2 id="html-modules-tkochi">HTML Modules -  @tkochi</h2>
+
+<ul>
+<li>Blink</li>
+<li>Layout Tests</li>
+<li>HTML5
+
+<ul>
+<li>progressとかいろんな要素が増えた</li>
+<li>もっとプリミティブなAPIを定義したほうがいいのではというのがスタート</li>
+</ul></li>
+<li>HTML Imports
+
+<ul>
+<li><a href="https://www.polymer-project.org/blog/2017-08-22-npm-modules" title="Polymer 3.0 preview: npm and ES6 Modules - Polymer Project">Polymer 3.0 preview: npm and ES6 Modules - Polymer Project</a></li>
+<li>PolymerでもHTML ImportsからES moduleに移行することになった</li>
+</ul></li>
+<li>そもそもHTML Importとは
+
+<ul>
+<li>コンポーネントの定義を一つにまとめてロードする仕組み</li>
+<li><code>&lt;link rel=import href=my-button.html&gt;</code></li>
+<li><code>HTMLLinkElement.import</code> (readonly)</li>
+<li>後は使うだけ</li>
+</ul></li>
+<li>共通のImport
+
+<ul>
+<li>common.htmlを2回importした時</li>
+<li>1度目は実行される、2度目は実行されない</li>
+<li>import</li>
+</ul></li>
+<li>HTML Importのメリット
+
+<ul>
+<li><code>&lt;script&gt;</code>が実行できる</li>
+<li>依存関係を解決しながらロードしてくれる
+
+<ul>
+<li>ES moduleはすべての依存をリンクしてから実行するモデル</li>
+<li>HTML Importsならパイプライン処理できる</li>
+</ul></li>
+<li>テンプレート、スタイル、スクリプトを1つのファイルにかける
+
+<ul>
+<li>Vueの<code>.vue</code>とかと同じ</li>
+</ul></li>
+</ul></li>
+<li>問題点
+
+<ul>
+<li>Chrome以外の実装がない</li>
+<li><code>Document</code>のツリーができてしまう
+
+<ul>
+<li>しかし、HTML Importの<code>Document</code>は表示されない</li>
+<li>Fragmentではない</li>
+<li>Documentを持つ問題を引きずる
+
+<ul>
+<li><code>&lt;base&gt;</code>問題</li>
+</ul></li>
+<li>import先でも<code>document</code>を呼ぶとメインのドキュメントが返ってくる</li>
+<li><code>document.currentScript.ownerDocument</code></li>
+</ul></li>
+<li><code>&lt;style&gt;</code>がメインドキュメントに適応される
+
+<ul>
+<li>HTML module待ち</li>
+</ul></li>
+<li>ESModulesと相互運用できない
+
+<ul>
+<li>ロードとか実行の順序を決めるとかをHTML ImportとES Module両方をそれぞれ書かないといけなくなる</li>
+</ul></li>
+</ul></li>
+<li>HTML Modules
+
+<ul>
+<li><a href="https://github.com/w3c/webcomponents/issues/645">https://github.com/w3c/webcomponents/issues/645</a>
+
+<ul>
+<li>長いスレッド</li>
+</ul></li>
+<li>実際にユーザーに出すときにはコンパイルした何かになってる</li>
+<li>そういうときにHTML Modulesみたいなそのまま出すものを作る意味がどれぐらいあるのか</li>
+<li>スレッドのまとめ
+
+<ul>
+<li>HTML in JS、JS in HTML</li>
+<li>importでJavaScript以外も <code>as Foo</code> で読めるようにするとか</li>
+<li><code>Symbol.importer</code>みたいなhookを実装できるようにすればいいのではとか</li>
+<li>論点がまとまってない</li>
+</ul></li>
+</ul></li>
+</ul>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">module</span><span class="nt">&gt;</span>
+<span class="kr">import</span> <span class="nx">temp</span> <span class="nx">from</span> <span class="s2">&quot;my-template.html&quot;</span><span class="p">;</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">&quot;#id&quot;</span><span class="p">).</span><span class="nx">appendChild</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">importNode</span><span class="p">(</span><span class="nx">tmpl</span><span class="p">.</span><span class="nx">content</span><span class="p">));</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+<p>実現例(イメージ)</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">module</span><span class="nt">&gt;</span>
+<span class="kr">import</span> <span class="o">*</span> <span class="nx">from</span> <span class="s2">&quot;lgtm-button.html&quot;</span><span class="p">;</span>
+<span class="c1">// registryはwindowにくっついている</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;lgtm-button&gt;&lt;/lgtm-button&gt;</span>
+</code></pre></div>
+<p>実装例(import/export)</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;template&gt;</span>
+  <span class="nt">&lt;button&gt;</span>LGTM<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/template&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+<span class="kr">import</span> <span class="nx">MyButton</span> <span class="nx">from</span> <span class="s2">&quot;./my-button.html&quot;</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">LGTMButton</span> <span class="kr">extends</span> <span class="nx">MyButton</span><span class="p">{}</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+<ul>
+<li><p>HTML moduileはHTMLとES両方の仕様を参照する</p>
+
+<ul>
+<li>ES側にhookの仕組み</li>
+<li>HTML側に解釈の仕組み</li>
+</ul></li>
+<li><p>何がうれしいのか</p>
+
+<ul>
+<li><code>&lt;template&gt;</code>を読み込みたい</li>
+<li>文字列からDOM生成じゃないので効率的?</li>
+<li>ネイティブHTMLパーザーを使うと性能が出る?</li>
+</ul></li>
+<li><p>TAPC 2017の議論</p>
+
+<ul>
+<li>ES moduleベースのシステム</li>
+<li>InertなHTMLがロードできる
+
+<ul>
+<li><a href="http://takenspc.hatenablog.com/entry/2013/09/26/232111" title="inertとは何だろう - Unreviewed">inertとは何だろう - Unreviewed</a></li>
+</ul></li>
+<li>ここまでは共通認識</li>
+<li>single file component
+
+<ul>
+<li>html,js,cssを含んだコンポーネント</li>
+</ul></li>
+<li><code>&lt;script&gt;</code>が実行できる</li>
+<li>DOMの一部をexportできる</li>
+<li>他のモジュールをimportできる</li>
+<li>Document or DocumentGragment</li>
+<li>独立した空間
+
+<ul>
+<li>サードパーティなHTMLを独立した空間で実行出来る</li>
+<li>いいねボタンとかを別の空間にする</li>
+<li><a href="https://github.com/tc39/proposal-realms" title="tc39/proposal-realms: ECMAScript Proposal, specs, and reference implementation for Realms">tc39/proposal-realms: ECMAScript Proposal, specs, and reference implementation for Realms</a></li>
+</ul></li>
+<li>何も決まらなかった</li>
+<li>具体的なユースケースで話をしようぜ</li>
+</ul></li>
+<li><p>FAQ</p>
+
+<ul>
+<li>Q. パッケージマネージャについて議論されてる?</li>
+<li>A. 特になかった
+
+<ul>
+<li>Polymerの人もいるので一応考えているのでは</li>
+<li><a href="https://github.com/package-community/discussions/issues/2" title="javascript: npm for web packages · Issue #2 · package-community/discussions">javascript: npm for web packages · Issue #2 · package-community/discussions</a></li>
+</ul></li>
+<li>Q. 文章のフォーマットなのに文章として実行できないもを定義する意味は?</li>
+<li>A. Declarative Custom HTMLとかの議論はあった</li>
+</ul></li>
+</ul>
+
+    </div>
+    <div class="post-post-toolbar">
+        <a class="btn edit-on-github"
+           href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-11-15-html_module_study.md"><span
+                class="edit-on-github-label"></span>修正リクエストをする</a>
+        <nav class="tags"
+             id="js-post-tags"
+             data-post-tags='["JavaScript","HTML","modules"]'>
+            <span>タグ:</span>
+            <ul>
+                
+                <li><a href="/tags/?q=JavaScript">JavaScript</a></li>
+                
+                <li><a href="/tags/?q=HTML">HTML</a></li>
+                
+                <li><a href="/tags/?q=modules">modules</a></li>
+                
+            </ul>
+        </nav>
+    </div>
+    <div class="announce-area">
+        <h3>お知らせ欄</h3>
+        <div class="announce-text">
+            <!--お知らせ-->
+JavaScriptに関する最新情報は週一で<a href="http://jser.info/" title="JSer.info">JSer.info</a>を更新しています。
+
+        </div>
+        <h3>次に書くかもしれない記事候補</h3>
+        <p>興味がありましたら<a href="https://github.com/efcl/efcl.github.io/labels/%E8%A8%98%E4%BA%8B%E5%80%99%E8%A3%9C" title="Issues · efcl/efcl.github.io">Issues · efcl/efcl.github.io</a>からご意見下さい</p>
+        <div class="announce-text">
+            <iframe src="https://azu.github.io/github-issue-widget/?owner=efcl&repo=efcl.github.io&labels=記事候補&limit=4&random"
+                    allowtransparency="true" frameborder="0" scrolling="0" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+    <div class="related-articles" id="js-related-articles">
+        <h3>関連記事</h3>
+    </div>
+</div>
+<div class="zenback-embed">
+    <!-- X:S ZenBackWidget --><div id="zenback-widget-loader"></div><script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var r=Math.ceil((new Date()*1)*Math.random());var j=d.createElement("script");j.id=i;j.async=true;j.src="//w.zenback.jp/v1/?base_uri=http%3A//efcl.info/&nsid=89229392978401102%3A%3A89229398078677080&rand="+r;d.body.appendChild(j);}}(document,"zenback-widget-js");</script><!-- X:E ZenBackWidget -->
+</div>
+<div class="disqus-embed" id="js-disqus-embed">
+    <button class="comment-button" id="js-comment-button">コメントを表示</button>
+</div>
+
+<script type="text/javascript" src="/public/js/tag-fetcher.js"></script>
+<script type="text/javascript" src="/public/js/show-related-article.js"></script>
+<script type="text/javascript" src="/public/js/show-disqus.js"></script>
+
+    </div>
+</article>
+</body>
+</html>

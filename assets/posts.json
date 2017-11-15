@@ -2,6 +2,12 @@
     "posts": [
         
         {
+            "title": "#html_modules_study アウトラインメモ",
+            "url": "http://efcl.info/2017/11/15/html_module_study/",
+            "date": "2017-11-15T20:56:00+09:00"
+        },
+        
+        {
             "title": "textlintのコアをTypeScriptで書き直した、textlintの今後について",
             "url": "http://efcl.info/2017/11/06/textlint-core-refactoring/",
             "date": "2017-11-06T10:43:00+09:00"

@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-12T23:23:54+09:00</updated>
+ <updated>2017-11-15T21:00:29+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,338 @@
  </author>
  
 
+ 
+ <entry>
+   <title>#html_modules_study アウトラインメモ</title>
+   <link href="http://efcl.info/2017/11/15/html_module_study/"/>
+   <updated>2017-11-15T20:56:00+09:00</updated>
+   <id>http://efcl.info/2017/11/15/html_module_study</id>
+   <content type="html"><![CDATA[ <h1 id="html_modules_study-connpass"><a href="https://web-study.connpass.com/event/70731/" title="html_modules_study - connpass">html_modules_study - connpass</a></h1>
+
+<p><a href="https://web-study.connpass.com/event/70731/" title="html_modules_study - connpass">html_modules_study</a>に参加したのでメモ。</p>
+
+<h2 id="webcomponents-updates-1000ch">WebComponents Updates - @1000ch</h2>
+
+<blockquote>
+<p>スライド: <a href="https://1000ch.github.io/slide/webcomponents-2017/#" title="Web Components Updates">Web Components Updates</a></p>
+</blockquote>
+
+<ul>
+<li>Void or Self-closing Element
+
+<ul>
+<li>今は <code>&lt;x-button&gt;&lt;/x-button&gt;</code> なので省略したい</li>
+<li><code>&lt;x-button&gt;</code></li>
+</ul></li>
+<li><code>assignedElements()</code>
+
+<ul>
+<li><code>assignedNodes()</code>はTextも含まれる</li>
+<li>挿入された要素だけをShadom DOM内部で参照したい</li>
+</ul></li>
+<li>Custom Psuedo-elements
+
+<ul>
+<li>疑似要素を独自に定義出来るようにしたいPropsal</li>
+<li><code>&lt;input paseudo=&quot;start-data&quot; type=&quot;data&quot;&gt;</code></li>
+<li><code>data-range-selector::start-data</code></li>
+</ul></li>
+<li>CSS shadow Parts
+
+<ul>
+<li>Shadow Hostを<code>::part()</code>や<code>::theme()</code>で参照するCSSセレクタ</li>
+</ul></li>
+<li>HTML modules
+
+<ul>
+<li><code>import</code>、<code>export</code>でHTMLをロードしていいか</li>
+<li>ESのシンタックスも拡張する必要がある?</li>
+</ul></li>
+<li>(個人の意見) HTML Importsが宣言的に使えば何でもいい</li>
+<li>HTML Template Instantiation
+
+<ul>
+<li><a href="https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Template-Instantiation.md" title="webcomponents/Template-Instantiation.md at gh-pages · w3c/webcomponents">webcomponents/Template-Instantiation.md at gh-pages · w3c/webcomponents</a></li>
+<li><code>&lt;template&gt;</code>の中でMustace的なテンプレート</li>
+<li>記法とその振る舞いを定義</li>
+</ul></li>
+<li><code>&lt;link rel=&quot;modulepreload&quot;&gt;</code>
+
+<ul>
+<li><a href="https://github.com/whatwg/html/pull/2383">Add <link> rel=&quot;modulepreload&quot; by domenic · Pull Request #2383 · whatwg/html</a></li>
+<li><a href="https://docs.google.com/document/d/1ds9EEkcDGnt-iR8SAN-_7nsOfw7gsMfhZjzZ_QAIyjM/edit">Loading Performance with (Many) Modules: Summary as of Oct 7, 2017 - Google ドキュメント</a></li>
+<li>moduleの先までpreloadをしていくpreload</li>
+</ul></li>
+<li>rel=preloadとかas=moduleではだめ?
+
+<ul>
+<li>script要素のcredentialと一致する必要がある</li>
+<li>パースする前にhtml moduleなのかスクリプトなのかわからないと問題に?</li>
+<li>rel=preloadは専用のpreload cacheに保存してる V8</li>
+<li>なので、module cache</li>
+<li>なぜas=moduleではだめ?</li>
+<li><a href="https://github.com/whatwg/fetch/issues/486" title="preload, destinations, and module scripts · Issue #486 · whatwg/fetch">preload, destinations, and module scripts · Issue #486 · whatwg/fetch</a></li>
+</ul></li>
+</ul>
+
+<h2 id="template-instantiation-md-koba04">Template-Instantiation.md: @koba04</h2>
+
+<ul>
+<li><a href="https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Template-Instantiation.md" title="HTML Template Instantiation">HTML Template Instantiation</a></li>
+<li>テンプレートであってコンポーネントではない
+
+<ul>
+<li>mustache syntax</li>
+</ul></li>
+<li>バックグラウンド
+
+<ul>
+<li>いろんなフレームワークが独自のテンプレートを定義していた</li>
+<li>それぞれのテンプレートを組み合わせるのは難しい</li>
+</ul></li>
+<li>mustache syntax
+
+<ul>
+<li>シンプル</li>
+<li>値を代入する所だけはmustache syntax</li>
+<li>他はConfigurableにして柔軟性を作る</li>
+</ul></li>
+<li>Use Cases 9コ
+
+<ul>
+<li>テンプレートからDOM Treeを作れる</li>
+<li>テンプレートの変数へ代入できる</li>
+<li>テンプレートの変数は更新できる</li>
+<li>テンプレートの変数処理には関数を挟むことができる</li>
+<li>テンプレート -&gt; JavaScriptへ値を渡せる = 双方向なバンディング
+ィング</li>
+<li>属性を更新できる</li>
+<li>デフォルトの値を指定できる</li>
+<li>DOMの出し分けに対応する</li>
+<li>ループ処理</li>
+</ul></li>
+<li>Template Parts
+
+<ul>
+<li>`` をPartsと呼ぶ</li>
+<li>このpartsを更新することでCapitalizeとかの処理を実装できる</li>
+<li>前後のNodeや親子のNodeの参照などを持つ</li>
+</ul></li>
+<li>Template Partsの中にTemplate Parts
+
+<ul>
+<li><code>InnterTemplatePart</code></li>
+</ul></li>
+<li>Template Process Callback
+
+<ul>
+<li>createとupdate時に呼ばれるcallbackを指定できる</li>
+<li><code>createCallback</code></li>
+<li><code>processCallback</code></li>
+</ul></li>
+<li>Other libraries
+
+<ul>
+<li><a href="https://github.com/PolymerLabs/lit-html" title="PolymerLabs/lit-html: HTML template literals in JavaScript">PolymerLabs/lit-html: HTML template literals in JavaScript</a>
+
+<ul>
+<li>JavaScriptの中にテンプレートを書く</li>
+<li>Tagged Template</li>
+</ul></li>
+<li><a href="https://glimmerjs.com/" title="Glimmer">Glimmer</a>
+
+<ul>
+<li><a href="https://emberjs.com/blog/2017/10/10/glimmer-progress-report.html" title="Ember.js - Glimmer.js Progress Report">Ember.js - Glimmer.js Progress Report</a></li>
+</ul></li>
+</ul></li>
+<li>出典
+
+<ul>
+<li><a href="https://github.com/whatwg/html/issues/2254" title="Standardize &amp;lt;template&amp;gt; variables and event handlers · Issue #2254 · whatwg/html">Standardize <template> variables and event handlers · Issue #2254 · whatwg/html</a></li>
+</ul></li>
+<li>FAQ
+
+<ul>
+<li>`` は変えられない?</li>
+</ul></li>
+</ul>
+
+<h2 id="html-modules-tkochi">HTML Modules -  @tkochi</h2>
+
+<ul>
+<li>Blink</li>
+<li>Layout Tests</li>
+<li>HTML5
+
+<ul>
+<li>progressとかいろんな要素が増えた</li>
+<li>もっとプリミティブなAPIを定義したほうがいいのではというのがスタート</li>
+</ul></li>
+<li>HTML Imports
+
+<ul>
+<li><a href="https://www.polymer-project.org/blog/2017-08-22-npm-modules" title="Polymer 3.0 preview: npm and ES6 Modules - Polymer Project">Polymer 3.0 preview: npm and ES6 Modules - Polymer Project</a></li>
+<li>PolymerでもHTML ImportsからES moduleに移行することになった</li>
+</ul></li>
+<li>そもそもHTML Importとは
+
+<ul>
+<li>コンポーネントの定義を一つにまとめてロードする仕組み</li>
+<li><code>&lt;link rel=import href=my-button.html&gt;</code></li>
+<li><code>HTMLLinkElement.import</code> (readonly)</li>
+<li>後は使うだけ</li>
+</ul></li>
+<li>共通のImport
+
+<ul>
+<li>common.htmlを2回importした時</li>
+<li>1度目は実行される、2度目は実行されない</li>
+<li>import</li>
+</ul></li>
+<li>HTML Importのメリット
+
+<ul>
+<li><code>&lt;script&gt;</code>が実行できる</li>
+<li>依存関係を解決しながらロードしてくれる
+
+<ul>
+<li>ES moduleはすべての依存をリンクしてから実行するモデル</li>
+<li>HTML Importsならパイプライン処理できる</li>
+</ul></li>
+<li>テンプレート、スタイル、スクリプトを1つのファイルにかける
+
+<ul>
+<li>Vueの<code>.vue</code>とかと同じ</li>
+</ul></li>
+</ul></li>
+<li>問題点
+
+<ul>
+<li>Chrome以外の実装がない</li>
+<li><code>Document</code>のツリーができてしまう
+
+<ul>
+<li>しかし、HTML Importの<code>Document</code>は表示されない</li>
+<li>Fragmentではない</li>
+<li>Documentを持つ問題を引きずる
+
+<ul>
+<li><code>&lt;base&gt;</code>問題</li>
+</ul></li>
+<li>import先でも<code>document</code>を呼ぶとメインのドキュメントが返ってくる</li>
+<li><code>document.currentScript.ownerDocument</code></li>
+</ul></li>
+<li><code>&lt;style&gt;</code>がメインドキュメントに適応される
+
+<ul>
+<li>HTML module待ち</li>
+</ul></li>
+<li>ESModulesと相互運用できない
+
+<ul>
+<li>ロードとか実行の順序を決めるとかをHTML ImportとES Module両方をそれぞれ書かないといけなくなる</li>
+</ul></li>
+</ul></li>
+<li>HTML Modules
+
+<ul>
+<li><a href="https://github.com/w3c/webcomponents/issues/645">https://github.com/w3c/webcomponents/issues/645</a>
+
+<ul>
+<li>長いスレッド</li>
+</ul></li>
+<li>実際にユーザーに出すときにはコンパイルした何かになってる</li>
+<li>そういうときにHTML Modulesみたいなそのまま出すものを作る意味がどれぐらいあるのか</li>
+<li>スレッドのまとめ
+
+<ul>
+<li>HTML in JS、JS in HTML</li>
+<li>importでJavaScript以外も <code>as Foo</code> で読めるようにするとか</li>
+<li><code>Symbol.importer</code>みたいなhookを実装できるようにすればいいのではとか</li>
+<li>論点がまとまってない</li>
+</ul></li>
+</ul></li>
+</ul>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">module</span><span class="nt">&gt;</span>
+<span class="kr">import</span> <span class="nx">temp</span> <span class="nx">from</span> <span class="s2">&quot;my-template.html&quot;</span><span class="p">;</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">&quot;#id&quot;</span><span class="p">).</span><span class="nx">appendChild</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">importNode</span><span class="p">(</span><span class="nx">tmpl</span><span class="p">.</span><span class="nx">content</span><span class="p">));</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+<p>実現例(イメージ)</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">module</span><span class="nt">&gt;</span>
+<span class="kr">import</span> <span class="o">*</span> <span class="nx">from</span> <span class="s2">&quot;lgtm-button.html&quot;</span><span class="p">;</span>
+<span class="c1">// registryはwindowにくっついている</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;lgtm-button&gt;&lt;/lgtm-button&gt;</span>
+</code></pre></div>
+<p>実装例(import/export)</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;template&gt;</span>
+  <span class="nt">&lt;button&gt;</span>LGTM<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/template&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+<span class="kr">import</span> <span class="nx">MyButton</span> <span class="nx">from</span> <span class="s2">&quot;./my-button.html&quot;</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">LGTMButton</span> <span class="kr">extends</span> <span class="nx">MyButton</span><span class="p">{}</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+<ul>
+<li><p>HTML moduileはHTMLとES両方の仕様を参照する</p>
+
+<ul>
+<li>ES側にhookの仕組み</li>
+<li>HTML側に解釈の仕組み</li>
+</ul></li>
+<li><p>何がうれしいのか</p>
+
+<ul>
+<li><code>&lt;template&gt;</code>を読み込みたい</li>
+<li>文字列からDOM生成じゃないので効率的?</li>
+<li>ネイティブHTMLパーザーを使うと性能が出る?</li>
+</ul></li>
+<li><p>TAPC 2017の議論</p>
+
+<ul>
+<li>ES moduleベースのシステム</li>
+<li>InertなHTMLがロードできる
+
+<ul>
+<li><a href="http://takenspc.hatenablog.com/entry/2013/09/26/232111" title="inertとは何だろう - Unreviewed">inertとは何だろう - Unreviewed</a></li>
+</ul></li>
+<li>ここまでは共通認識</li>
+<li>single file component
+
+<ul>
+<li>html,js,cssを含んだコンポーネント</li>
+</ul></li>
+<li><code>&lt;script&gt;</code>が実行できる</li>
+<li>DOMの一部をexportできる</li>
+<li>他のモジュールをimportできる</li>
+<li>Document or DocumentGragment</li>
+<li>独立した空間
+
+<ul>
+<li>サードパーティなHTMLを独立した空間で実行出来る</li>
+<li>いいねボタンとかを別の空間にする</li>
+<li><a href="https://github.com/tc39/proposal-realms" title="tc39/proposal-realms: ECMAScript Proposal, specs, and reference implementation for Realms">tc39/proposal-realms: ECMAScript Proposal, specs, and reference implementation for Realms</a></li>
+</ul></li>
+<li>何も決まらなかった</li>
+<li>具体的なユースケースで話をしようぜ</li>
+</ul></li>
+<li><p>FAQ</p>
+
+<ul>
+<li>Q. パッケージマネージャについて議論されてる?</li>
+<li>A. 特になかった
+
+<ul>
+<li>Polymerの人もいるので一応考えているのでは</li>
+<li><a href="https://github.com/package-community/discussions/issues/2" title="javascript: npm for web packages · Issue #2 · package-community/discussions">javascript: npm for web packages · Issue #2 · package-community/discussions</a></li>
+</ul></li>
+<li>Q. 文章のフォーマットなのに文章として実行できないもを定義する意味は?</li>
+<li>A. Declarative Custom HTMLとかの議論はあった</li>
+</ul></li>
+</ul>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>textlintのコアをTypeScriptで書き直した、textlintの今後について</title>
@@ -1942,104 +2274,6 @@ open http://localhost:3000
 </ul>
 
 <p>LDRは長いこと使いましたが、livedoor Readerを作った<a href="http://youkoseki.tumblr.com/post/22588852397/mala">方</a>々、LDRを<a href="https://www.youtube.com/watch?v=596ymsCCxbw">AWS</a>に<a href="http://media.amazonwebservices.com/jp/summit2015/docs/ME-02-Tokyo-Summit-2015.pdf">移して</a>運用されたLive Dwango Readerの方々ありがとうございました。</p>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>略語は括弧の中 or 前? Open Source Software(OSS) or OSS(Open Source Software)</title>
-   <link href="http://efcl.info/2017/08/15/textlint-rule-abbr-within-parentheses/"/>
-   <updated>2017-08-15T19:25:00+09:00</updated>
-   <id>http://efcl.info/2017/08/15/textlint-rule-abbr-within-parentheses</id>
-   <content type="html"><![CDATA[ <p>タイトルにあるような正式名称に対する略語(主に頭文字を取るタイプ)を括弧の中に書いているかをチェックする<a href="https://github.com/textlint/textlint" title="textlint">textlint</a>ルールを書きました。</p>
-
-<ul>
-<li><a href="https://github.com/azu/textlint-rule-abbr-within-parentheses" title="textlint-rule-abbr-within-parentheses">textlint-rule-abbr-within-parentheses</a></li>
-</ul>
-
-<h2 id="例">例</h2>
-
-<p>例えば、Open Source Softwareの略語はOSSですということを表現したい場合に次のように書くというルールです。</p>
-
-<p><strong>OK</strong>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">This is Open Source Software(OSS)
-これはOpen Source Software（OSS）なルールです
-JavaScript(JS)
-</code></pre></div>
-<p><strong>NG</strong>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">LTS（Long-Term Support）
-JS(JavaScript)
-This rule is OSS(Open Source Software)
-これはOSS（Open Source Software）なルールです
-</code></pre></div>
-<h2 id="使い方">使い方</h2>
-
-<p>npmでインストールして</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">npm install textlint-rule-abbr-within-parentheses
-</code></pre></div>
-<p><code>.textlintrc</code>(Recommended)を設定すれば動きます。</p>
-<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
-    <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;abbr-within-parentheses&quot;</span><span class="p">:</span> <span class="kc">true</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<h2 id="略語は括弧の中-or-前">略語は括弧の中 or 前?</h2>
-
-<p>統一という観点から見ると次のような文章は略語の書き方が混ざっていてよくありません。</p>
-
-<blockquote>
-<p>混ざっていて良くない例<br>
-Ths Object Management Group(OMG) maintains specifications for the UML(Unified Modeling Language).</p>
-</blockquote>
-
-<p>そのため統一する書き方を探していたのですが、括弧の中に略語を書くというルールを採用してるケースが色々ありました。APA StyleやIBM Style Guideなどはそのような書き方を推奨しているようです。</p>
-
-<p>逆(略語を先に書く)を推奨してるルールは見つけることができませんでしたが、括弧ではなく言葉で略語を解説するスタイルも見られました。しかしながら略語は括弧の中に書くという根拠については見つけられませんでした。</p>
-
-<p>一つまだ疑問があって、括弧の中に書くとどうも補足的な印象が出てきてしまいます。
-たとえば、URLのような略語自体が言葉として一般的に成立してるパターンは、Uniform Resource Locatorという正式名称はもはやURLの補足情報になっているように思えます。
-他にもAP Styleの正式名称はAssociated Press Styleですが、AP(Associated Press) Styleのように紹介してる文章も見受けられます。(ここでの正式名称はわかりにくいしあまり重要ではないから括弧の中に書かれているのかも?)</p>
-
-<h3 id="english">English</h3>
-
-<ul>
-<li><a href="https://english.stackexchange.com/questions/84958/which-would-you-place-in-parentheses-the-expansion-or-the-abbreviation" title="Which would you place in parentheses: the expansion or the abbreviation? - English Language &amp;amp; Usage Stack Exchange">Which would you place in parentheses: the expansion or the abbreviation? - English Language &amp; Usage Stack Exchange</a></li>
-<li><a href="http://blog.apastyle.org/apastyle/2015/10/an-abbreviations-faq.html">APA Style Blog: An Abbreviations FAQ</a></li>
-<li><a href="http://www.kuediting.com/style/qa-why-you-shouldnt-put-acronyms-in-parentheses/" title="Q&amp;amp;A: Why you shouldn&amp;#39;t put acronyms in parentheses">Q&amp;A: Why you shouldn&#39;t put acronyms in parentheses</a></li>
-<li><a href="https://books.google.co.jp/books?id=77WoO_P8yA4C&amp;pg=PA57&amp;lpg=PA57" title="The IBM Style Guide: Conventions for Writers and Editors - Francis DeRespinis, Peter Hayward, Jana Jenkins, Amy Laird, Leslie McDonald, Eric Radzinski">The IBM Style Guide: Conventions for Writers and Editors - Francis DeRespinis, Peter Hayward, Jana Jenkins, Amy Laird, Leslie McDonald, Eric Radzinski - Google ブックス</a></li>
-</ul>
-
-<h3 id="japanese">Japanese</h3>
-
-<ul>
-<li><a href="http://www.jsphcs.jp/gakkaishi/denshi-m2.pdf" title="Microsoft Word - 執筆ガイドライン20151109訂正.docx - denshi-m2.pdf">Microsoft Word - 執筆ガイドライン20151109訂正.docx - denshi-m2.pdf</a></li>
-<li><a href="http://logicalskill.blog.fc2.com/blog-entry-79.html">Logical Skill の深い話 略語の表記</a></li>
-<li><a href="http://tmotooka.hatenablog.jp/entry/2013/05/18/212538">略語 : abbreviation と acronym - 職業プログラマの休日出勤</a></li>
-</ul>
-
-<p>ウェブに文書を書くと基本的にはHTMLなので、HTMLではどうなっているかが気になりました。
-HTMLの世界では<a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/dfn" title="dfn">dfn</a>と<a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/abbr" title="abbr">abbr</a>がそれぞれ関係します。</p>
-
-<blockquote>
-<p>We use <dfn><abbr title="Hypertext Markup Language">HTML</abbr></dfn> to structure our web documents.</p>
-</blockquote>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;p&gt;</span>We use <span class="nt">&lt;dfn&gt;&lt;abbr</span> <span class="na">title=</span><span class="s">&quot;Hypertext Markup Language&quot;</span><span class="nt">&gt;</span>HTML<span class="nt">&lt;/abbr&gt;&lt;/dfn&gt;</span> to structure our web documents.<span class="nt">&lt;/p&gt;</span>
-</code></pre></div>
-<p>この場合も正式名称が属性値にあるので、正式名称の方が補足情報にも見えます。</p>
-
-<p>これは感覚的なものですが、略語をそもそも使うのは正式名称が毎回書くには長いためです。
-なので、最初にこの正式名称の略語はこう定義しますという意味で <code>正式名称(略語)</code>と書くスタイルがあるのだと思います。またこの時に2回目以降は正式名称は補足的な情報に逆転する感じがします。(<code>abbr</code>要素の例)
-一方、そもそも一度しか出てこない単語はどちらでもいいという理由で表記が安定しないような気がします。(このルールで縛りたい部分)</p>
-
-<p>この辺の書き方や読んだときにどのような印象を受けるかについて調査レポートや論文とか知ってる人いたら教えてください。</p>
-
-<hr>
-
-<p>作ったtextlintルール</p>
-
-<ul>
-<li><a href="https://github.com/azu/textlint-rule-abbr-within-parentheses" title="textlint-rule-abbr-within-parentheses">textlint-rule-abbr-within-parentheses</a></li>
-</ul>
  ]]></content>
  </entry>
  
