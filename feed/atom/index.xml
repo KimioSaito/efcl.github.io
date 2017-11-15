@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-15T21:35:05+09:00</updated>
+ <updated>2017-11-15T21:36:33+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -88,6 +88,10 @@
 </ul>
 
 <h2 id="template-instantiation-md-koba04">Template-Instantiation.md: @koba04</h2>
+
+<blockquote>
+<p>スライド: <a href="https://speakerdeck.com/koba04/template-instantiation" title="Template Instantiation // Speaker Deck">Template Instantiation // Speaker Deck</a></p>
+</blockquote>
 
 <ul>
 <li><a href="https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Template-Instantiation.md" title="HTML Template Instantiation">HTML Template Instantiation</a></li>
