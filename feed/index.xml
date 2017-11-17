@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-17T22:10:45+09:00</updated>
+ <updated>2017-11-17T22:13:59+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,188 @@
  </author>
  
 
+ 
+ <entry>
+   <title>ローカルのPDFを全文検索するクライアント/サーバ/Electronアプリを書いた</title>
+   <link href="http://efcl.info/2017/11/17/searchive/"/>
+   <updated>2017-11-17T20:03:00+09:00</updated>
+   <id>http://efcl.info/2017/11/17/searchive</id>
+   <content type="html"><![CDATA[ <p>ローカルにあるPDFを全部検索して、その結果を一覧したいことがあります。
+例えば、今<a href="https://github.com/asciidwango/js-primer" title="js-primer">js-primer</a>という書籍を書いていて、他の書籍ではどんな扱い/用語になっているのかを調べいことがよくありました。</p>
+
+<p>この手のアプリとしては論文管理の<a href="https://www.readcube.com/papers/mac/" title="Papers for Mac">Papers for Mac</a>などがありますが、検索したいだけなのに色々な機能がついていてまた、とりあえず作ってみることにしました。</p>
+
+<p><a href="https://github.com/azu/searchive" title="searchive">searchive</a>というプロジェクト名にしてPDFからテキストを取り出す所やフロントエンドのElectronアプリ、PDFからテキストを取り出すのはブラウザでやるには遅いので、そこをサーバ側でやってくれる仕組みを作りました。</p>
+
+<p>大体100冊ぐらいをインデックスに入れて検索していますが、数百ms以内に検索結果が出てるので意外と動くようです。</p>
+
+<p><a href="http://www.giphy.com/gifs/3o6fIYo3aDtasisB2M"><img src="https://media.giphy.com/media/3o6fIYo3aDtasisB2M/giphy.gif" alt="App"></a></p>
+
+<h2 id="インストール">インストール</h2>
+
+<p><a href="https://github.com/azu/searchive/releases">Release page</a>からElectronアプリをダウンロードしてインストール出来ます。Electronアプリにはサーバの実装も入ってるので、アプリを入れるだけで動きます。</p>
+
+<ul>
+<li><a href="https://github.com/azu/searchive/releases/latest">Latest Release</a></li>
+</ul>
+
+<p><a href="https://www.appveyor.com/" title="AppVeyor">AppVeyor</a>などのCIの設定が面倒だったので、Mac版のバイナリしか置いていませんが、<a href="https://github.com/azu/searchive/tree/master/packages/searchive-app" title="searchive-app">searchive-app</a>をビルドすればどのOSでも動くと思います。またはPR歓迎です。</p>
+
+<h3 id="使い方">使い方</h3>
+
+<p>起動したら最初にPDFのインデックスを作る必要があります。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/11/17-1510917382.png" alt="image"></p>
+
+<p>メニューから設定を開くと、インデックスしたいファイルの場所を<a href="https://github.com/isaacs/node-glob" title="node-glob">glob</a>で指定できます。
+保存するとPDFからテキストを取り出した<code>index.json</code>を作り出してくれます。(とても重いので放置しておくといいです)</p>
+
+<p>ローディングバーが消えて終わったら後は検索するだけです。
+検索結果をフィルターすることができるので、大雑把な検索をしてからフィルターする使い方を想定しています。(検索の単位はPDFのページ)</p>
+
+<p><a href="http://www.giphy.com/gifs/3o6fIYo3aDtasisB2M"><img src="https://media.giphy.com/media/3o6fIYo3aDtasisB2M/giphy.gif" alt="App"></a></p>
+
+<p>検索演算子はGitHubみたいなものが使えます。
+ライブラリとしては<a href="https://github.com/azu/search-query-tester" title="search-query-tester">search-query-tester</a>を使っています。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/11/17-1510924048.png" alt="keyword operator"></p>
+
+<h2 id="作り方">作り方</h2>
+
+<p><a href="https://github.com/azu/searchive" title="searchive">searchive</a>はmonorepoのプロジェクトになっていて、細かい部品を独立したライブラリとして作っています。
+それらを組み合わせて<a href="https://github.com/azu/searchive/tree/master/packages/searchive-app" title="searchive-app">searchive-app</a>というアプリが動いています。</p>
+
+<p>それぞれの部品を順番に紹介していきます。</p>
+
+<h3 id="pdf-to-json"><a href="https://github.com/azu/searchive/tree/master/packages/pdf-to-json"><code>pdf-to-json</code></a> <a href="https://www.npmjs.com/package/pdf-to-json"><img src="https://img.shields.io/npm/v/pdf-to-json.svg?style=flat-square" alt="npm"></a></h3>
+
+<p><a href="https://github.com/mozilla/pdf.js" title="pdf.js">pdf.js</a>を使ってPDFからテキストを取り出してJSONにしてくれるライブラリです。ページごとのテキストをJSONにまとめてくれます。
+実際にはpdf.jsのnpm版である<a href="https://github.com/mozilla/pdfjs-dist" title="pdfjs-dist">pdfjs-dist</a>を使います。</p>
+
+<p>pdf.jsは使いにくいライブラリ(というアプリに近い)なので、日本語などもちゃんと扱えるようにするのは工夫が必要です。</p>
+
+<ul>
+<li><a href="http://efcl.info/2014/10/07/pdf-presentation/">pdf.jsを使いブラウザで見られるPDFスライド表示ツールを作った | Web Scratch</a></li>
+<li><a href="http://efcl.info/2015/12/07/pdf.js-controller/" title="[pdf.js] テキスト選択出来るスライド表示ライブラリを書いた | Web Scratch">[pdf.js] テキスト選択出来るスライド表示ライブラリを書いた | Web Scratch</a></li>
+</ul>
+
+<p>cmapsというファイルをちゃんと読めないと日本語などが扱えません。
+Node.jsで扱う公式のオプションはないので、テストコードを読んでURLをfsで代替するモック実装を使って読み込むことができました。</p>
+
+<ul>
+<li><a href="https://github.com/azu/searchive/blob/7ed276adfec3ec86ba421a9a2227e8333502e248/packages/pdf-to-json/src/pdf-to-json.ts#L15-L43">https://github.com/azu/searchive/blob/7ed276adfec3ec86ba421a9a2227e8333502e248/packages/pdf-to-json/src/pdf-to-json.ts#L15-L43</a></li>
+</ul>
+
+<h3 id="searchive-client"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-client"><code>searchive-client</code></a>  <a href="https://www.npmjs.com/package/searchive-client"><img src="https://img.shields.io/npm/v/searchive-client.svg?style=flat-square" alt="npm"></a></h3>
+
+<p><a href="https://github.com/azu/searchive" title="searchive">searchive</a>の検索やインデックへの書き込みを扱う抽象レイヤーです。fsやブラウザAPIにも依存してないクリーンなJavaScriptとして動作する層です。</p>
+
+<h3 id="searchive-create-index"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-create-index"><code>searchive-create-index</code></a>  <a href="https://www.npmjs.com/package/searchive-create-index"><img src="https://img.shields.io/npm/v/searchive-create-index.svg?style=flat-square" alt="npm"></a></h3>
+
+<p><a href="https://github.com/azu/searchive/tree/master/packages/searchive-client"><code>searchive-client</code></a>と<a href="https://github.com/azu/searchive/tree/master/packages/pdf-to-json"><code>pdf-to-json</code></a>を使って、実際にインデックファイルを作るライブラリでうｓ。
+ファイルを読み込んだり、書き込んだりするのでNode.jsに依存しています。</p>
+
+<h3 id="searchive-cli"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-cli"><code>searchive-cli</code></a> <a href="https://www.npmjs.com/package/searchive-cli"><img src="https://img.shields.io/npm/v/searchive-cli.svg?style=flat-square" alt="npm"></a></h3>
+
+<p>インデックを作ったり、実際に検索できるCLIです。
+<a href="https://github.com/azu/searchive/tree/master/packages/searchive-client"><code>searchive-client</code></a>や<a href="https://github.com/azu/searchive/tree/master/packages/searchive-create-index"><code>searchive-create-index</code></a>が実装の殆どを持っているため数行ぐらいしかないCLIです。monorepoだとこういう切り離しがし易いのもメリットです。</p>
+
+<p>テスト用に使ったりできます。</p>
+
+<h3 id="searchive-server"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-server"><code>searchive-server</code></a> <a href="https://www.npmjs.com/package/searchive-server"><img src="https://img.shields.io/npm/v/searchive-server.svg?style=flat-square" alt="npm"></a></h3>
+
+<p>Electronアプリはmain(Node.js)とrenderer(ブラウザ)のプロセスを両方持っていますが、こちらはNode.js側の実装です。
+<a href="https://github.com/azu/searchive/tree/master/packages/searchive-create-index"><code>searchive-create-index</code></a>を使ってインデックス作るWeb APIや、インデックを検索して結果を返すWeb APIを実装しています。</p>
+
+<p>REST APIの実装するサーバには<a href="https://github.com/restify/node-restify" title="restify">restify</a>を使っています。
+また、インデックスを作る処理は時間がかかるためREST APIでは不向きでした。
+そこでWeb Socketを使ったAPIを実装して、クライアント側とはWebSocketで進捗をやり取りしています。
+サーバ側のWebSocketsは<a href="https://github.com/websockets/ws" title="ws">ws</a>を使い、クライアント側はブラウザネイティブの<code>WebSocket</code>を使っています。</p>
+
+<h3 id="searchive-web-api-interface"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-web-api-interface"><code>searchive-web-api-interface</code></a> | <a href="https://www.npmjs.com/package/searchive-web-api-interface"><img src="https://img.shields.io/npm/v/searchive-web-api-interface.svg?style=flat-square" alt="npm"></a></h3>
+
+<p>主にWebSocketが原因でできたパッケージです。
+WebSocketはReduxとかのActionみたいなコマンドをやり取りする必要があります。
+それらの定義はサーバとクライアントどちらも共有したいので、インターフェイスだけを定義したパッケージを定義してサーバとクライアントではこれを使っています。</p>
+
+<p>サーバ側に定義してしまうと、クライアントがサーバに依存するという問題が起きてしまうための回避策です。</p>
+
+<h3 id="searchive-app"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-app" title="searchive-app"><code>searchive-app</code></a></h3>
+
+<p>最後にElectronで書かれたアプリです。
+Electronはmain(Node.js)とrenderer(ブラウザ)の両方を持っているので、mainで<a href="https://github.com/azu/searchive/tree/master/packages/searchive-server"><code>searchive-server</code></a>のサーバを動かして、rendererからAPIを叩いて使っています。</p>
+
+<p>Electronのセットアップは毎回苦戦するので、今回はElectron版<code>create-react-app</code>のような<a href="https://github.com/electron-userland/electron-webpack/" title="electron-webpack">electron-webpack</a>を使っています。
+これで<code>yarn run dev</code>するだけで開発が始めらます。mainのソースが変わった場合はアプリが起動し直され、rendererの場合はHot Reloadingができる構成なので、面倒なwebpackを触れなくてよくて便利です。</p>
+
+<p><a href="http://typescriptlang.org/">TypeScript</a>の対応も<a href="https://webpack.electron.build/add-ons" title="Add-ons · electron-webpack">Add-ons · electron-webpack</a>を入れるだけで解決するので楽でした。</p>
+
+<p>一方問題もあって、webpack-dev-serverを開発中は使って、buildした場合はhtmlになるので、<code>file:///</code>だと特権で動く処理がdevelopment中は動かないことがあります。(webviewの中でfileなコンテンツを表示するなどがhttpのページ上ではできない)</p>
+
+<p>次の記事でも同様の構成について触れています。</p>
+
+<ul>
+<li><a href="https://qiita.com/azu/items/a149501ca1b5864000a3" title="React + TypeScript (+ Electron)でアプリを書き始めるときにやってること - Qiita">React + TypeScript (+ Electron)でアプリを書き始めるときにやってること - Qiita</a></li>
+</ul>
+
+<p>Viewには<a href="https://reactjs.org/">React</a>を使っていて、UIコンポーネントとしてMSの<a href="https://developer.microsoft.com/en-us/fabric" title="Office UI Fabric">Office UI Fabric</a>を使っています。<a href="https://developer.microsoft.com/en-us/fabric" title="Office UI Fabric">Office UI Fabric</a>はこういうアプリを作るときに便利なメニューやコンテキストメニュー、パネルなどがあるのでよく使ってます。</p>
+
+<p>State管理には、<a href="https://github.com/almin/almin" title="almin">Almin</a>を使っています。
+基本的にやりたいことは次のようなことだけでした。</p>
+
+<ul>
+<li>(APIを叩いて)検索</li>
+<li>(WebSocketを繋いで)インデックスを更新</li>
+<li>フィルターを更新</li>
+<li>設定パネルを開く/閉じる</li>
+</ul>
+
+<p>Alminでは、やりたいこと(ユースケース)を1ファイル1ユースケースで書いていきます。</p>
+
+<ul>
+<li><a href="http://azu.github.io/slide/2017/almin/concept-of-almin.html" title="The Concept of Almin">The Concept of Almin</a></li>
+</ul>
+
+<p>なので、このアプリでは次のようなユースケースを書きました。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/11/use-case.png" alt="usecase図"></p>
+
+<blockquote>
+<p><a href="https://github.com/almin/almin-usecase-map-generator">https://github.com/almin/almin-usecase-map-generator</a>でユースケース図を生成</p>
+</blockquote>
+
+<p>このアプリではドメインとかそこまでちゃんとやっても旨味がない気がしたので、UseCaseでイベントをdispatchして、Storeでイベントを受け取ってStateを更新する感じにしました。
+Reduxでよく見るような形になってると思います。</p>
+
+<p><a href="https://github.com/azu/searchive/blob/master/packages/searchive-app/src/renderer/store/SearchIndexStore/SearchIndexStore.ts"><img src="http://efcl.info/wp-content/uploads/2017/11/17-1510923816.png" alt="Store"></a></p>
+
+<p>後は、<a href="https://github.com/almin/almin/tree/master/packages/almin-react-container" title="almin-react-container">almin-react-container</a>を使えば、AlminのStoreとViewが自動で繋がるので、Stateが更新されたViewを更新するだけです。</p>
+
+<h4 id="todo">TODO</h4>
+
+<ul>
+<li>Electronのmainプロセスで重たい処理をすると、UIも固まるのでどうにかしたい
+
+<ul>
+<li>インデックスを作る処理が重たい</li>
+</ul></li>
+<li>この制限で検索結果に実際にpdfを表示するプレビューがでてきてないのでどうにかしたい</li>
+<li>PDF以外も原理的に対応できるのでテキストファイルも合わせて検索したい</li>
+</ul>
+
+<h2 id="おわり">おわり</h2>
+
+<p>ローカルのPDFを全文検索する<a href="https://github.com/azu/searchive/tree/master/packages/searchive-app" title="searchive-app">searchive-app</a>の紹介とそのプロジェクト構造の解説をしました。</p>
+
+<p>最初は<a href="https://github.com/weixsong/elasticlunr.js" title="elasticlunr.js">elasticlunr.js</a>とかを使った全文検索を実装していたのですが、単純にJSONを保存してその中身を単純にマッチしたほうが早かったので変更した経緯とかがあります。</p>
+
+<p>勢いで自分用に書いたところが多いので、PRやIssueとかあったらよろしくお願いします。</p>
+
+<ul>
+<li><a href="https://github.com/azu/searchive" title="azu/searchive: Search All My Documents{PDF}.">azu/searchive: Search All My Documents{PDF}.</a></li>
+</ul>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>performance.markにメタデータを紐付けできるライブラリを書いた</title>
@@ -1860,322 +2042,6 @@ Alminのパフォーマンスプロファイルは、UseCaseの実行、StoreGro
 <li>「だからPush通知が欲しい」</li>
 <li>続きは <a href="https://twitter.com/search?q=%23pwa_study&amp;src=typd" title="#pwa_study - Twitter Search">#pwa_study - Twitter Search</a> で</li>
 </ul></li>
-</ul>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>Frontrend Vol.10 アウトラインメモ</title>
-   <link href="http://efcl.info/2017/09/08/frontrend-v10/"/>
-   <updated>2017-09-08T20:52:00+09:00</updated>
-   <id>http://efcl.info/2017/09/08/frontrend-v10</id>
-   <content type="html"><![CDATA[ <h1 id="frontrend-vol-10">Frontrend Vol.10</h1>
-
-<p><a href="https://frontrend.connpass.com/event/63971/" title="Frontrend Vol.10 - 夏の終わりに納涼パフォーマンス話 - connpass">Frontrend Vol.10 - 夏の終わりに納涼パフォーマンス話 - connpass</a>に参加してきたのでメモ。</p>
-
-<hr>
-
-<h2 id="fresh-クライアントサイドパフォーマンス改善-by-sutiwo_">FRESH!: クライアントサイドパフォーマンス改善 by @sutiwo_</h2>
-
-<ul>
-<li><a href="https://developers.cyberagent.co.jp/blog/archives/6057/" title="FRESH! Web パフォーマンス改善 〜クライアントサイド編〜">FRESH! Web パフォーマンス改善 〜クライアントサイド編〜</a>の話</li>
-<li>FRESHはPCとSPの視聴/配信のブラウザ対応</li>
-<li>生放送のタイムラグを10秒 -&gt; 5秒
-
-<ul>
-<li><a href="https://www.cyberagent.co.jp/newsinfo/info/print/id=14062" title="映像配信プラットフォーム「FRESH!」が映像配信のタイムラグを大幅に短縮 業界最速水準で高画質映像の配信が可能に | 株式会社サイバーエージェント">映像配信プラットフォーム「FRESH!」が映像配信のタイムラグを大幅に短縮 業界最速水準で高画質映像の配信が可能に | 株式会社サイバーエージェント</a></li>
-</ul></li>
-<li>Freshのウェブプッシュ通知機能</li>
-<li>Freshアクセシビリティガイドライン
-
-<ul>
-<li><a href="https://openfresh.github.io/a11y-guidelines/" title="FRESH! Accessibility Guidelines">FRESH! Accessibility Guidelines</a></li>
-</ul></li>
-<li>Service Worker
-
-<ul>
-<li>バックグラインドで実行するWorker</li>
-<li>postMessageでのやり取り</li>
-<li>ネットワークのハンドリング</li>
-<li>PUsh通知</li>
-<li>httpsが必須
-
-<ul>
-<li><a href="https://developer.mozilla.org/ja/docs/Web/Security/Secure_Contexts" title="Secure Contexts - Web セキュリティ | MDN">Secure Contexts - Web セキュリティ | MDN</a></li>
-</ul></li>
-<li>ブラウザ &lt;-&gt; SW &lt;-&gt; ネットワーク</li>
-</ul></li>
-<li>FRESHではFirefox + Chrome = 50%ぐらいの利用者にある
-
-<ul>
-<li>SWが50%のユーザーに適応できる</li>
-</ul></li>
-<li>設計と実装</li>
-<li>キャッシュがあれば、キャッシュを使いない場合はFetchする
-
-<ul>
-<li>リリース単位でキャッシュさせる(CircleCIでビルド時にIDを含める)</li>
-<li>意図的に更新させないとキャッシュされ続けるもの
-
-<ul>
-<li><code>version.json</code>で任意の日付をマニュアル更新</li>
-</ul></li>
-</ul></li>
-<li>ディレクトリ構成
-
-<ul>
-<li>service-worker
-
-<ul>
-<li>asserts.js - キャッシュのホワイトリスト</li>
-<li>index.js - イベントハンドラ登録</li>
-<li>register.js SWのインストール判定</li>
-</ul></li>
-</ul></li>
-<li>デバッグ方法
-
-<ul>
-<li>Chrome DevToolsを使ってる</li>
-<li>assetsのパスに日付が入ってる</li>
-</ul></li>
-<li>ローカルで確認する時
-
-<ul>
-<li>環境変数でフラグを用意 = <code>DISABLED_SW_CACHE</code></li>
-<li>ブラウザでスーパーリロードする</li>
-</ul></li>
-<li>Intersection Observerでの遅延ロード
-
-<ul>
-<li>ランキングの表示</li>
-<li>50件でているが見えるのは最初の6-7件</li>
-</ul></li>
-<li>Intersection Observerを使って遅延ロード
-
-<ul>
-<li><a href="https://blog.jxck.io/entries/2016-06-25/intersection-observer.html">Intersection Observer を用いた要素出現検出の最適化 | blog.jxck.io</a></li>
-<li><a href="https://1000ch.net/posts/2016/intersection-observer-lazyload.html">IntersectionObserverを使ってlazyload-imageを書き直した - EagleLand</a></li>
-</ul></li>
-<li><a href="https://github.com/openfresh/viewport-observer" title="openfresh/viewport-observer: A React Component that observe changes in the intersection of a target element with viewport using IntersectionObserver">openfresh/viewport-observer: A React Component that observe changes in the intersection of a target element with viewport using IntersectionObserver</a>
-
-<ul>
-<li>Reactラッパー</li>
-</ul></li>
-<li>SVGスプライトとHTTP/2
-
-<ul>
-<li>SVGファイル毎にリクエストするHTTP/1だと問題がある</li>
-<li>SVGスプライトにまとめた
-
-<ul>
-<li>すべてのSVGが読み終わるまで、どのSVGもでない</li>
-</ul></li>
-<li>ただHTTP/2なら特に問題にならないので個別で読み込んだ
-
-<ul>
-<li>個別のSVGで読み込むようにした</li>
-</ul></li>
-</ul></li>
-<li>SpeedCurveで計測してる</li>
-</ul>
-
-<hr>
-
-<h2 id="パフォーマンスを改善して本を売る！「読書のお時間です」の取り組みについて">パフォーマンスを改善して本を売る！「読書のお時間です」の取り組みについて</h2>
-
-<ul>
-<li>5年続いたSPAのウェブサービスをSSRにした話</li>
-<li>問題分析
-
-<ul>
-<li>ボトルネック調査</li>
-</ul></li>
-<li>設計
-
-<ul>
-<li>Before
-
-<ul>
-<li>jQuery</li>
-<li>handlebars</li>
-<li>Grunt</li>
-</ul></li>
-<li>After
-
-<ul>
-<li>React/webpack色々</li>
-</ul></li>
-</ul></li>
-<li>開発
-
-<ul>
-<li>プロイピング</li>
-<li>主要ページからリニューアルする</li>
-<li>旧仕様のページと行き来できる作り(共存する)</li>
-<li><code>#!</code> から <code>/</code> に変更</li>
-</ul></li>
-<li>リリース
-
-<ul>
-<li>ページロード 30% down</li>
-<li>コンテンツサイズ 50% down</li>
-</ul></li>
-<li>展開
-
-<ul>
-<li>対象ページが100ページ以上あった</li>
-<li>既存のものを運用しないといけない</li>
-</ul></li>
-<li>画像との戦い
-
-<ul>
-<li>本の表紙 = 書影</li>
-<li>画像の提供元によってサイズなどがバラバラ</li>
-</ul></li>
-<li>パフォーマンス計測とKPIの紐付け
-
-<ul>
-<li>RUM-speedIndex
-
-<ul>
-<li><a href="https://github.com/WPO-Foundation/RUM-SpeedIndex" title="WPO-Foundation/RUM-SpeedIndex: Calculate SpeedIndex measurements from the field">WPO-Foundation/RUM-SpeedIndex: Calculate SpeedIndex measurements from the field</a></li>
-</ul></li>
-<li>SpeedIndexとKPIを紐付けてビジュアライズ
-
-<ul>
-<li><a href="https://developers.cyberagent.co.jp/blog/archives/9540/" title="WebパフォーマンスとプロダクトKPIの相関を可視化する話">WebパフォーマンスとプロダクトKPIの相関を可視化する話</a></li>
-</ul></li>
-</ul></li>
-</ul>
-
-<hr>
-
-<h2 id="アメブロ-isomprhicアプリケーションのパフォーマンス・チューニング">アメブロ: Isomprhicアプリケーションのパフォーマンス・チューニング</h2>
-
-<blockquote>
-<p>スライド: <a href="https://speakerdeck.com/kouhin/ameburo-isomprhicapurikesiyonfalsepahuomansutiyuningu" title="アメブロ: Isomprhicアプリケーションのパフォーマンス・チューニング // Speaker Deck">アメブロ: Isomprhicアプリケーションのパフォーマンス・チューニング // Speaker Deck</a></p>
-</blockquote>
-
-<ul>
-<li><a href="https://developers.cyberagent.co.jp/blog/archives/636/" title="アメブロ2016 ~ React/ReduxでつくるIsomorphic web app ~">アメブロ2016 ~ React/ReduxでつくるIsomorphic web app ~</a>の話</li>
-<li>Javaベース -&gt; Node.jsベースに変更</li>
-<li>SSR: Isomorphic App(SPA + SSR) + React+ Redux + React Router</li>
-<li>バックエンドキャッシュは大分
-
-<ul>
-<li>React SSRはパフォーマンスが悪い</li>
-</ul></li>
-<li>クライントは特定のユーザー、サーバサイドはすべてのユーザにサービスを提供
-
-<ul>
-<li>なのでサーバサイドはキャッシュとかしないと</li>
-</ul></li>
-<li>バックエンドのキャッシュの設計</li>
-<li>問題点を洗い出す
-
-<ul>
-<li>何をキャッシュするか
-
-<ul>
-<li>Router -&gt; Redux Store準備(API Object) -&gt; Render -&gt; HTML</li>
-<li>RenderToStringはとても重たい
-
-<ul>
-<li>同期的な処理</li>
-<li>Note: React 16では30%程度改善</li>
-<li><a href="https://twitter.com/herablog/status/893421865670017024">https://twitter.com/herablog/status/893421865670017024</a></li>
-</ul></li>
-<li>RenderToStringはキャッシュしたい</li>
-<li>ただしユーザーによって違うのでそのままキャッシュできない</li>
-<li>RenderToStringはテンプレートを吐き出して、クライアントサイドでそれをレンダリングする</li>
-<li>API Objectもキャッシュすることでより改善された</li>
-</ul></li>
-<li>キャッシュするタイミング
-
-<ul>
-<li>アクセスされたとき</li>
-</ul></li>
-<li>キャッシュを削除するタイミング
-
-<ul>
-<li>記事を更新したら、記事IDから記事のキャッシュを消すのはNG</li>
-<li>実際は記事を更新したら、記事本体、記事一覧、記事の前後などいろんなところを影響する</li>
-<li>実装はかなり複雑になるので、キャッシュの削除は難しい</li>
-<li>AmebaブログはユーザIDに紐付いているので、更新したらユーザIDに紐づくページをすべて削除する</li>
-<li>FallbackとしてキャッシュのTTLで失効させる</li>
-</ul></li>
-<li>キッシュのトランザクション
-
-<ul>
-<li>キャッシュの更新とアクセスでキャッシュ作られたときに衝突してしまう問題</li>
-<li>キャッシュのkeyは namespace(user-id)+version をつかうようにした</li>
-<li>なので削除ではなくバージョンの更新 = キャッシュの削除</li>
-</ul></li>
-<li>Local Cache VS Cache Server
-
-<ul>
-<li>Node.jsのインスタンス数が多い(オンメモリだけではばらけてしまう)</li>
-<li>オンメモリのキャッシュ + キャッシュサーバを併用</li>
-</ul></li>
-</ul></li>
-<li>遅延ロード
-
-<ul>
-<li>SSR -&gt; SPA
-
-<ul>
-<li><a href="https://github.com/kouhin/rrr-lazy" title="kouhin/rrr-lazy: A fork of react-lazy-load and add support for react-router, react-router-hook.">kouhin/rrr-lazy: A fork of react-lazy-load and add support for react-router, react-router-hook.</a></li>
-<li>サーバサイドではレンダリングしないコンポーネントを指定できる</li>
-</ul></li>
-<li>ページの表示範囲
-
-<ul>
-<li>クライントサイドの処理</li>
-<li>Intersection Observer的な遅延ロード</li>
-</ul></li>
-<li>コードの分割
-
-<ul>
-<li>JavaScriptのパース時間が短くなる</li>
-<li>main.jsの肥大化を防ぐ</li>
-<li>webpack</li>
-<li>分割粒度: AtomicデザインのOrganisms毎
-
-<ul>
-<li>Dynamic Importで遅延ロード</li>
-</ul></li>
-<li>分割するとビルドが遅い
-
-<ul>
-<li>ローカルではコード分割しない</li>
-<li><a href="https://github.com/knpwrs/babel-plugin-remove-webpack" title="knpwrs/babel-plugin-remove-webpack: Removes webpack-specific functions from JavaScript code.">knpwrs/babel-plugin-remove-webpack: Removes webpack-specific functions from JavaScript code.</a>などで無効化してる</li>
-</ul></li>
-<li>chunkのサイズは結構でかい</li>
-</ul></li>
-</ul></li>
-<li>Service Worker
-
-<ul>
-<li>AMPなので専用のタグを使う</li>
-<li><a href="https://github.com/GoogleChrome/workbox" title="GoogleChrome/workbox: 📦 Workbox: JavaScript libraries for Offline Caching">GoogleChrome/workbox: 📦 Workbox: JavaScript libraries for Offline Caching</a></li>
-</ul></li>
-<li>HTTP/2 &amp;&amp; コード分割
-
-<ul>
-<li>Chromeは一度にリクエストできるの6つまで</li>
-<li>一括で読み込むと詰まることがある</li>
-<li>この辺は改善していきたい</li>
-</ul></li>
-</ul>
-
-<hr>
-
-<h1 id="q-amp-a">Q&amp;A</h1>
-
-<ul>
-<li>Q. パフォーマンス計測ツールはアメーバ社内で共通化されてるの?</li>
-<li>A. アメブロはSpeedCurveとか</li>
-<li>1000chに聞いて</li>
 </ul>
  ]]></content>
  </entry>

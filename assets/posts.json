@@ -2,6 +2,12 @@
     "posts": [
         
         {
+            "title": "ローカルのPDFを全文検索するクライアント/サーバ/Electronアプリを書いた",
+            "url": "http://efcl.info/2017/11/17/searchive/",
+            "date": "2017-11-17T20:03:00+09:00"
+        },
+        
+        {
             "title": "performance.markにメタデータを紐付けできるライブラリを書いた",
             "url": "http://efcl.info/2017/11/15/performance.mark-metadata/",
             "date": "2017-11-15T21:58:00+09:00"

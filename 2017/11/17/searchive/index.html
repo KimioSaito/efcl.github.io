@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+    <title>
+        
+        ローカルのPDFを全文検索するクライアント/サーバ/Electronアプリを書いた | Web Scratch
+        
+    </title>
+    <meta name="description" content="ローカルにあるPDFを全部検索して、その結果を一覧したいことがあります。例えば、今js-primerという書籍を書いていて、他の書籍ではどんな扱い/用語になっているのかを調べいことがよくありました。">
+    
+    <meta name="keywords" content="JavaScript,Electron" />
+    
+    <meta name="author" content="azu">
+    <!-- Icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="/public/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="http://efcl.info/public/favicon.ico">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/public/css/main.css">
+    <!-- JavaScript -->
+    <!-- Open graph tags -->
+<meta property="og:title" content="ローカルのPDFを全文検索するクライアント/サーバ/Electronアプリを書いた">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://efcl.info/2017/11/17/searchive/">
+<meta property="og:image" content="http://efcl.info/public/favicon.ico">
+
+<meta property="og:description" content="ローカルにあるPDFを全部検索して、その結果を一覧したいことがあります。例えば、今js-primerという書籍を書いていて、他の書籍ではどんな扱い/用語になっているのかを調べいことがよくありました。">
+<meta property="og:site_name" content="Web Scratch">
+
+
+
+
+<meta property="article:published_time" content="2017-11-17T20:03:00+09:00">
+<meta property="article:author" content="https://www.facebook.com/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/11/15/performance.mark-metadata/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/11/15/html_module_study/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/11/06/textlint-core-refactoring/">
+
+
+
+
+
+<meta property="article:section" content="javascript">
+
+
+
+
+
+<meta property="article:tag" content="JavaScript">
+
+<meta property="article:tag" content="Electron">
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-2184335-8', 'auto');
+    ga('send', 'pageview');
+</script>
+    <script>
+var blog_categories = [
+{
+    "title" : "greasemonkey",
+    "count" : 61
+},{
+    "title" : "ニコニコ動画",
+    "count" : 16
+},{
+    "title" : "小説電子化",
+    "count" : 3
+},{
+    "title" : "vista",
+    "count" : 12
+},{
+    "title" : "firefox",
+    "count" : 55
+},{
+    "title" : "その他",
+    "count" : 13
+},{
+    "title" : "webサービス",
+    "count" : 22
+},{
+    "title" : "software",
+    "count" : 59
+},{
+    "title" : "雑記",
+    "count" : 36
+},{
+    "title" : "まとめ",
+    "count" : 11
+},{
+    "title" : "zaurus",
+    "count" : 3
+},{
+    "title" : "ハードウェア",
+    "count" : 8
+},{
+    "title" : "アドオン",
+    "count" : 31
+},{
+    "title" : "wordpress",
+    "count" : 6
+},{
+    "title" : "javascript",
+    "count" : 191
+},{
+    "title" : "インストール設定",
+    "count" : 12
+},{
+    "title" : "iphone",
+    "count" : 10
+},{
+    "title" : "loox u",
+    "count" : 1
+},{
+    "title" : "tombloo",
+    "count" : 3
+},{
+    "title" : "イベント",
+    "count" : 92
+},{
+    "title" : "userchome.js",
+    "count" : 8
+},{
+    "title" : "jetpack",
+    "count" : 7
+},{
+    "title" : "onenote",
+    "count" : 2
+},{
+    "title" : "nilscript",
+    "count" : 4
+},{
+    "title" : "keysnail",
+    "count" : 3
+},{
+    "title" : "ios",
+    "count" : 15
+},{
+    "title" : "shell",
+    "count" : 3
+},{
+    "title" : "r言語",
+    "count" : 2
+},{
+    "title" : "node.js",
+    "count" : 3
+},{
+    "title" : "mac",
+    "count" : 2
+},{
+    "title" : "github",
+    "count" : 11
+},{
+    "title" : "jekyll",
+    "count" : 1
+},{
+    "title" : "golang",
+    "count" : 1
+},{
+    "title" : "web",
+    "count" : 1
+},{
+    "title" : "スライド",
+    "count" : 1
+},{
+    "title" : "ie",
+    "count" : 1
+},{
+    "title" : "書籍",
+    "count" : 2
+},{
+    "title" : "textlint",
+    "count" : 8
+}
+];
+    blog_categories = blog_categories.filter(function(categoryObject){
+        return !/^\d+$/.test(categoryObject.title);
+    });
+</script>
+</head>
+
+
+<body class="layout-reverse theme-base-0d">
+<a href="https://github.com/efcl/efcl.github.io" class="github-ribbon">
+    <img style="position: fixed; z-index:100; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+<header>
+    <div class="site-header">
+    <img src="/public/img/reimu-right.png" class="header-logo">
+
+    <h1 class="site-title">
+        <a href="/">
+            Web Scratch
+        </a>
+    </h1>
+    <p class="lead">ブラウザ/JavaScript等についてのブログ</p>
+
+</div>
+</header>
+<aside>
+    <div class="sidebar">
+    <div class="container">
+        <div class="profile">
+            <a href="/about/" title="About"><img src="/public/img/azu.png" alt="Profile"></a>
+
+            <h2><a href="/about/" title="About">azu</a></h2>
+        </div>
+        <div class="social">
+            <a class="twitter" href="http://twitter.com/azu_re" title="Twitter">
+                <img src="/public/svg/twitter.svg" alt="twitter" width="32" height="32"/>
+            </a>
+            <a class="github" href="https://github.com/azu" title="GitHub">
+                <img src="/public/svg/github.svg" alt="GitHub" width="32" height="32"/>
+            </a>
+            <a class="rss" href="/feed/" title="RSS Feed">
+                <img src="/public/svg/feed.svg" alt="RSS" width="32" height="32"/>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="search">
+                <form class="search-box" method="get" action="https://www.google.co.jp/search">
+                    <label for="search-box-label">検索:</label>
+                    <input type="hidden" name="q" value="site:efcl.info">
+                    <input id="search-box-label" type="search" name="q">
+                    <input type="submit" value="search">
+                </form>
+            </div>
+            <div class="recent">
+    <h3 class="recent-posts-list-title">
+        <a href="/">最近の投稿</a>
+    </h3>
+    <ul class="recent-posts">
+        
+        <li>
+            <a href="/2017/11/17/searchive/">
+                ローカルのPDFを全文検索するクライアント/サーバ/Electronアプリを書いた
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/11/15/performance.mark-metadata/">
+                performance.markにメタデータを紐付けできるライブラリを書いた
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/11/15/html_module_study/">
+                #html_modules_study アウトラインメモ
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/11/06/textlint-core-refactoring/">
+                textlintのコアをTypeScriptで書き直した、textlintの今後について
+            </a>
+        </li>
+        
+    </ul>
+</div>
+            <div class="recent">
+    <h3 class="categories-list-title"><a href="/categories">カテゴリ一覧</a></h3>
+
+    <div class="categories-list" id="js-categories-list">
+
+    </div>
+    <script>
+        (function () {
+            var categoriesList = window.blog_categories;
+            var appendPoint = document.getElementById("js-categories-list");
+            // big ... small
+            var sortedCategories = categoriesList.sort(function (a, b) {
+                return a.count < b.count ? 1 : -1;
+            });
+            var ulTag = document.createElement("ul");
+            var displayCount = sortedCategories.length < 3 ? sortedCategories.length : 3;
+            for (var i = 0; i < displayCount; i++) {
+                var category = sortedCategories[i];
+                var liTag = document.createElement("li");
+                var aTag = document.createElement("a");
+                aTag.href = "/categories#" + category.title;
+                aTag.textContent = category.title;
+                var spanTag = document.createElement("span");
+                spanTag.appendChild(document.createTextNode("[" + category.count + "]"));
+                liTag.appendChild(aTag);
+                liTag.appendChild(spanTag);
+                ulTag.appendChild(liTag);
+            }
+            var lastLiTag = document.createElement("li");
+            var lastATag = document.createElement("a");
+            lastATag.href = "/categories";
+            lastATag.textContent = "その他のタグ…";
+            lastLiTag.appendChild(lastATag);
+            ulTag.appendChild(lastATag);
+            appendPoint.appendChild(ulTag);
+        })();
+    </script>
+</div>
+        </nav>
+    </div>
+</div>
+
+</aside>
+<article>
+    <div class="content container">
+        <div class="post" id="js-post-url" data-post-url="/2017/11/17/searchive/">
+    <h1 class="post-title">ローカルのPDFを全文検索するクライアント/サーバ/Electronアプリを書いた</h1>
+
+    <div class="pre-post-toolbar">
+        <span class="post-date">2017年11月17日</span>
+        <a class="btn edit-on-github" href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-11-17-searchive.md"><span class="edito-on-github-label"></span>Edit on GitHub</a>
+
+    </div>
+    <div class="post-content">
+        <p>ローカルにあるPDFを全部検索して、その結果を一覧したいことがあります。
+例えば、今<a href="https://github.com/asciidwango/js-primer" title="js-primer">js-primer</a>という書籍を書いていて、他の書籍ではどんな扱い/用語になっているのかを調べいことがよくありました。</p>
+
+<p>この手のアプリとしては論文管理の<a href="https://www.readcube.com/papers/mac/" title="Papers for Mac">Papers for Mac</a>などがありますが、検索したいだけなのに色々な機能がついていてまた、とりあえず作ってみることにしました。</p>
+
+<p><a href="https://github.com/azu/searchive" title="searchive">searchive</a>というプロジェクト名にしてPDFからテキストを取り出す所やフロントエンドのElectronアプリ、PDFからテキストを取り出すのはブラウザでやるには遅いので、そこをサーバ側でやってくれる仕組みを作りました。</p>
+
+<p>大体100冊ぐらいをインデックスに入れて検索していますが、数百ms以内に検索結果が出てるので意外と動くようです。</p>
+
+<p><a href="http://www.giphy.com/gifs/3o6fIYo3aDtasisB2M"><img src="https://media.giphy.com/media/3o6fIYo3aDtasisB2M/giphy.gif" alt="App"></a></p>
+
+<h2 id="インストール">インストール</h2>
+
+<p><a href="https://github.com/azu/searchive/releases">Release page</a>からElectronアプリをダウンロードしてインストール出来ます。Electronアプリにはサーバの実装も入ってるので、アプリを入れるだけで動きます。</p>
+
+<ul>
+<li><a href="https://github.com/azu/searchive/releases/latest">Latest Release</a></li>
+</ul>
+
+<p><a href="https://www.appveyor.com/" title="AppVeyor">AppVeyor</a>などのCIの設定が面倒だったので、Mac版のバイナリしか置いていませんが、<a href="https://github.com/azu/searchive/tree/master/packages/searchive-app" title="searchive-app">searchive-app</a>をビルドすればどのOSでも動くと思います。またはPR歓迎です。</p>
+
+<h3 id="使い方">使い方</h3>
+
+<p>起動したら最初にPDFのインデックスを作る必要があります。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/11/17-1510917382.png" alt="image"></p>
+
+<p>メニューから設定を開くと、インデックスしたいファイルの場所を<a href="https://github.com/isaacs/node-glob" title="node-glob">glob</a>で指定できます。
+保存するとPDFからテキストを取り出した<code>index.json</code>を作り出してくれます。(とても重いので放置しておくといいです)</p>
+
+<p>ローディングバーが消えて終わったら後は検索するだけです。
+検索結果をフィルターすることができるので、大雑把な検索をしてからフィルターする使い方を想定しています。(検索の単位はPDFのページ)</p>
+
+<p><a href="http://www.giphy.com/gifs/3o6fIYo3aDtasisB2M"><img src="https://media.giphy.com/media/3o6fIYo3aDtasisB2M/giphy.gif" alt="App"></a></p>
+
+<p>検索演算子はGitHubみたいなものが使えます。
+ライブラリとしては<a href="https://github.com/azu/search-query-tester" title="search-query-tester">search-query-tester</a>を使っています。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/11/17-1510924048.png" alt="keyword operator"></p>
+
+<h2 id="作り方">作り方</h2>
+
+<p><a href="https://github.com/azu/searchive" title="searchive">searchive</a>はmonorepoのプロジェクトになっていて、細かい部品を独立したライブラリとして作っています。
+それらを組み合わせて<a href="https://github.com/azu/searchive/tree/master/packages/searchive-app" title="searchive-app">searchive-app</a>というアプリが動いています。</p>
+
+<p>それぞれの部品を順番に紹介していきます。</p>
+
+<h3 id="pdf-to-json"><a href="https://github.com/azu/searchive/tree/master/packages/pdf-to-json"><code>pdf-to-json</code></a> <a href="https://www.npmjs.com/package/pdf-to-json"><img src="https://img.shields.io/npm/v/pdf-to-json.svg?style=flat-square" alt="npm"></a></h3>
+
+<p><a href="https://github.com/mozilla/pdf.js" title="pdf.js">pdf.js</a>を使ってPDFからテキストを取り出してJSONにしてくれるライブラリです。ページごとのテキストをJSONにまとめてくれます。
+実際にはpdf.jsのnpm版である<a href="https://github.com/mozilla/pdfjs-dist" title="pdfjs-dist">pdfjs-dist</a>を使います。</p>
+
+<p>pdf.jsは使いにくいライブラリ(というアプリに近い)なので、日本語などもちゃんと扱えるようにするのは工夫が必要です。</p>
+
+<ul>
+<li><a href="http://efcl.info/2014/10/07/pdf-presentation/">pdf.jsを使いブラウザで見られるPDFスライド表示ツールを作った | Web Scratch</a></li>
+<li><a href="http://efcl.info/2015/12/07/pdf.js-controller/" title="[pdf.js] テキスト選択出来るスライド表示ライブラリを書いた | Web Scratch">[pdf.js] テキスト選択出来るスライド表示ライブラリを書いた | Web Scratch</a></li>
+</ul>
+
+<p>cmapsというファイルをちゃんと読めないと日本語などが扱えません。
+Node.jsで扱う公式のオプションはないので、テストコードを読んでURLをfsで代替するモック実装を使って読み込むことができました。</p>
+
+<ul>
+<li><a href="https://github.com/azu/searchive/blob/7ed276adfec3ec86ba421a9a2227e8333502e248/packages/pdf-to-json/src/pdf-to-json.ts#L15-L43">https://github.com/azu/searchive/blob/7ed276adfec3ec86ba421a9a2227e8333502e248/packages/pdf-to-json/src/pdf-to-json.ts#L15-L43</a></li>
+</ul>
+
+<h3 id="searchive-client"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-client"><code>searchive-client</code></a>  <a href="https://www.npmjs.com/package/searchive-client"><img src="https://img.shields.io/npm/v/searchive-client.svg?style=flat-square" alt="npm"></a></h3>
+
+<p><a href="https://github.com/azu/searchive" title="searchive">searchive</a>の検索やインデックへの書き込みを扱う抽象レイヤーです。fsやブラウザAPIにも依存してないクリーンなJavaScriptとして動作する層です。</p>
+
+<h3 id="searchive-create-index"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-create-index"><code>searchive-create-index</code></a>  <a href="https://www.npmjs.com/package/searchive-create-index"><img src="https://img.shields.io/npm/v/searchive-create-index.svg?style=flat-square" alt="npm"></a></h3>
+
+<p><a href="https://github.com/azu/searchive/tree/master/packages/searchive-client"><code>searchive-client</code></a>と<a href="https://github.com/azu/searchive/tree/master/packages/pdf-to-json"><code>pdf-to-json</code></a>を使って、実際にインデックファイルを作るライブラリでうｓ。
+ファイルを読み込んだり、書き込んだりするのでNode.jsに依存しています。</p>
+
+<h3 id="searchive-cli"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-cli"><code>searchive-cli</code></a> <a href="https://www.npmjs.com/package/searchive-cli"><img src="https://img.shields.io/npm/v/searchive-cli.svg?style=flat-square" alt="npm"></a></h3>
+
+<p>インデックを作ったり、実際に検索できるCLIです。
+<a href="https://github.com/azu/searchive/tree/master/packages/searchive-client"><code>searchive-client</code></a>や<a href="https://github.com/azu/searchive/tree/master/packages/searchive-create-index"><code>searchive-create-index</code></a>が実装の殆どを持っているため数行ぐらいしかないCLIです。monorepoだとこういう切り離しがし易いのもメリットです。</p>
+
+<p>テスト用に使ったりできます。</p>
+
+<h3 id="searchive-server"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-server"><code>searchive-server</code></a> <a href="https://www.npmjs.com/package/searchive-server"><img src="https://img.shields.io/npm/v/searchive-server.svg?style=flat-square" alt="npm"></a></h3>
+
+<p>Electronアプリはmain(Node.js)とrenderer(ブラウザ)のプロセスを両方持っていますが、こちらはNode.js側の実装です。
+<a href="https://github.com/azu/searchive/tree/master/packages/searchive-create-index"><code>searchive-create-index</code></a>を使ってインデックス作るWeb APIや、インデックを検索して結果を返すWeb APIを実装しています。</p>
+
+<p>REST APIの実装するサーバには<a href="https://github.com/restify/node-restify" title="restify">restify</a>を使っています。
+また、インデックスを作る処理は時間がかかるためREST APIでは不向きでした。
+そこでWeb Socketを使ったAPIを実装して、クライアント側とはWebSocketで進捗をやり取りしています。
+サーバ側のWebSocketsは<a href="https://github.com/websockets/ws" title="ws">ws</a>を使い、クライアント側はブラウザネイティブの<code>WebSocket</code>を使っています。</p>
+
+<h3 id="searchive-web-api-interface"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-web-api-interface"><code>searchive-web-api-interface</code></a> | <a href="https://www.npmjs.com/package/searchive-web-api-interface"><img src="https://img.shields.io/npm/v/searchive-web-api-interface.svg?style=flat-square" alt="npm"></a></h3>
+
+<p>主にWebSocketが原因でできたパッケージです。
+WebSocketはReduxとかのActionみたいなコマンドをやり取りする必要があります。
+それらの定義はサーバとクライアントどちらも共有したいので、インターフェイスだけを定義したパッケージを定義してサーバとクライアントではこれを使っています。</p>
+
+<p>サーバ側に定義してしまうと、クライアントがサーバに依存するという問題が起きてしまうための回避策です。</p>
+
+<h3 id="searchive-app"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-app" title="searchive-app"><code>searchive-app</code></a></h3>
+
+<p>最後にElectronで書かれたアプリです。
+Electronはmain(Node.js)とrenderer(ブラウザ)の両方を持っているので、mainで<a href="https://github.com/azu/searchive/tree/master/packages/searchive-server"><code>searchive-server</code></a>のサーバを動かして、rendererからAPIを叩いて使っています。</p>
+
+<p>Electronのセットアップは毎回苦戦するので、今回はElectron版<code>create-react-app</code>のような<a href="https://github.com/electron-userland/electron-webpack/" title="electron-webpack">electron-webpack</a>を使っています。
+これで<code>yarn run dev</code>するだけで開発が始めらます。mainのソースが変わった場合はアプリが起動し直され、rendererの場合はHot Reloadingができる構成なので、面倒なwebpackを触れなくてよくて便利です。</p>
+
+<p><a href="http://typescriptlang.org/">TypeScript</a>の対応も<a href="https://webpack.electron.build/add-ons" title="Add-ons · electron-webpack">Add-ons · electron-webpack</a>を入れるだけで解決するので楽でした。</p>
+
+<p>一方問題もあって、webpack-dev-serverを開発中は使って、buildした場合はhtmlになるので、<code>file:///</code>だと特権で動く処理がdevelopment中は動かないことがあります。(webviewの中でfileなコンテンツを表示するなどがhttpのページ上ではできない)</p>
+
+<p>次の記事でも同様の構成について触れています。</p>
+
+<ul>
+<li><a href="https://qiita.com/azu/items/a149501ca1b5864000a3" title="React + TypeScript (+ Electron)でアプリを書き始めるときにやってること - Qiita">React + TypeScript (+ Electron)でアプリを書き始めるときにやってること - Qiita</a></li>
+</ul>
+
+<p>Viewには<a href="https://reactjs.org/">React</a>を使っていて、UIコンポーネントとしてMSの<a href="https://developer.microsoft.com/en-us/fabric" title="Office UI Fabric">Office UI Fabric</a>を使っています。<a href="https://developer.microsoft.com/en-us/fabric" title="Office UI Fabric">Office UI Fabric</a>はこういうアプリを作るときに便利なメニューやコンテキストメニュー、パネルなどがあるのでよく使ってます。</p>
+
+<p>State管理には、<a href="https://github.com/almin/almin" title="almin">Almin</a>を使っています。
+基本的にやりたいことは次のようなことだけでした。</p>
+
+<ul>
+<li>(APIを叩いて)検索</li>
+<li>(WebSocketを繋いで)インデックスを更新</li>
+<li>フィルターを更新</li>
+<li>設定パネルを開く/閉じる</li>
+</ul>
+
+<p>Alminでは、やりたいこと(ユースケース)を1ファイル1ユースケースで書いていきます。</p>
+
+<ul>
+<li><a href="http://azu.github.io/slide/2017/almin/concept-of-almin.html" title="The Concept of Almin">The Concept of Almin</a></li>
+</ul>
+
+<p>なので、このアプリでは次のようなユースケースを書きました。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/11/use-case.png" alt="usecase図"></p>
+
+<blockquote>
+<p><a href="https://github.com/almin/almin-usecase-map-generator">https://github.com/almin/almin-usecase-map-generator</a>でユースケース図を生成</p>
+</blockquote>
+
+<p>このアプリではドメインとかそこまでちゃんとやっても旨味がない気がしたので、UseCaseでイベントをdispatchして、Storeでイベントを受け取ってStateを更新する感じにしました。
+Reduxでよく見るような形になってると思います。</p>
+
+<p><a href="https://github.com/azu/searchive/blob/master/packages/searchive-app/src/renderer/store/SearchIndexStore/SearchIndexStore.ts"><img src="http://efcl.info/wp-content/uploads/2017/11/17-1510923816.png" alt="Store"></a></p>
+
+<p>後は、<a href="https://github.com/almin/almin/tree/master/packages/almin-react-container" title="almin-react-container">almin-react-container</a>を使えば、AlminのStoreとViewが自動で繋がるので、Stateが更新されたViewを更新するだけです。</p>
+
+<h4 id="todo">TODO</h4>
+
+<ul>
+<li>Electronのmainプロセスで重たい処理をすると、UIも固まるのでどうにかしたい
+
+<ul>
+<li>インデックスを作る処理が重たい</li>
+</ul></li>
+<li>この制限で検索結果に実際にpdfを表示するプレビューがでてきてないのでどうにかしたい</li>
+<li>PDF以外も原理的に対応できるのでテキストファイルも合わせて検索したい</li>
+</ul>
+
+<h2 id="おわり">おわり</h2>
+
+<p>ローカルのPDFを全文検索する<a href="https://github.com/azu/searchive/tree/master/packages/searchive-app" title="searchive-app">searchive-app</a>の紹介とそのプロジェクト構造の解説をしました。</p>
+
+<p>最初は<a href="https://github.com/weixsong/elasticlunr.js" title="elasticlunr.js">elasticlunr.js</a>とかを使った全文検索を実装していたのですが、単純にJSONを保存してその中身を単純にマッチしたほうが早かったので変更した経緯とかがあります。</p>
+
+<p>勢いで自分用に書いたところが多いので、PRやIssueとかあったらよろしくお願いします。</p>
+
+<ul>
+<li><a href="https://github.com/azu/searchive" title="azu/searchive: Search All My Documents{PDF}.">azu/searchive: Search All My Documents{PDF}.</a></li>
+</ul>
+
+    </div>
+    <div class="post-post-toolbar">
+        <a class="btn edit-on-github"
+           href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-11-17-searchive.md"><span
+                class="edit-on-github-label"></span>修正リクエストをする</a>
+        <nav class="tags"
+             id="js-post-tags"
+             data-post-tags='["JavaScript","Electron"]'>
+            <span>タグ:</span>
+            <ul>
+                
+                <li><a href="/tags/?q=JavaScript">JavaScript</a></li>
+                
+                <li><a href="/tags/?q=Electron">Electron</a></li>
+                
+            </ul>
+        </nav>
+    </div>
+    <div class="announce-area">
+        <h3>お知らせ欄</h3>
+        <div class="announce-text">
+            <!--お知らせ-->
+JavaScriptに関する最新情報は週一で<a href="http://jser.info/" title="JSer.info">JSer.info</a>を更新しています。
+
+        </div>
+        <h3>次に書くかもしれない記事候補</h3>
+        <p>興味がありましたら<a href="https://github.com/efcl/efcl.github.io/labels/%E8%A8%98%E4%BA%8B%E5%80%99%E8%A3%9C" title="Issues · efcl/efcl.github.io">Issues · efcl/efcl.github.io</a>からご意見下さい</p>
+        <div class="announce-text">
+            <iframe src="https://azu.github.io/github-issue-widget/?owner=efcl&repo=efcl.github.io&labels=記事候補&limit=4&random"
+                    allowtransparency="true" frameborder="0" scrolling="0" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+    <div class="related-articles" id="js-related-articles">
+        <h3>関連記事</h3>
+    </div>
+</div>
+<div class="zenback-embed">
+    <!-- X:S ZenBackWidget --><div id="zenback-widget-loader"></div><script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var r=Math.ceil((new Date()*1)*Math.random());var j=d.createElement("script");j.id=i;j.async=true;j.src="//w.zenback.jp/v1/?base_uri=http%3A//efcl.info/&nsid=89229392978401102%3A%3A89229398078677080&rand="+r;d.body.appendChild(j);}}(document,"zenback-widget-js");</script><!-- X:E ZenBackWidget -->
+</div>
+<div class="disqus-embed" id="js-disqus-embed">
+    <button class="comment-button" id="js-comment-button">コメントを表示</button>
+</div>
+
+<script type="text/javascript" src="/public/js/tag-fetcher.js"></script>
+<script type="text/javascript" src="/public/js/show-related-article.js"></script>
+<script type="text/javascript" src="/public/js/show-disqus.js"></script>
+
+    </div>
+</article>
+</body>
+</html>
