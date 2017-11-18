@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-17T23:07:15+09:00</updated>
+ <updated>2017-11-18T09:10:30+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -20,7 +20,7 @@
    <updated>2017-11-17T20:03:00+09:00</updated>
    <id>http://efcl.info/2017/11/17/searchive</id>
    <content type="html"><![CDATA[ <p>ローカルにあるPDFを全部検索して、その結果を一覧したいことがあります。
-例えば、今<a href="https://github.com/asciidwango/js-primer" title="js-primer">js-primer</a>という書籍を書いていて、他の書籍ではどんな扱い/用語になっているのかを調べいことがよくありました。</p>
+例えば、今、<a href="https://github.com/asciidwango/js-primer" title="js-primer">js-primer</a>という書籍を書いていて、ある用語が他の書籍ではどんな扱い/用語になっているのかを調べたいことがよくありました。</p>
 
 <p>この手のアプリとしては論文管理の<a href="https://www.readcube.com/papers/mac/" title="Papers for Mac">Papers for Mac</a>などがありますが、検索したいだけなのに色々な機能がついていてまた、とりあえず作ってみることにしました。</p>
 
