@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-18T09:10:30+09:00</updated>
+ <updated>2017-11-19T15:23:29+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -182,7 +182,7 @@ Reduxでよく見るような形になってると思います。</p>
 <ul>
 <li>インデックスを作る処理が重たい</li>
 </ul></li>
-<li>この制限で検索結果に実際にpdfを表示するプレビューがでてきてないのでどうにかしたい</li>
+<li><a href="https://github.com/electron-userland/electron-webpack/" title="electron-webpack">electron-webpack</a>がdev serverを立てる制限で検索結果に実際にpdfを表示するプレビューがでてきてないのでどうにかしたい</li>
 <li>PDF以外も原理的に対応できるのでテキストファイルも合わせて検索したい</li>
 </ul>
 
