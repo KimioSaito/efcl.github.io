@@ -332,7 +332,7 @@ var blog_categories = [
     <div class="post-content">
         <p><a href="https://github.com/almin/almin" title="Almin">Almin</a>でFluxアーキテクチャについてを見ていく話です。</p>
 
-<p>AlminはいわゆるFluxライブラリ的なものですが、ドメイン駆動設計(DDD)を行うにあたって既存の<a href="https://github.com/reactjs/redux" title="Redux">Redux</a>や<a href="https://github.com/facebook/flux" title="Flux">Flux</a>では上手くレイヤー分けをやりにくい部分がありました。</p>
+<p>AlminはいわゆるFluxライブラリ的なものですが、ドメイン駆動設計（DDD）を行うにあたって既存の<a href="https://github.com/reactjs/redux" title="Redux">Redux</a>や<a href="https://github.com/facebook/flux" title="Flux">Flux</a>では上手くレイヤー分けをやりにくい部分がありました。</p>
 
 <p>この辺の経緯については以前スライドやドキュメントにまとめてあるので、以下を参照してください。</p>
 
@@ -349,12 +349,18 @@ var blog_categories = [
 
 <p><img src="https://almin.js.org/docs/tutorial/counter/img/counter.png" alt="counter"></p>
 
+<p>次に英語のチュートリアルもあるので参照してください。</p>
+
+<ul>
+<li><a href="https://almin.js.org/docs/tutorial/counter/" title="Counter App · Almin.js">Counter App · Almin.js</a></li>
+</ul>
+
 <h2 id="source-code">Source Code</h2>
 
 <p>ソースコードは次の場所にあります。</p>
 
 <ul>
-<li><a href="https://github.com/almin/almin/tree/master/example/counter">https://github.com/almin/almin/tree/master/example/counter</a></li>
+<li><a href="https://github.com/almin/almin/tree/master/examples/counter">https://github.com/almin/almin/tree/master/examples/counter</a></li>
 </ul>
 <div class="highlight"><pre><code class="language-sh" data-lang="sh">git clone https://github.com/almin/almin.git
 
@@ -394,8 +400,8 @@ open http://localhost:8080/
 <li>Store
 
 <ul>
-<li>アプリの状態(State)を保存する</li>
-<li>Stateが変わったことを(Viewへ)通知する</li>
+<li>アプリの状態（State）を保存する</li>
+<li>Stateが変わったことを（Viewへ）通知する</li>
 </ul></li>
 <li>UseCase
 
@@ -408,7 +414,7 @@ open http://localhost:8080/
 
 <p><img src="http://efcl.info/wp-content/uploads/2017/03/17-1489747778.png" alt="比較table"></p>
 
-<p>このサンプルは状態が一つしかないため、複数のStoreをまとめるStoreGroupや、
+<p>このサンプルは状態が1つしかないため、複数のStoreをまとめるStoreGroupや、
 ロジックが殆どないためDomainといった要素は登場していません。</p>
 
 <h2 id="カウンターの機能">カウンターの機能</h2>
@@ -426,7 +432,7 @@ open http://localhost:8080/
 <p>カウンターの機能をUseCaseという形で実装します。
 UseCaseとは、ユーザーとシステムのやり取りを対話的に書いたものです。</p>
 
-<p>簡単に言えば、ユースケースにはユーザーがシステムとやり取りする手順を書いていきます。
+<p>簡単にいえば、ユースケースにはユーザーがシステムとやり取りする手順を書いていきます。
 カウンターの例では複雑な手順が出てこないため、ユーザーがUIを操作した時に行うアクションを書く場所と考えれば問題ありません。</p>
 
 <blockquote>
@@ -435,12 +441,12 @@ UseCaseとは、ユーザーとシステムのやり取りを対話的に書い�
 </ol>
 </blockquote>
 
-<p>基本的にAlminでは1 UseCase 1ファイル(クラス)として実装します。</p>
+<p>基本的にAlminでは1 UseCase 1ファイル（クラス）として実装します。</p>
 
 <p>これを実現する<code>IncrementalCounterUseCase.js</code>を作成します。
 Alminの<code>UseCase</code>クラスを継承し、<code>execute()</code>メソッドに行いたい処理実装します。</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
-<span class="kr">import</span> <span class="p">{</span><span class="nx">UseCase</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;almin&quot;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">UseCase</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;almin&quot;</span><span class="p">;</span>
 <span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">IncrementalCounterUseCase</span> <span class="kr">extends</span> <span class="nx">UseCase</span> <span class="p">{</span>
     <span class="c1">// UseCase should implement #execute method</span>
     <span class="nx">execute</span><span class="p">()</span> <span class="p">{</span>
@@ -458,7 +464,7 @@ Alminの<code>UseCase</code>クラスを継承し、<code>execute()</code>メソ
 
 <p>まずは、<code>CounterStore</code>という<code>Store</code>クラスを継承したものを作成します。</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
-<span class="kr">import</span> <span class="p">{</span><span class="nx">Store</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;almin&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">Store</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;almin&quot;</span><span class="p">;</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">CounterStore</span> <span class="kr">extends</span> <span class="nx">Store</span> <span class="p">{</span>
     <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
         <span class="kr">super</span><span class="p">();</span>
@@ -469,7 +475,7 @@ Alminの<code>UseCase</code>クラスを継承し、<code>execute()</code>メソ
     <span class="nx">getState</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="nx">count</span><span class="o">:</span> <span class="mi">0</span> 
-        <span class="p">}</span>
+        <span class="p">};</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -478,8 +484,8 @@ Alminの<code>UseCase</code>クラスを継承し、<code>execute()</code>メソ
 <p>つまり次のような流れを実装します。</p>
 
 <ol>
-<li>IncrementalCounterUseCaseが&quot;increment&quot; payloadをdispatchします.</li>
-<li>CounterStoreは&quot;increment&quot; payloadを受け取り、自分自身のstateを更新します。</li>
+<li>IncrementalCounterUseCaseが&quot;increment&quot; payloadをdispatchします</li>
+<li>CounterStoreは&quot;increment&quot; payloadを受け取り、自分自身のstateを更新します</li>
 </ol>
 
 <p>これはいわゆるFluxパターンです</p>
@@ -490,7 +496,7 @@ Alminの<code>UseCase</code>クラスを継承し、<code>execute()</code>メソ
 
 <ol>
 <li>ActionCreatorで&quot;increment&quot; actionを作りdispatchします</li>
-<li>CounterStoreは&quot;increment&quot; payloadを受け取り、自分自身のstateを更新します。</li>
+<li>CounterStoreは&quot;increment&quot; payloadを受け取り、自分自身のstateを更新します</li>
 </ol>
 
 <h2 id="usecase-dispatch-gt-store"><strong>UseCase</strong> dispatch -&gt; Store</h2>
@@ -511,9 +517,9 @@ Alminの<code>UseCase</code>クラスを継承し、<code>execute()</code>メソ
 <p><code>UseCase</code>クラスを継承したクラスは<code>this.dispatch(payload)</code>メソッド利用できます。</p>
 
 <p><code>payload</code>オブジェクトは<code>type</code>プロパティを持ったオブジェクトです。
-次の<code>payload</code>は最小のものと言えます。</p>
+次の<code>payload</code>は最小のものといえます。</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span>
-    <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;type&quot;</span>
+    <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;type&quot;</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>次のように<code>type</code>以外のプロパティも持たせることができます。</p>
@@ -529,7 +535,7 @@ Alminの<code>UseCase</code>クラスを継承し、<code>execute()</code>メソ
 <p>次は<code>CounterStore</code> が &quot;increment&quot; payloadを受け取れるようにします。</p>
 
 <p><code>Store</code>クラスを継承したクラスは、<code>this.onDispatch(function(payload){ })</code>メソッドが利用できます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span><span class="nx">Store</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;almin&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Store</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;almin&quot;</span><span class="p">;</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">CounterStore</span> <span class="kr">extends</span> <span class="nx">Store</span> <span class="p">{</span>
     <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
         <span class="kr">super</span><span class="p">();</span>
@@ -544,7 +550,7 @@ Alminの<code>UseCase</code>クラスを継承し、<code>execute()</code>メソ
         <span class="p">});</span>
     <span class="p">}</span>
 
-    <span class="nx">getState</span><span class="p">(){</span> <span class="cm">/* stateを返す */</span> <span class="p">}</span>
+    <span class="nx">getState</span><span class="p">()</span> <span class="p">{</span> <span class="cm">/* stateを返す */</span> <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><code>Store#onDispatch</code>メソッドで、UseCaseがdispatchしたpayloadを受け取れます。
@@ -552,7 +558,7 @@ Alminの<code>UseCase</code>クラスを継承し、<code>execute()</code>メソ
 
 <p>その前に、Alminでは多くの場合StoreがStateを別々のクラスとして実装しています。</p>
 
-<p>つまり、<code>CouterStore</code>は<code>CounterState</code>のインスタンスを持つという形にしています。</p>
+<p>つまり、<code>CouterStore</code>は<code>CounterState</code>のインスタンスをもつという形にしています。</p>
 
 <p><strong>Store</strong></p>
 
@@ -612,11 +618,11 @@ Reduxの <strong>reducer</strong> と呼ばれるものによく似たものを�
 <ol>
 <li>dispatchされたpayloadを受け取り、<code>CounterState</code>を更新を試みます</li>
 <li>もし<code>CounterState</code>が更新されたなら, <code>CounterStore#emitChange</code>を叩き変更を通知します</li>
-<li><code>getState(){}</code>ではStateのインスタンスを返します。</li>
+<li><code>getState(){}</code>ではStateのインスタンスを返します</li>
 </ol>
 
 <p><code>Store</code>を継承したクラスは<code>this.emitChange()</code>メソッドを持っています。
-これは、Storeを監視しているもの(主にView)に対して、Store(State)が変わったことを通知しています。</p>
+これは、Storeを監視しているもの（主にView）に対して、Store（State）が変わったことを通知しています。</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">Store</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;almin&quot;</span><span class="p">;</span>
 <span class="kr">import</span> <span class="nx">CounterState</span> <span class="nx">from</span> <span class="s2">&quot;./CounterState&quot;</span><span class="p">;</span>
@@ -638,9 +644,7 @@ Reduxの <strong>reducer</strong> と呼ばれるものによく似たものを�
     <span class="p">}</span>
 
     <span class="nx">getState</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="nx">counterState</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span>
-        <span class="p">};</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -665,16 +669,23 @@ Reduxの <strong>reducer</strong> と呼ばれるものによく似たものを�
 <code>Context</code>オブジェクトとはStoreとUseCaseを繋ぐ役割をするものです。</p>
 
 <p>次のように、StoreのインスタンスとDispatcherのインスタンスを渡して初期化しています。
-(ここではStoreが一つのみですが、Alminでは複数のStoreをまとめるStoreGroupというものも用意しています)</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">Dispatcher</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;almin&quot;</span><span class="p">;</span>
-<span class="kr">import</span> <span class="p">{</span><span class="nx">CounterStore</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;../store/CounterStore&quot;</span><span class="p">;</span>
+ここではStoreが1つのみですが、Alminでは複数のStoreをまとめるStoreGroupというものも用意しています。
+StoreGroupには <code>{ State名: Store }</code> というように対応関係のマッピングオブジェクトを渡します。
+<code>StoreGroup#getState</code>で <code>{ State名: Store#getState()結果 }</code>が取得できます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Context</span><span class="p">,</span> <span class="nx">Dispatcher</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;almin&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">CounterStore</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;../store/CounterStore&quot;</span><span class="p">;</span>
 <span class="c1">// a single dispatcher</span>
 <span class="kr">const</span> <span class="nx">dispatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dispatcher</span><span class="p">();</span>
 <span class="c1">// a single store. if you want to use multiple, please use StoreGroup!</span>
 <span class="kr">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CounterStore</span><span class="p">();</span>
+<span class="c1">// StoreGroupを</span>
+<span class="kr">const</span> <span class="nx">storeGroup</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StoreGroup</span><span class="p">({</span>
+    <span class="c1">// stateName : store</span>
+    <span class="nx">counter</span><span class="o">:</span> <span class="nx">store</span>
+<span class="p">});</span>
 <span class="kr">const</span> <span class="nx">appContext</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Context</span><span class="p">({</span>
     <span class="nx">dispatcher</span><span class="p">,</span>
-    <span class="nx">store</span>
+    <span class="nx">store</span><span class="o">:</span> <span class="nx">storeGroup</span>
 <span class="p">});</span>
 </code></pre></div><div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
 <span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
@@ -726,11 +737,11 @@ Reduxの <strong>reducer</strong> と呼ばれるものによく似たものを�
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">appContext</span><span class="p">.</span><span class="nx">onChange</span><span class="p">(</span><span class="nx">onChangeHandler</span><span class="p">);</span>
 </code></pre></div>
 <p>これは、<code>CounterStore</code> が変更される(<code>emitChange()</code>を叩く)と<code>onChangeHandler</code>が呼ばれることを意味しています。
-そして、<code>onChangeHandler</code> は<code>App</code> componentのState(ReactのState)を更新します。</p>
+そして、<code>onChangeHandler</code> は<code>App</code> componentのState（ReactのState）を更新します。</p>
 
 <h3 id="counter-component">Counter component</h3>
 
-<p>後は、<code>counterState</code>をCounterComponent(実際にcountを表示するView)が受け取り、カウントの値を表示すれば完成です。</p>
+<p>後は、<code>counterState</code>をCounterComponent（実際にcountを表示するView）が受け取り、カウントの値を表示すれば完成です。</p>
 
 <p>カウントを更新したい場合は、作成したIncrementalCounterUseCaseを<code>context.useCase(new IncrementalCounterUseCase()).execute(渡したい値);</code>で呼び出すことができます。</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">context</span><span class="p">.</span><span class="nx">useCase</span><span class="p">(</span><span class="k">new</span> <span class="nx">IncrementalCounterUseCase</span><span class="p">()).</span><span class="nx">execute</span><span class="p">();</span>
@@ -771,7 +782,7 @@ Reduxの <strong>reducer</strong> と呼ばれるものによく似たものを�
 <p>これにより、一般的なFluxの一方こうのデータフローが次のようにできていることが分かります。</p>
 
 <ul>
-<li>React -&gt; UseCase -&gt; Store(State) -&gt; React</li>
+<li>React -&gt; UseCase -&gt; Store（State） -&gt; React</li>
 </ul>
 
 <h2 id="alminとロガー">Alminとロガー</h2>
@@ -801,18 +812,18 @@ Reduxの <strong>reducer</strong> と呼ばれるものによく似たものを�
 </ul>
 
 <p>Alminでは<a href="https://github.com/almin/almin-devtools" title="almin-devtools">almin-devtools</a>を使うことで、
-<a href="https://github.com/gaearon/redux-devtools" title="Redux DevTools">Redux DevTools</a>と連携することができます。</p>
+<a href="https://github.com/gaearon/redux-devtools" title="Redux DevTools">Redux DevTools</a>と連携できます。</p>
 
 <p>ブラウザに<a href="https://github.com/gaearon/redux-devtools" title="Redux DevTools">Redux DevTools</a>をインストールします。</p>
 
 <ul>
 <li>Chrome: <a href="https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd">Chrome Web Store</a>;</li>
 <li>Firefox: <a href="https://addons.mozilla.org/en-US/firefox/addon/remotedev/">Mozilla Add-ons</a>;</li>
-<li>Electron: <a href="https://github.com/GPMDP/electron-devtools-installer"><code>electron-devtools-installer</code></a>.</li>
+<li>Electron: <a href="https://github.com/GPMDP/electron-devtools-installer"><code>electron-devtools-installer</code></a></li>
 </ul>
 
-<p>そして、3行加えるだけで、Alminのログを<a href="https://github.com/gaearon/redux-devtools" title="Redux DevTools">Redux DevTools</a>で見ることができます。(タイムマシーンデバッグなどはアプリ側でちゃんと実装しないと動かないので制限があります)</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="nx">AlminDevTools</span> <span class="nx">from</span> <span class="s2">&quot;almin-devtools&quot;</span>
+<p>そして、3行加えるだけで、Alminのログを<a href="https://github.com/gaearon/redux-devtools" title="Redux DevTools">Redux DevTools</a>で見ることができます。（タイムマシーンデバッグなどはアプリ側でちゃんと実装しないと動かないので制限があります）</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="nx">AlminDevTools</span> <span class="nx">from</span> <span class="s2">&quot;almin-devtools&quot;</span><span class="p">;</span>
 <span class="kr">const</span> <span class="nx">logger</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AlminDevTools</span><span class="p">(</span><span class="nx">appContext</span><span class="p">);</span>
 <span class="nx">logger</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
 </code></pre></div>
@@ -832,7 +843,7 @@ Reduxの <strong>reducer</strong> と呼ばれるものによく似たものを�
 
 <p><img src="https://almin.js.org/docs/tutorial/counter/img/almin-architecture-flux.png" alt="almin-flux.png"></p>
 
-<p>実際のアプリケーションでは、StoreやUseCaseが一つだけというものはあまりないと思います。
+<p>実際のアプリケーションでは、StoreやUseCaseが1つだけというものはあまりないと思います。
 TodoMVCの例では、CQRSやドメインモデルなどの要素も登場し、複数のUseCaseを実装していきます。</p>
 
 <ul>
@@ -848,7 +859,7 @@ TodoMVCの例では、CQRSやドメインモデルなどの要素も登場し、
 
 <p>どれだけ短く書けるかよりも、どれだけ読みやすく書けて管理できるかの方がメインといえるかもしれません。</p>
 
-<p>この辺の話は、以下のスライドやリポジトリを見てみると良いかもしれません。</p>
+<p>この辺の話は、次のスライドやリポジトリを見てみるとよいかもしれません。</p>
 
 <ul>
 <li>スライド: <a href="http://azu.github.io/slide/2016/react-meetup/large-scale-javascript.html" title="複雑なJavaScriptアプリケーションを考えながら作る話">複雑なJavaScriptアプリケーションを考えながら作る話</a></li>
