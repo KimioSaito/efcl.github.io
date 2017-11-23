@@ -717,17 +717,18 @@ StoreGroupには <code>{ State名: Store }</code> というように対応関係
     <span class="p">}</span>
 
     <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
-        <span class="cm">/*</span>
-<span class="cm">         Where is &quot;CounterState&quot; come from? </span>
-<span class="cm">         It is CounterStore#getState()&#39;s key name</span>
-
-<span class="cm">         getState() {</span>
-<span class="cm">             return {</span>
-<span class="cm">                counterState: this.state</span>
-<span class="cm">             }</span>
-<span class="cm">         }</span>
-<span class="cm">        */</span>
-        <span class="kr">const</span> <span class="nx">counterState</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">counterState</span><span class="p">;</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Where is &quot;CounterState&quot; come from?</span>
+<span class="cm">         * It is a `key` of StoreGroup.</span>
+<span class="cm">         *</span>
+<span class="cm">         * ```</span>
+<span class="cm">         * const storeGroup = new StoreGroup({</span>
+<span class="cm">         *   &quot;counter&quot;: counterStore</span>
+<span class="cm">         * });</span>
+<span class="cm">         * ```</span>
+<span class="cm">         * @type {CounterState}</span>
+<span class="cm">         */</span>
+        <span class="kr">const</span> <span class="nx">counterState</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">counter</span><span class="p">;</span>
         <span class="k">return</span> <span class="o">&lt;</span><span class="nx">Counter</span> <span class="nx">counterState</span><span class="o">=</span><span class="p">{</span><span class="nx">counterState</span><span class="p">}</span>
                         <span class="nx">appContext</span><span class="o">=</span><span class="p">{</span><span class="nx">appContext</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">;</span>
     <span class="p">}</span>
