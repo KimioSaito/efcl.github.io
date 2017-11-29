@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-23T15:45:15+09:00</updated>
+ <updated>2017-11-29T21:07:15+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -760,7 +760,7 @@ textlint 9.0.0では<a href="https://github.com/textlint/textlint/tree/master/pa
 </ul></li>
 </ul>
 
-<p><a href="https://github.com/textlint/textlint/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+for+beginner%22" title="Issues · textlint/textlint"><code>label:&quot;good for beginner&quot;</code></a>というラベルが付いてるものは、比較的やることがはっきりしています。
+<p><a href="https://github.com/textlint/textlint/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"><code>label:&quot;good first issue</code></a>というラベルが付いてるものは、比較的やることがはっきりしています。
 そのため最初のコントビューションとして手が出しやすいかもしれません。</p>
 
 <p>また、textlintはあまりパフォーマンスの最適化がまだ行われていません。<a href="https://github.com/textlint/textlint/blob/master/packages/markdown-to-ast/src/markdown-parser.js" title="markdown-parser">markdown-parser</a>など明らかに無駄な処理をしている部分があります。
