@@ -2,6 +2,12 @@
     "posts": [
         
         {
+            "title": "shallow-equal for Object/React props",
+            "url": "http://efcl.info/2017/11/30/shallow-equal/",
+            "date": "2017-11-30T10:12:00+09:00"
+        },
+        
+        {
             "title": "ローカルのPDFを全文検索するクライアント/サーバ/Electronアプリを書いた",
             "url": "http://efcl.info/2017/11/17/searchive/",
             "date": "2017-11-17T20:03:00+09:00"
