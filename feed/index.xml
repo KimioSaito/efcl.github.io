@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-30T22:28:12+09:00</updated>
+ <updated>2017-11-30T22:34:56+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -130,7 +130,7 @@ Shallow Equalは対象のオブジェクトのプロパティをそれぞれ1段
 </code></pre></div>
 <p>アプリの構造はシンプルで<code>&lt;A/&gt;</code>というネストが深い用途、でっかいリストを描画する<code>&lt;List /&gt;</code>があります。<code>&lt;button /&gt;</code>を押すたびに、<code>state.a</code>の中にある<code>count</code>が+1ずつ更新されるだけです。</p>
 
-<p>ここで<code>&lt;List /&gt;</code>に渡す<code>state.largeList</code>は初回時に固定の10000コの配列を作ったものが入ります。</p>
+<p>ここで<code>&lt;List /&gt;</code>に渡す<code>state.largeList</code>は初回時に固定の10000コの値をもつ配列となります。</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">frozenLargeList</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">10000</span><span class="p">).</span><span class="nx">fill</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">);</span>
 </code></pre></div>
 <p>ボタン押しても<code>List</code>のpropsである<code>state.largeList</code>は変更されないので、<code>&lt;List/&gt;</code>は一度描画されたら更新する必要がありません。</p>
