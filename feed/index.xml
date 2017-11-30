@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-30T23:58:50+09:00</updated>
+ <updated>2017-12-01T00:20:07+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -167,7 +167,8 @@ Shallow Equalは対象のオブジェクトのプロパティをそれぞれ1段
 </code></pre></div>
 <hr>
 
-<p>この例ではわざわざ<a href="https://github.com/azu/shallow-equal-object" title="shallow-equal-object">shallow-equal-object</a>を使ってますが、Reactには<code>React.PureComponent</code>があるので、そちらを使えば実装は特にいらないです。</p>
+<p>この例ではわざわざ<a href="https://github.com/azu/shallow-equal-object" title="shallow-equal-object">shallow-equal-object</a>を使ってますが、Reactには<code>React.PureComponent</code>があるので、そちらを使えば実装は特にいらないです。
+(<a href="https://github.com/azu/shallow-equal-props" title="shallow-equal-props">shallow-equal-props</a>は<a href="https://github.com/facebook/react/issues/8669">React.PureComponentとはChildrenとかのReact.Elementの扱い</a>が違いますが、大抵は<code>React.PureComponent</code>で十分です。この例ではこの違いは特に関係ないので省きます。)</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">abstract</span> <span class="kr">class</span> <span class="nx">BaseComponent</span><span class="o">&lt;</span><span class="nx">P</span><span class="p">,</span> <span class="nx">S</span><span class="o">&gt;</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">PureComponent</span><span class="o">&lt;</span><span class="nx">P</span><span class="p">,</span> <span class="nx">S</span><span class="o">&gt;</span> <span class="p">{</span>
 <span class="p">}</span>
 </code></pre></div>
