@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-30T22:34:56+09:00</updated>
+ <updated>2017-11-30T23:58:50+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -130,6 +130,8 @@ Shallow Equalは対象のオブジェクトのプロパティをそれぞれ1段
 </code></pre></div>
 <p>アプリの構造はシンプルで<code>&lt;A/&gt;</code>というネストが深い用途、でっかいリストを描画する<code>&lt;List /&gt;</code>があります。<code>&lt;button /&gt;</code>を押すたびに、<code>state.a</code>の中にある<code>count</code>が+1ずつ更新されるだけです。</p>
 
+<p><img src="http://efcl.info/wp-content/uploads/2017/11/30-1512048718.png" alt="image"></p>
+
 <p>ここで<code>&lt;List /&gt;</code>に渡す<code>state.largeList</code>は初回時に固定の10000コの値をもつ配列となります。</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">frozenLargeList</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">10000</span><span class="p">).</span><span class="nx">fill</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">);</span>
 </code></pre></div>
@@ -163,6 +165,14 @@ Shallow Equalは対象のオブジェクトのプロパティをそれぞれ1段
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<hr>
+
+<p>この例ではわざわざ<a href="https://github.com/azu/shallow-equal-object" title="shallow-equal-object">shallow-equal-object</a>を使ってますが、Reactには<code>React.PureComponent</code>があるので、そちらを使えば実装は特にいらないです。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">abstract</span> <span class="kr">class</span> <span class="nx">BaseComponent</span><span class="o">&lt;</span><span class="nx">P</span><span class="p">,</span> <span class="nx">S</span><span class="o">&gt;</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">PureComponent</span><span class="o">&lt;</span><span class="nx">P</span><span class="p">,</span> <span class="nx">S</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+
 <p>ここで本題のDeep Equal(<code>JSON.stringify</code>)とShallow Equalの比較のコストの差の話がでてきます。このコストの差は<code>shouldComponentUpdate</code>の処理自体にどれぐらいかかっているかを調べれば比較できます。</p>
 
 <p>React 15まではreact-addon-perfsで比較できましたが、React 16では<code>?react_perf</code>の<code>performance.mark</code>の結果を使うのが簡単です。</p>
