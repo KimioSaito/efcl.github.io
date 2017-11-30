@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-11-30T22:22:21+09:00</updated>
+ <updated>2017-11-30T22:27:24+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -303,7 +303,7 @@ App.tsx:33 Updated components: ⚛ A.shouldComponentUpdate, ⚛ B.shouldComponen
 
 <p>Deep Equalは合計で5ms程度かかるのに対して、Shallowは0.02ms程度で済んでいます。
 200倍程度の違いがでていますが、これは複雑で巨大なpropsになるほどDeep Equalは不利になります。
-(今回は10000コ程度の配列)</p>
+(<code>JSON.stringify</code>の結果をキャッシュすれば時間は半分程度になります)</p>
 
 <p>この例は恣意的な比較なので、十分に早いデバイスでそこまで大きくないオブジェクトなら目に見えるコストにはなりにくいです。</p>
 
