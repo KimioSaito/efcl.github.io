@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-12-07T12:15:43+09:00</updated>
+ <updated>2017-12-07T12:18:30+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -70,7 +70,7 @@
 <p>タイムラインツールでも記録はできるのですが、呼び出し元毎のグルーピングやフィルタリングが難しいです。(良い方法があるなら知りたい)
 &quot;setTimeout&quot;, &quot;setInterval&quot;, &quot;requestAnimationFrame&quot;を乗っ取ってログを取ることで実装しています。</p>
 
-<p>一回のタイマー発火ごとの処理は小さくても、CPUが弱いデバイスではネックとなることがあるのでそのような無駄な処理を発見する目的で作りました。
+<p>一回のタイマー発火ごとの処理は小さくても、スペック弱いデバイスではネックとなることがあるのでそのような無駄な処理を発見する目的で作りました。
 (Chromeの<a href="https://umaar.com/dev-tips/88-cpu-throttling/" title="CPU Throttling - Chrome DevTools - Dev Tips">CPU Throttling</a>などでシミュレートすると問題を見つけやすいです)</p>
 
 <p>その他</p>
