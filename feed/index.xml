@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-12-07T12:18:30+09:00</updated>
+ <updated>2017-12-07T12:34:54+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -72,6 +72,36 @@
 
 <p>一回のタイマー発火ごとの処理は小さくても、スペック弱いデバイスではネックとなることがあるのでそのような無駄な処理を発見する目的で作りました。
 (Chromeの<a href="https://umaar.com/dev-tips/88-cpu-throttling/" title="CPU Throttling - Chrome DevTools - Dev Tips">CPU Throttling</a>などでシミュレートすると問題を見つけやすいです)</p>
+
+<p>最近は、分かりやすい指標が既にある起動時間のパフォーマンスではなく、アプリを起動後のパフォーマンスを改善しています。</p>
+
+<p>次の記事で作ってたものはそういうところを改善する目安を探すためのツールです。</p>
+
+<ul>
+<li><a href="http://efcl.info/2017/11/15/performance.mark-metadata/" title="performance.markにメタデータを紐付けできるライブラリを書いた | Web Scratch">performance.markにメタデータを紐付けできるライブラリを書いた | Web Scratch</a></li>
+<li><a href="https://dev.to/azu/performancemark-with-medata-is-useful-for-real-user-monitoring-54p" title="`performance.mark` with metadata is useful for Real user monitoring"><code>performance.mark</code> with metadata is useful for Real user monitoring</a></li>
+</ul>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">これのFB Flux版を実装してたけど、やっぱりこういうの必要だと思う。ボトルネックが可視化されるので特殊な技能がなくてもパフォーマンス悪いところが発見できる。 &quot;Almin + React/Vue.jsのパフォーマンスプロフ…&quot; <a href="https://t.co/9alBY5tnca">https://t.co/9alBY5tnca</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/933888717101588480?ref_src=twsrc%5Etfw">November 24, 2017</a></blockquote>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>アプリの起動後の指標として、何かした時に反応が100ms以内、アニメーションが10ms以内、アイドル時の処理は50ms以上以内のブロックにする(long task)、Loadは1000ms以内などを指標を定めた<a href="https://developers.google.com/web/fundamentals/performance/rail?hl=ja" title="RAIL">RAIL</a>モデルなどがあります。</p>
+
+<p>これらはマイクロなベンチマークを取ってからそれを改善していくという積み重ねをしています。
+この記事で書いたspyスクリプトも、無駄に動くタイマーが減ればその分処理が減ったということが明確であるため、それを検出するために作りました。</p>
+
+<p>また、アプリ起動後は何もしてないときも体感が良いということも必要になります。
+例えばユーザー操作がないけど、タイムラインがスムーズに更新される、映像がスムーズに流れる、放置ゲームを眺めててつっかかりがないとか、リアルタイムにデータを受信してて止まらないなどがこれにあたります。</p>
+
+<p>これらの放置時の更新は大体裏では&quot;setTimeout&quot;, &quot;setInterval&quot;, &quot;requestAnimationFrame&quot;などを使っていることが多いです。
+(WebRTCやWebSocketなどもありますが、それらが止まってないかを定期的にチェックする仕組みなどにも関係します)</p>
+
+<p>タイマー系は意図しないタイミングで他の処理と重なるとUIを固めたりするので、<a href="https://developer.mozilla.org/ja/docs/Web/API/Window/requestIdleCallback" title="requestIdleCallback">requestIdleCallback</a>と組み合わせるなどの工夫がひつようになるかもしれません。</p>
+
+<ul>
+<li><a href="https://github.com/azu/faao/blob/f52920656db792a0e24fc8bcbbc555c33b02b623/src/infra/time-sheduler/TimeScheduler.ts">https://github.com/azu/faao/blob/f52920656db792a0e24fc8bcbbc555c33b02b623/src/infra/time-sheduler/TimeScheduler.ts</a></li>
+</ul>
 
 <p>その他</p>
 
