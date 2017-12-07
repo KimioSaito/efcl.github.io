@@ -406,7 +406,7 @@ var blog_categories = [
 <p>これらの放置時の更新は大体裏では&quot;setTimeout&quot;, &quot;setInterval&quot;, &quot;requestAnimationFrame&quot;などを使っていることが多いです。
 (WebRTCやWebSocketなどもありますが、それらが止まってないかを定期的にチェックする仕組みなどにも関係します)</p>
 
-<p>タイマー系は意図しないタイミングで他の処理と重なるとUIを固めたりするので、<a href="https://developer.mozilla.org/ja/docs/Web/API/Window/requestIdleCallback" title="requestIdleCallback">requestIdleCallback</a>と組み合わせるなどの工夫がひつようになるかもしれません。</p>
+<p>タイマー系は意図しないタイミングで他の処理と重なるとUIを固めたりするので、<a href="https://developer.mozilla.org/ja/docs/Web/API/Window/requestIdleCallback" title="requestIdleCallback">requestIdleCallback</a>と組み合わせるなどの工夫が必要になるかもしれません。</p>
 
 <ul>
 <li><a href="https://github.com/azu/faao/blob/f52920656db792a0e24fc8bcbbc555c33b02b623/src/infra/time-sheduler/TimeScheduler.ts">https://github.com/azu/faao/blob/f52920656db792a0e24fc8bcbbc555c33b02b623/src/infra/time-sheduler/TimeScheduler.ts</a></li>
