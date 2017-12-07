@@ -333,9 +333,10 @@ var blog_categories = [
 <p>例えば、Twitterのようなアプリならば、ポーリングで更新するために<code>setInverval</code>のようなタイマーを回します。
 また、ゲームなどCanvasで描画を行うアプリケーションならば、メインループを<code>requestAnimationFrame</code>で回します。</p>
 
-<p>このように色々なタイマー系が一つのアプリで動くことが多いですが、特に問題がなりやすいのが表示中だけタイマーを回すようなコンポーネントがあるケースです。</p>
+<p>このように色々なタイマー系が一つのアプリで動くことが多いですが、特に問題がなりやすいのが表示中だけタイマーを回すコンポーネントです。</p>
 
-<p>よくあるのが次のようなmount時にtimerを開始して、unmount時にtimerを停止するコンポーネントです。この実装はunmount時に止めているので問題ありませんが、<code>componentWillUnmount</code>の実装を忘れるとそのタイマーはコンポーネントが消えた後も周り続けます。</p>
+<p>よくあるのが次のようなmount時にtimerを開始して、unmount時にtimerを停止するコンポーネントです。
+この実装はunmount時に止めているので問題ありませんが、<code>componentWillUnmount</code>の実装を忘れるとそのタイマーはコンポーネントが消えた後も回り続けます。</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">TimerComponent</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
 
     <span class="nx">componentDidMount</span><span class="p">()</span> <span class="p">{</span>
@@ -343,7 +344,7 @@ var blog_categories = [
     <span class="p">}</span>
 
     <span class="nx">componentWillUnmount</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">stopTimer</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">stopTimer</span><span class="p">();</span> <span class="c1">// &lt;= これを止め忘れるとTimerリーク</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
