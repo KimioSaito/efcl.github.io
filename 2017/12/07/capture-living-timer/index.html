@@ -330,8 +330,8 @@ var blog_categories = [
     <div class="post-content">
         <p>複雑なウェブアプリケーションになってくると、1つのページで複数のTimerなどを回すことがあります。</p>
 
-<p>例えば、Gmailのようなアプリならば、ポーリングで更新するために<code>setInverval</code>のようなタイマーを回します。
-また、ゲームなどCanvasで描画を行うアプリケーションならば、メインループをrequestAnimationFrame`で回します。</p>
+<p>例えば、Twitterのようなアプリならば、ポーリングで更新するために<code>setInverval</code>のようなタイマーを回します。
+また、ゲームなどCanvasで描画を行うアプリケーションならば、メインループを<code>requestAnimationFrame</code>で回します。</p>
 
 <p>このように色々なタイマー系が一つのアプリで動くことが多いですが、特に問題がなりやすいのが表示中だけタイマーを回すようなコンポーネントがあるケースです。</p>
 

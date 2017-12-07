@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-12-07T11:10:14+09:00</updated>
+ <updated>2017-12-07T12:15:43+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -21,8 +21,8 @@
    <id>http://efcl.info/2017/12/07/capture-living-timer</id>
    <content type="html"><![CDATA[ <p>複雑なウェブアプリケーションになってくると、1つのページで複数のTimerなどを回すことがあります。</p>
 
-<p>例えば、Gmailのようなアプリならば、ポーリングで更新するために<code>setInverval</code>のようなタイマーを回します。
-また、ゲームなどCanvasで描画を行うアプリケーションならば、メインループをrequestAnimationFrame`で回します。</p>
+<p>例えば、Twitterのようなアプリならば、ポーリングで更新するために<code>setInverval</code>のようなタイマーを回します。
+また、ゲームなどCanvasで描画を行うアプリケーションならば、メインループを<code>requestAnimationFrame</code>で回します。</p>
 
 <p>このように色々なタイマー系が一つのアプリで動くことが多いですが、特に問題がなりやすいのが表示中だけタイマーを回すようなコンポーネントがあるケースです。</p>
 
