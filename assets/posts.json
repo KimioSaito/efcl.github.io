@@ -2,6 +2,12 @@
     "posts": [
         
         {
+            "title": "ページ上でずっと動いているsetTimeout、setInterval、requestAnimationFrameを見つけてパフォーマンス改善する",
+            "url": "http://efcl.info/2017/12/07/capture-living-timer/",
+            "date": "2017-12-07T10:25:00+09:00"
+        },
+        
+        {
             "title": "shallow-equal for Object/React props",
             "url": "http://efcl.info/2017/11/30/shallow-equal/",
             "date": "2017-11-30T10:12:00+09:00"

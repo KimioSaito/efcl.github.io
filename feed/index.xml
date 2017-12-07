@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-12-07T10:59:35+09:00</updated>
+ <updated>2017-12-07T11:10:14+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,73 @@
  </author>
  
 
+ 
+ <entry>
+   <title>ページ上でずっと動いているsetTimeout、setInterval、requestAnimationFrameを見つけてパフォーマンス改善する</title>
+   <link href="http://efcl.info/2017/12/07/capture-living-timer/"/>
+   <updated>2017-12-07T10:25:00+09:00</updated>
+   <id>http://efcl.info/2017/12/07/capture-living-timer</id>
+   <content type="html"><![CDATA[ <p>複雑なウェブアプリケーションになってくると、1つのページで複数のTimerなどを回すことがあります。</p>
+
+<p>例えば、Gmailのようなアプリならば、ポーリングで更新するために<code>setInverval</code>のようなタイマーを回します。
+また、ゲームなどCanvasで描画を行うアプリケーションならば、メインループをrequestAnimationFrame`で回します。</p>
+
+<p>このように色々なタイマー系が一つのアプリで動くことが多いですが、特に問題がなりやすいのが表示中だけタイマーを回すようなコンポーネントがあるケースです。</p>
+
+<p>よくあるのが次のようなmount時にtimerを開始して、unmount時にtimerを停止するコンポーネントです。この実装はunmount時に止めているので問題ありませんが、<code>componentWillUnmount</code>の実装を忘れるとそのタイマーはコンポーネントが消えた後も周り続けます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">TimerComponent</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+
+    <span class="nx">componentDidMount</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">startTimer</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="nx">componentWillUnmount</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">stopTimer</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>このような意図しないで動いてるタイマーなどを見つけるspyスクリプトを書きました</p>
+
+<ul>
+<li><a href="https://gist.github.com/azu/d7942102dc5282b0eca859149791c3f0" title="Logging Timer and requestAnimationFrame">Logging Timer and requestAnimationFrame</a></li>
+</ul>
+
+<h2 id="使い方">使い方</h2>
+
+<ol>
+<li>次のスクリプトをページに読み込ませる<br>
+
+<ul>
+<li>コンソールにコピペして実行しても大丈夫</li>
+<li>Non strict modeじゃないと動かないことやってるで混ぜる場合は注意</li>
+</ul></li>
+<li>結果を取りたくなったら <code>window.getContexualLogResult()</code>を叩く</li>
+</ol>
+
+<p>&quot;setTimeout&quot;, &quot;setInterval&quot;, &quot;requestAnimationFrame&quot;の実行元の関数毎に呼ばれた回数をまとめて表示してくれます。
+またスタックトレースも無理やり入れているので、意図しない呼び出しが頻発しているならその部分のコードを直す目安となります。</p>
+
+<script src="https://gist.github.com/azu/d7942102dc5282b0eca859149791c3f0.js"></script>
+
+<p>例えば、twtter.comでこれを実行してみると<code>setInterval</code>と<code>requestAnimationFrame</code>が回っていることが分かります。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/12/07-1512611803.png" alt="image"></p>
+
+<p>これは定期的な更新をするために呼び出していることがわかります。</p>
+
+<p>タイムラインツールでも記録はできるのですが、呼び出し元毎のグルーピングやフィルタリングが難しいです。(良い方法があるなら知りたい)
+&quot;setTimeout&quot;, &quot;setInterval&quot;, &quot;requestAnimationFrame&quot;を乗っ取ってログを取ることで実装しています。</p>
+
+<p>一回のタイマー発火ごとの処理は小さくても、CPUが弱いデバイスではネックとなることがあるのでそのような無駄な処理を発見する目的で作りました。
+(Chromeの<a href="https://umaar.com/dev-tips/88-cpu-throttling/" title="CPU Throttling - Chrome DevTools - Dev Tips">CPU Throttling</a>などでシミュレートすると問題を見つけやすいです)</p>
+
+<p>その他</p>
+
+<ul>
+<li><a href="https://havelog.ayumusato.com/develop/javascript/e725-timer_vs_raf.html" title="requestAnimationFrame とタイマーの今更な比較とデモ ::ハブろぐ">requestAnimationFrame とタイマーの今更な比較とデモ ::ハブろぐ</a></li>
+</ul>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>shallow-equal for Object/React props</title>
@@ -1914,126 +1981,6 @@ NLCSTは<a href="https://github.com/wooorm/retext">retext</a>などが使って�
 </ul>
 
 <p>感想の量からもわかるように<a href="https://www.amazon.com/dp/1491986360/" title="Building Evolutionary Architectures: Support Constant Change: Neal Ford, Rebecca Parsons, Patrick Kua: 9781491986363: Amazon.com: Books">Building Evolutionary Architectures</a>は結構面白かった。</p>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように</title>
-   <link href="http://efcl.info/2017/09/20/almin-performance-profile-0.14.0/"/>
-   <updated>2017-09-20T10:07:00+09:00</updated>
-   <id>http://efcl.info/2017/09/20/almin-performance-profile-0.14.0</id>
-   <content type="html"><![CDATA[ <p><a href="https://github.com/almin/almin"><img src="https://almin.github.io/media/logo/logo.png" alt="Almin.js"></a></p>
-
-<p><a href="https://github.com/almin/almin" title="Almin">Almin</a>はClient-side DDD/CQRSをしやすい構造を作ることを目的にした – いわゆるステート管理ライブラリです。</p>
-
-<p><a href="https://github.com/almin/almin/releases/tag/almin%400.14.0" title="almin@0.14.0">Almin 0.14.0</a>で<code>performance.mark</code>ベースのプロファイルを取れるようになりました。
-これにより、AlminのUseCaseやStoreといったそれぞれの処理にどれぐらいかかっているかを開発者ツールのタイムラインで見ることができます。</p>
-
-<p><a href="https://github.com/almin/almin/releases/tag/almin%400.14.0"><img src="http://efcl.info/wp-content/uploads/2017/09/20-1505888631.png" alt="DevTool timeline"></a></p>
-
-<p><code>performance.mark</code>は<a href="https://w3c.github.io/user-timing/" title="User Timing Level 2">User Timing Level 2</a>で標準化されている方法なので、後述するようにReactやVueなどのライブラリと組み合わせた状態も見ることができます。
-<code>performance.mark</code>については次の記事でも書いています。</p>
-
-<ul>
-<li><a href="http://efcl.info/2016/08/15/performance.mark/" title="performance.markでパフォーマンス計測する | Web Scratch">performance.markでパフォーマンス計測する | Web Scratch</a></li>
-</ul>
-
-<h2 id="使い方">使い方</h2>
-
-<p>Contextを作成する際に<code>performanceProfile</code>オプションを有効にするだけです。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">appContext</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Context</span><span class="p">({</span>
-    <span class="nx">dispatcher</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Dispatcher</span><span class="p">(),</span>
-    <span class="nx">store</span><span class="o">:</span> <span class="nx">yourStoreGroup</span><span class="p">,</span>
-    <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">strict</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-        <span class="nx">performanceProfile</span><span class="o">:</span> <span class="kc">true</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-</code></pre></div>
-<p>このオプションを有効にした状態で実際のウェブサイトにアクセスして、次のステップでみることができます。</p>
-
-<ol>
-<li><code>performanceProfile</code>オプションを有効化</li>
-<li>ウェブサイトを開く</li>
-<li>開発者ツールの&quot;Performance&quot;タブを開き<strong>Record</strong>を押す
-
-<ul>
-<li><a href="https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/timeline-tool">Chrome&#39;s Timeline Tool document</a>や<a href="https://docs.microsoft.com/en-us/microsoft-edge/f12-devtools-guide/performance" title="F12 devtools guide - Performance - Microsoft Edge Development | Microsoft Docs">MSEdge&#39;s F12 devtools guide</a>を参考に</li>
-</ul></li>
-<li><strong>Record</strong>を停止する</li>
-<li><strong>User Timing</strong>というラベルにAlminのイベントが表示される</li>
-</ol>
-
-<p>実際にパフォーマンスプロファイルをタイムラインで見ている様子です。</p>
-
-<blockquote class="twitter-video" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/almin?src=hash">#almin</a> + <a href="https://twitter.com/hashtag/react?src=hash">#react</a> easy to profile web app with devTool&#39;s timeline.<a href="https://t.co/HLndVyS4hI">https://t.co/HLndVyS4hI</a> <a href="https://t.co/d7l2c2pP1K">pic.twitter.com/d7l2c2pP1K</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/909418278153478144">September 17, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<p>この動画ではReactの<a href="https://facebook.github.io/react/docs/optimizing-performance.html" title="?react_perf">?react_perf</a>と組み合わせたものをタイムライン表示しています。</p>
-
-<p>動かしているサンプルはショッピングカートのコードです。</p>
-
-<ul>
-<li><a href="https://github.com/almin/almin/tree/master/examples/shopping-cart" title="almin/examples/shopping-cart at master · almin/almin">almin/examples/shopping-cart at master · almin/almin</a></li>
-</ul>
-
-<h2 id="vue-almin">Vue + Almin</h2>
-
-<p>ReactだけではなくVueも<code>performance.mark</code>ベースの<a href="https://vuejs.org/v2/api/#performance">パフォーマンスオプション</a>をサポートしています。</p>
-
-<p>Vue + Alminで書いたサンプルを作ったので、次のリポジトリで試すことができます。</p>
-
-<ul>
-<li><a href="https://github.com/azu/vue-almin-counter-example" title="azu/vue-almin-counter-example: Vue + Almin counter example">azu/vue-almin-counter-example: Vue + Almin counter example</a></li>
-</ul>
-
-<p><img src="https://cdn.rawgit.com/azu/vue-almin-counter-example/master/img/performance-timeline.gif" alt="Vue + Almin"></p>
-
-<p>VueのパフォーマンスプロファイルはVueによるViewの更新(<code>render</code>や<code>patch</code>)に関する情報がタイムラインにでます。
-Alminのパフォーマンスプロファイルは、UseCaseの実行、StoreGroup/Storeの更新、StoreからのState取得に関する情報がタイムラインにでます。</p>
-
-<p>Alminが現在サポートしているメトリクスについては次のドキュメントで公開しています。</p>
-
-<p><a href="https://almin.js.org/docs/tips/performance-profile.html"><img src="http://efcl.info/wp-content/uploads/2017/09/20-1505887064.png" alt="Metrics"></a></p>
-
-<ul>
-<li><a href="https://almin.js.org/docs/tips/performance-profile.html" title="Performance profile · Almin.js">Performance profile · Almin.js</a></li>
-</ul>
-
-<p>このVue + Alminのサンプルプロジェクトは、Vue + Vuexで書いたものをAlminに変換して作ったので、そのときはDiffは次のPull Requestで見ることができます。</p>
-
-<ul>
-<li><a href="https://github.com/azu/vue-almin-counter-example/pull/1" title="Almin + Vue performance profile by azu · Pull Request #1 · azu/vue-almin-counter-example">Almin + Vue performance profile by azu · Pull Request #1 · azu/vue-almin-counter-example</a></li>
-</ul>
-
-<h2 id="おわりに">おわりに</h2>
-
-<p>Reactの<a href="https://facebook.github.io/react/docs/optimizing-performance.html" title="?react_perf">?react_perf</a>のように、<code>?almin_perf</code>をクエリに付けた時だけプロファイルを取りたい場合は次のように設定すればできます。</p>
-
-<p>またパフォーマンスプロファイルのコードは、オプション値関係なくproductionビルドすると消えるようになっています。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// ?almin_perf をつけるとプロファイルが取れる</span>
-<span class="kr">const</span> <span class="nx">context</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Context</span><span class="p">({</span>
-    <span class="nx">dispatcher</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Dispatcher</span><span class="p">(),</span>
-    <span class="nx">store</span><span class="o">:</span> <span class="k">new</span> <span class="nx">StoreGroup</span><span class="p">({</span>
-        <span class="nx">counter</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CounterStore</span><span class="p">()</span>
-    <span class="p">}),</span>
-    <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">strict</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-        <span class="nx">performanceProfile</span><span class="o">:</span> <span class="sr">/[?&amp;]almin_perf\b/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-</code></pre></div>
-<p>Alminはロガーなどを外部実装するための<a href="https://almin.js.org/docs/tips/usecase-lifecycle.html" title="life-cycle events">ライフサイクルイベント</a>のAPIも公開しています。
-<a href="https://www.npmjs.com/package/almin-logger" title="almin-logger">almin-logger</a>や<a href="https://github.com/almin/almin-devtools" title="almin-devtools">almin-devtools</a>はこちらを使っていますが、それとは別にオプションを追加したのはパフォーマンスプロファイルはAlmin内部的な状態を出す可能性があるからです。
-そのため、Publicなものはライフサイクルイベントとして、内部的な状態のダンプデータは<code>performanceProfile</code>のみで出すようにしています。</p>
-
-<p>Alminのパフォーマンスプロファイルについて詳しくは次のドキュメントに書いています。</p>
-
-<ul>
-<li><a href="https://almin.js.org/docs/tips/performance-profile.html" title="Performance profile · Almin.js">Performance profile · Almin.js</a></li>
-<li><a href="https://almin.js.org/docs/tips/usecase-lifecycle.html" title="LifeCycle of UseCase · Almin.js">LifeCycle of UseCase · Almin.js</a></li>
-</ul>
  ]]></content>
  </entry>
  
