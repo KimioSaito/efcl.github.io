@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-12-18T21:16:31+09:00</updated>
+ <updated>2017-12-18T21:18:47+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -162,8 +162,10 @@ textlintにコミットしてみたいという人は、ここを読むとどう
 <li>textlint-fixer-formatter <a href="https://github.com/textlint/textlint/issues/347">#347</a> </li>
 </ul>
 
-<p><code>textlint-plugin-html</code>というmonorepoに入れるべきかという議論があり、これだけimportできていません。主に自分がhtmlでチェックする対象を持っていないため、コアメンテナがいない状態でmonorepoに入れるのは良くないためです。
-もし、textlintのHTMLプラグインに興味がありもっと良くしていきたいという人は次のIssueに見てください。コアにメンテをできる人がいるならばmonorepoに取り入れて改善するべきだと思います。</p>
+<p><code>textlint-plugin-html</code>をmonorepoに入れるべきかという議論があり、まだこれだけimportできていません。
+主に自分がhtmlでチェックする対象を持っていないため、コアメンテナがいない状態でmonorepoに入れるのは良くないためです。
+もし、textlintのHTMLプラグインに興味があり、もっと良くしていきたいという人は次のIssueに見てください。
+コアにメンテをできる人がいるならばmonorepoに取り入れて改善するべきだと思います。</p>
 
 <ul>
 <li><a href="https://github.com/textlint/textlint/pull/364" title="Import textlint-plugin-html to monorepo by Leko · Pull Request #364 · textlint/textlint">Import textlint-plugin-html to monorepo by Leko · Pull Request #364 · textlint/textlint</a></li>
@@ -207,19 +209,19 @@ ESLintのXOやstandardに近いかな?</p>
 
 <h2 id="⏭️-next">⏭️ Next</h2>
 
-<p>ロジックを扱う<a href="https://github.com/textlint/textlint/tree/master/packages/%40textlint/kernel" title="@textlint/kernel">@textlint/kernel</a>や<a href="https://github.com/textlint/textlint/tree/master/packages/textlint" title="textlint">textlint</a>などがTypeScript化できたことで安定したモジュールとして扱いやすくなる基盤ができてきていると思います。</p>
+<p>ロジックを扱う<a href="https://github.com/textlint/textlint/tree/master/packages/%40textlint/kernel" title="@textlint/kernel">@textlint/kernel</a>や<a href="https://github.com/textlint/textlint/tree/master/packages/textlint" title="textlint">textlint</a>などがTypeScript化できたことでモジュールとして扱いやすくなる基盤ができてきていると思います。</p>
 
-<p>そのため次にやるのはtextlintのもう一つの本体であるルールの改善をやっていきます。
+<p>そのため、次にやるのはtextlintのもう一つの本体であるルールの改善をやっていきます。
 最近、Google Developer Documentation Style Guideのtextlintルールである<a href="https://github.com/textlint-rule/textlint-rule-preset-google" title="textlint-rule-preset-google">textlint-rule-preset-google</a>を作っていますが、文章を真面目に扱うと&quot;センテンス&quot;や&quot;セクション&quot;といった構造的な文脈を扱うのは避けられません。</p>
 
-<p>次のキャピタライズを扱うルールは、上手くセンテンスを扱えないことから来るバグがあります。</p>
+<p>次のキャピタライズを扱うルールは、ちゃんとセンテンスを扱えないことからくるバグがあります。</p>
 
 <ul>
 <li><a href="https://github.com/textlint-rule/textlint-rule-en-capitalization/issues/2" title="Complains about file names in text · Issue #2 · textlint-rule/textlint-rule-en-capitalization">Complains about file names in text · Issue #2 · textlint-rule/textlint-rule-en-capitalization</a></li>
 </ul>
 
 <p><code>textlint</code>のASTである<a href="https://github.com/textlint/textlint/blob/master/docs/txtnode.md" title="TxtAST">TxtAST</a>では<code>Paragraph</code>や<code>Link</code>と行ったNodeはありますが、意味論的な<code>Sentence</code>や<code>Section</code>といった概念はありません。
-これらは言語によって扱いが異なるため、言語に依存するものごとはtextlintのコアには含めることができないためです。(HTMLの<code>&lt;section&gt;</code>要素のようなものはマークアップにアレばいいけどそれがない場合は言語やコンテキストで推測するしかない)</p>
+これらは言語によって扱いが異なり、言語に依存するものごとはtextlintのコアには含めることができないためです。(HTMLの<code>&lt;section&gt;</code>要素のようなものはマークアップにアレばいいけどそれがない場合は言語やコンテキストで推測するしかない)</p>
 
 <p>この辺は<a href="http://redpen.cc/" title="RedPen">RedPen</a>だと<code>Section</code>という概念を持っていたりするように、なんとなくのルールは大体あるような気がしています。</p>
 
