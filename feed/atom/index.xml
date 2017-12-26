@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-12-26T20:00:08+09:00</updated>
+ <updated>2017-12-26T20:04:34+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -20,7 +20,7 @@
    <updated>2017-12-26T09:48:00+09:00</updated>
    <id>http://efcl.info/2017/12/26/docusaurus-almin</id>
    <content type="html"><![CDATA[ <p><a href="https://github.com/almin/almin" title="Almin">Almin</a>では元々GitBookを使ったドキュメントサイトを<a href="https://almin.js.org/">https://almin.js.org/</a>で公開していました。
-最近、OSS向けのドキュメントサイト作成ツールである<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>が公開されたのを受けて、GitBookから<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>に移行しました。</p>
+最近、OSS向けのドキュメントサイト作成ツールである<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>が公開されたのを受けて、<a href="https://www.gitbook.com/">GitBook</a>から<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>に移行しました。</p>
 
 <ul>
 <li>Alminのサイト: <a href="https://almin.js.org/" title="Almin · Flux/CQRS patterns for JavaScript application.">Almin · Flux/CQRS patterns for JavaScript application.</a>
@@ -58,9 +58,9 @@
 
 <h2 id="gitbookからdocusaurusへの移行">GitBookからDocusaurusへの移行</h2>
 
-<p><a href="https://github.com/almin/almin">https://github.com/almin/almin</a>は元々GitBookで動いていましたが、<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>に移行しています。
-GitBookは便利でプラグインも沢山つくっていますが、ドキュメントサイト向けかというとそうでもない気がします。またファイル数が多くなると<code>gitbook serve</code>が異常なほど重くなる問題があります。
-<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>のサイトを見て代替できそうと思ったのと、ブログ機能なども欲しかったので試しに移行してみました。</p>
+<p><a href="https://almin.js.org/">https://almin.js.org/</a>は元々GitBookで動いていましたが、<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>に移行しています。
+GitBookは便利で<a href="https://github.com/asciidwango/js-primer">JavaScriptの入門書</a>や<a href="https://github.com/azu/JavaScript-Plugin-Architecture" title="JavaScriptプラグインアーキテクチャの本">JavaScriptプラグインアーキテクチャの本</a>でも使っていますが、ドキュメントサイト向けかというとそうでもない気がします。またファイル数が多くなると<code>gitbook serve</code>が異常なほど重くなる問題があります。
+<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>のサイトを見ていて、移行できそうと思ったのとブログ機能なども欲しかったので試しに移行してみました。</p>
 
 <p>詳細は次のPRでまるっと移行しました。
 合わせて<a href="https://www.netlify.com/" title="Netlify">Netlify</a>のPRプレビュー機能を使って、PRを出したら<a href="https://deploy-preview-304--almin.netlify.com/">https://deploy-preview-304--almin.netlify.com/</a>という感じでプレビューできるようにして進めました。</p>
