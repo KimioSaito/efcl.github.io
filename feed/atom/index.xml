@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-12-18T21:18:47+09:00</updated>
+ <updated>2017-12-26T20:00:08+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,177 @@
  </author>
  
 
+ 
+ <entry>
+   <title>AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した</title>
+   <link href="http://efcl.info/2017/12/26/docusaurus-almin/"/>
+   <updated>2017-12-26T09:48:00+09:00</updated>
+   <id>http://efcl.info/2017/12/26/docusaurus-almin</id>
+   <content type="html"><![CDATA[ <p><a href="https://github.com/almin/almin" title="Almin">Almin</a>では元々GitBookを使ったドキュメントサイトを<a href="https://almin.js.org/">https://almin.js.org/</a>で公開していました。
+最近、OSS向けのドキュメントサイト作成ツールである<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>が公開されたのを受けて、GitBookから<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>に移行しました。</p>
+
+<ul>
+<li>Alminのサイト: <a href="https://almin.js.org/" title="Almin · Flux/CQRS patterns for JavaScript application.">Almin · Flux/CQRS patterns for JavaScript application.</a>
+
+<ul>
+<li><a href="https://github.com/almin/almin">https://github.com/almin/almin</a></li>
+</ul></li>
+</ul>
+
+<p><a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>は説明にあるようにOSSのライブラリやプロダクト向けのドキュメントサイトを作る一種の静的サイトジェネレーターです。</p>
+
+<blockquote>
+<p>Easy to Maintain Open Source Documentation Websites</p>
+</blockquote>
+
+<p>Facebookから公開されていることからも分かるように、<a href="http://facebook.github.io/jest/" title="Jest">Jest</a>や<a href="https://prettier.io/" title="Prettier">Prettier</a>(Facebookプロダクトではないけど中にFacebookの<a href="https://github.com/vjeux" title="vjeux">vjeux</a>さんがいる)などが利用しています。</p>
+
+<p>特徴としてはMarkdownでドキュメントと目次を書いてドキュメントサイトを作ることができます。
+また、Reactを使ったカスタマイズ、バージョニングへの対応、<a href="https://crowdin.com/" title="Crowdin">Crowdin</a>を使った翻訳への対応、ブログ機能やalgoliaを使った検索などライブラリサイト向けの機能を持っています。</p>
+
+<p>ライブラリなどはバージョンで大きく変わったときに旧バージョンのドキュメントを残す仕組みがあると便利です。またリリースノートを書く際に簡単なブログがあると置き場所に困らないので便利です。
+(Organizationのコミュニティとして利用できる仕組みを持ったもとしては<a href="https://dev.to/">dev.to</a>などがあります)</p>
+
+<p>また、ReactやESLintのサイトなどでも見かける<a href="https://community.algolia.com/docsearch/" title="DocSearch">Algolia DocSearch</a>との検索連携もオプションも簡単にできます。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Get search feature🔎<a href="https://t.co/5ArxMldalw">https://t.co/5ArxMldalw</a><br><br>Thanks to <a href="https://twitter.com/algolia?ref_src=twsrc%5Etfw">@algolia</a> DocSearch <a href="https://t.co/0Ort7svZdf">pic.twitter.com/0Ort7svZdf</a></p>&mdash; alminjs (@alminjs) <a href="https://twitter.com/alminjs/status/943113112193941504?ref_src=twsrc%5Etfw">December 19, 2017</a></blockquote>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>そのほかの概要については次の記事で紹介されていますが、Jekyllをドキュメントサイト向けに特化したというのが近い感触です。</p>
+
+<ul>
+<li><a href="https://docusaurus.io/blog/2017/12/14/introducing-docusaurus.html" title="Introducing Docusaurus · Docusaurus">Introducing Docusaurus · Docusaurus</a></li>
+</ul>
+
+<h2 id="gitbookからdocusaurusへの移行">GitBookからDocusaurusへの移行</h2>
+
+<p><a href="https://github.com/almin/almin">https://github.com/almin/almin</a>は元々GitBookで動いていましたが、<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>に移行しています。
+GitBookは便利でプラグインも沢山つくっていますが、ドキュメントサイト向けかというとそうでもない気がします。またファイル数が多くなると<code>gitbook serve</code>が異常なほど重くなる問題があります。
+<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>のサイトを見て代替できそうと思ったのと、ブログ機能なども欲しかったので試しに移行してみました。</p>
+
+<p>詳細は次のPRでまるっと移行しました。
+合わせて<a href="https://www.netlify.com/" title="Netlify">Netlify</a>のPRプレビュー機能を使って、PRを出したら<a href="https://deploy-preview-304--almin.netlify.com/">https://deploy-preview-304--almin.netlify.com/</a>という感じでプレビューできるようにして進めました。</p>
+
+<ul>
+<li>PR: <a href="https://github.com/almin/almin/pull/304" title="docs(website): use docusaurus instead of GitBook by azu · Pull Request #304 · almin/almin">docs(website): use docusaurus instead of GitBook by azu · Pull Request #304 · almin/almin</a></li>
+</ul>
+
+<p>GitBookからDocusaurusへの移行に関するマイグレーションツールは特にありませんが、どちらも次の点が共通しています。</p>
+
+<ul>
+<li>ページをMarkdownで書く
+
+<ul>
+<li>YAMLなヘッダ + Markdown本体でほぼおなじ</li>
+</ul></li>
+<li>目次からページへのリンクを貼る
+
+<ul>
+<li>GitBookは<code>SUMMARY.md</code>からのリンク</li>
+<li>Docusaurusはページに<code>id</code>を振って、<a href="https://github.com/almin/almin/blob/master/website/sidebars.json" title="sidebars.json">sidebars.json</a>から<code>id</code>の一覧をまとめる</li>
+</ul></li>
+</ul>
+
+<p><a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>は<a href="https://docusaurus.io/docs/en/installation.html" title="Installation · Docusaurus">Installation · Docusaurus</a>にあるように、<code>docusaurus-init</code>をインストールして実行するとサイトのテンプレートを作ってくれます。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">npm install --global docusaurus-init
+docusaurus-init
+</code></pre></div>
+<p>テンプレを生成したら、後は地道にリネームして移行しました。</p>
+
+<ul>
+<li><code>docs/</code> にMarkdownファイルをフラットに配置する
+
+<ul>
+<li>それぞれのMarkdownのYAMLヘッダに<code>id</code>と<code>title</code>を振る</li>
+</ul></li>
+<li><code>sidebar.json</code> に <code>id</code> をグループごとにまとめる。</li>
+<li><a href="https://github.com/almin/almin/blob/master/website/siteConfig.js" title="siteConfig.js">siteConfig.js</a>にサイトタイトルとかを設定する
+
+<ul>
+<li>タイトルとかアイコンとかURLとかヘッダとか検索機能の有無、ブログの有無とか</li>
+</ul></li>
+<li>サイトデザインはGridコンポーネントなどよくあるパターンが用意されている
+
+<ul>
+<li>CSSは10行もかかないでいい感じになる</li>
+</ul></li>
+</ul>
+
+<p><code>docs/</code>(このディレクトリ自体は変更できる)以下のフラットにMarkdownファイルを置かないと行けないのは制約のようです。</p>
+
+<blockquote>
+<p>Note that all of your documentation .md files must still reside in a flat hierarchy. You cannot have your documents in nested directories.<br>
+<a href="https://docusaurus.io/docs/en/site-config.html#optional-fields" title="siteConfig.js · Docusaurus">siteConfig.js · Docusaurus</a></p>
+</blockquote>
+
+<p>Alminではフラットにしてかつファイル名を大文字小文字にするようにしました。
+URLは<code>id</code>によって決定されるため、ファイル名とは別で管理できます。</p>
+
+<ul>
+<li><a href="https://github.com/almin/almin/tree/master/docs" title="almin/docs/">almin/docs/</a></li>
+</ul>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/12/26-1514284267.png" alt="dicrectory"></p>
+
+<p>こうしたできたのが次のサイトです。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Almin get new website!<a href="https://t.co/5ArxMldalw">https://t.co/5ArxMldalw</a><br><br>Thanks to <a href="https://twitter.com/docusaurus?ref_src=twsrc%5Etfw">@docusaurus</a> <a href="https://t.co/OmrXn9SI8d">pic.twitter.com/OmrXn9SI8d</a></p>&mdash; alminjs (@alminjs) <a href="https://twitter.com/alminjs/status/942068484560715776?ref_src=twsrc%5Etfw">December 16, 2017</a></blockquote>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<h3 id="algolia-docsearchでの全文検索"><a href="https://community.algolia.com/docsearch/" title="DocSearch">Algolia DocSearch</a>での全文検索</h3>
+
+<p>Docusaurusは<a href="https://community.algolia.com/docsearch/" title="DocSearch">DocSearch</a>での検索連携ができます。
+<a href="https://community.algolia.com/docsearch/" title="DocSearch">DocSearch</a>はクロールしていい感じの検索結果とUIを提供してくれるサービです。(OSS向けで無料でやってくれる)</p>
+
+<p><a href="https://eslint.org/">ESLint</a>や<a href="vuejs.org/guide/">Vue</a>、<a href="https://reactjs.org/">React</a>など最近の有名なツールでドキュメントがしっかりとあるものは、使ってることが多いので見たことがある人も多いかもしれません。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/12/26-1514284622.png" alt="eslint"></p>
+
+<p>とても便利なのですが、この申請フローがなぜかマニュアルだったので有効化の仕方をメモって置きます。</p>
+
+<ol>
+<li><a href="https://community.algolia.com/docsearch/" title="DocSearch">DocSearch</a>のサイトでURLとメールアドレスを入れて申請する</li>
+<li>このサイトのOwnerですかって確認メールがくる
+
+<ul>
+<li>このOrganizationのOwner権限を持ってて、このリポジトリで管理してるサイトだよって伝えた</li>
+<li>後Docusaurusを使ってるサイトだよって書いた</li>
+</ul></li>
+<li>有効化したよってメール来る
+
+<ul>
+<li><a href="https://github.com/algolia/docsearch-configs/blob/master/configs/almin_js.json" title="docsearch-configs/almin_js.json at master · algolia/docsearch-configs">docsearch-configs/almin_js.json at master · algolia/docsearch-configs</a>が配置される</li>
+</ul></li>
+</ol>
+
+<p>さすがにそのうち自動化される気がしますが、<a href="https://github.com/algolia/docsearch-configs/blob/master/configs/almin_js.json" title="docsearch-configs/almin_js.json at master · algolia/docsearch-configs">docsearch-configs/almin_js.json at master · algolia/docsearch-configs</a>を見る感じだとクロールする設定を追加したら有効化されるようです(申請から2-3日かかります)</p>
+
+<h2 id="おわりに">おわりに</h2>
+
+<p><a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>はまだ公開されたばかりで、おかしなところはいくつかありますが、よくできていてドキュメントに必要な機能が大体あって便利です。
+(<a href="https://github.com/azu/gitbook-plugin-include-codeblock" title="gitbook-plugin-include-codeblock">gitbook-plugin-include-codeblock</a>みたいなコードインポート機能は欲しいけど、プラグインの仕組みがあるので何とかできそう)</p>
+
+<p>オープンソースで公開されているので、色々コントビュートしていきたいなという感じです。</p>
+
+<ul>
+<li><a href="https://github.com/facebook/Docusaurus" title="facebook/Docusaurus: Easy to maintain open source documentation websites.">facebook/Docusaurus: Easy to maintain open source documentation websites.</a></li>
+</ul>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">ドキュメントツール なんか個性的なデザインをつくれる柔軟性よりも、簡単に作れるとかなんとなくいい感じになるが求められてる感じ</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/944196537126567937?ref_src=twsrc%5Etfw">December 22, 2017</a></blockquote>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>Docusaurusはこんなツールです。(GitBookもそうではあった)</p>
+
+<p><a href="https://almin.js.org/">https://almin.js.org/</a> はDocusaurusが公開された翌日にDocusaurus化したので、Facebook関係以外で初めて<a href="docusaurus.io/en/users.html">Docusaurus User</a>に載せてもらいました。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://t.co/x6IYfCujya">https://t.co/x6IYfCujya</a><br><br>Almin is new user of docusaurus! <a href="https://t.co/r6XHhUvEHK">pic.twitter.com/r6XHhUvEHK</a></p>&mdash; alminjs (@alminjs) <a href="https://twitter.com/alminjs/status/942896757024866304?ref_src=twsrc%5Etfw">December 18, 2017</a></blockquote>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>textlint 10.0.0 リリース</title>
@@ -1866,86 +2037,6 @@ NLCSTは<a href="https://github.com/wooorm/retext">retext</a>などが使って�
 <blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">自分のはてなブックマークをAlfredから検索してして絞り込むやつ書いた。<br>もっと早く動くようにできないかな?(後マッチングが日本語不安定な気はする)<a href="https://t.co/8z3GzWGzwW">https://t.co/8z3GzWGzwW</a> <a href="https://t.co/DmhYJ8Dh6v">pic.twitter.com/DmhYJ8Dh6v</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/921017924898275328?ref_src=twsrc%5Etfw">October 19, 2017</a></blockquote>
 
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする</title>
-   <link href="http://efcl.info/2017/10/19/text-map-kuromoji/"/>
-   <updated>2017-10-19T09:45:00+09:00</updated>
-   <id>http://efcl.info/2017/10/19/text-map-kuromoji</id>
-   <content type="html"><![CDATA[ <p><a href="https://github.com/azu/text-map-kuromoji">azu/text-map-kuromoji: テキストを形態素解析した結果とテキストの関係をビジュアライズするエディタ</a>というツールを作った話。</p>
-
-<p><a href="https://ipsj.ixsq.nii.ac.jp/ej/?action=pages_view_main&amp;active_action=repository_view_main_item_detail&amp;item_id=70540&amp;item_no=1&amp;page_id=13&amp;block_id=8" title="くだけた表現を高精度に解析するための正規化ルール自動生成手法">くだけた表現を高精度に解析するための正規化ルール自動生成手法</a>という論文誌では、「ヵゎぃぃ」，「ゎた Uゎ」みたいな普通の形態素解析では未知語として検出されるものをどうやって正規化していくかという話が書かれていました。</p>
-
-<p>これを読んでいて面白かったのは形態素解析をした結果の未知語となった部分と穴埋め的にパターンを作って、そのパターンにマッチする同じようなテキストを探すというアプローチでした。</p>
-
-<p>プログラミング言語と違って、大抵の自然言語パーサはパース失敗ではなく、単なる未知な言葉として検出されます。
-また、その未知な言葉は常に増えていて、さきほどの<a href="https://ipsj.ixsq.nii.ac.jp/ej/?action=pages_view_main&amp;active_action=repository_view_main_item_detail&amp;item_id=70540&amp;item_no=1&amp;page_id=13&amp;block_id=8" title="くだけた表現を高精度に解析するための正規化ルール自動生成手法">くだけた表現を高精度に解析するための正規化ルール自動生成手法</a>によると手動では登録できない増加量らしいです。</p>
-
-<blockquote>
-<p>著者らの経験では，1 人月あたり約 3 万種類の未知語登録が可 能であるのに対し，ブログ 600 万文を著名な形態素解析器 MeCab 3) を用いて解析したと ころ，約 65 万種類の未知語が検出されたことから，ブログ文書のくだけた表現を正しく解 析することは困難といえる.</p>
-</blockquote>
-
-<p>この辺のスラング的な単語もクローリングしたデータから辞書を作ることで扱える量が多い辞書として<a href="https://github.com/neologd/mecab-ipadic-neologd" title="mecab-ipadic-NEologd">mecab-ipadic-NEologd</a>が有名です。</p>
-
-<p>で、話を戻して形態素解析をした結果の未知語となるパターンってどれぐらいあるのかなーと思いました。
-普通に形態素解析した結果を見ればいいのですが、それは品詞付きの情報が並ぶだけだったり、JSONだったりして、テキストのこの部分が未知語というのがあまり見やすくはありませんでした。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">今日もしないとね。
-今日    名詞,副詞可能,*,*,*,*,今日,キョウ,キョー
-も      助詞,係助詞,*,*,*,*,も,モ,モ
-し      動詞,自立,*,*,サ変・スル,未然形,する,シ,シ
-ない    助動詞,*,*,*,特殊・ナイ,基本形,ない,ナイ,ナイ
-と      助詞,接続助詞,*,*,*,*,と,ト,ト
-ね      助詞,終助詞,*,*,*,*,ね,ネ,ネ
-。      記号,句点,*,*,*,*,。,。,。
-</code></pre></div>
-<p>入力されたテキストと特定の位置に関する情報をビジュアライズするパターンについてはSourceMapを調べていたときに<a href="http://sokra.github.io/source-map-visualization/" title="source-map-visualization">source-map-visualization</a>というサイトがあるのを思い出しました。</p>
-
-<p><a href="http://sokra.github.io/source-map-visualization/"><img src="http://efcl.info/wp-content/uploads/2017/10/19-1508374636.png" alt="sourcemap"></a></p>
-
-<ul>
-<li><a href="http://efcl.info/2014/0622/res3933/" title="Source Mapを扱う関連ライブラリのまとめ | Web Scratch">Source Mapを扱う関連ライブラリのまとめ | Web Scratch</a></li>
-</ul>
-
-<p>これの形態素解析版があると良さそうと思いました。</p>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">これの形態素解析版ほしいな  &quot;source-map-visualization&quot;  <a href="https://t.co/PZuGwXdYIQ">https://t.co/PZuGwXdYIQ</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/920646507254050822?ref_src=twsrc%5Etfw">October 18, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<p>ここで、既にJavaScriptとそのパース結果からECMAScriptのバージョンをToken毎に割り出すツールを作ってたのを思い出しました。</p>
-
-<p><a href="https://azu.github.io/ecmascript-version-detector/"><img src="http://efcl.info/wp-content/uploads/2016/08/04-1470309082.png" alt="image"></a></p>
-
-<ul>
-<li><a href="http://efcl.info/2016/08/04/ecmascript-version-detector/" title="そのコードが標準化されてるJavaScriptなのかを判定する方法 | Web Scratch">そのコードが標準化されてるJavaScriptなのかを判定する方法 | Web Scratch</a></li>
-</ul>
-
-<p>これをforkして<a href="https://github.com/takuyaa/kuromoji.js#api" title="kuromoji.js">kuromoji.js</a>で形態素解析してその結果をビジュアライズするものを作りました。</p>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://t.co/zypZDjn20j">https://t.co/zypZDjn20j</a><a href="https://t.co/UOhjzSxMhI">https://t.co/UOhjzSxMhI</a><br><br>kuromojiで形態素解析した結果をビジュアライズするやつできた。<br>テキストをクリックすると対応した位置のトークン情報が表示される。 <a href="https://t.co/AqrbhMJFBm">pic.twitter.com/AqrbhMJFBm</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/920676180797173762?ref_src=twsrc%5Etfw">October 18, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<ul>
-<li>サイト: <a href="https://azu.github.io/text-map-kuromoji/">text-map-kuromoji</a></li>
-<li>ソースコード:<a href="https://github.com/azu/text-map-kuromoji">azu/text-map-kuromoji: テキストを形態素解析した結果とテキストの関係をビジュアライズするエディタ</a></li>
-</ul>
-
-<p>それで目的だった壊れた日本語は未知語として検出されるのかを確かめてみましたが、てにをはを間違えただけとかその程度だとやっぱり未知語として検出されないということがわかりました。</p>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">日本語の文章ってやっぱり普通に書くと未知語が結構出にくいっぽい気がする。<br><br>変換ミスだとアルファベットが混ざってくるので未知語 = 壊れた文章の検出ができる可能性はありそう。<br>壊れた日本語は検出するの難しいかもなー。パースが失敗しない問題 <a href="https://t.co/EhpmHv34LD">pic.twitter.com/EhpmHv34LD</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/920678011141201920?ref_src=twsrc%5Etfw">October 18, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<p>一方、ローマ字入力のIME特有のtypoはアルファベットが不自然に混ざるからか未知な言葉として検出されやすくかったです(論文誌の形状が似てる言葉もこういうタイプ)</p>
-
-<ul>
-<li><a href="https://github.com/textlint-ja/textlint-rule-ja-unnatural-alphabet" title="textlint-ja/textlint-rule-ja-unnatural-alphabet: 不自然なアルファベットを検知するtextlintルール">textlint-ja/textlint-rule-ja-unnatural-alphabet: 不自然なアルファベットを検知するtextlintルール</a></li>
-</ul>
-
-<p>やっぱり形態素解析に失敗するパーサの必要性を感じました。</p>
  ]]></content>
  </entry>
  

@@ -811,7 +811,9 @@
         
         "自然言語",
         
-        "modules"
+        "modules",
+        
+        "docusaurus"
         
     ]
 }

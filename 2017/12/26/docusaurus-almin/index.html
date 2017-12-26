@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+    <title>
+        
+        AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した | Web Scratch
+        
+    </title>
+    <meta name="description" content="Alminでは元々GitBookを使ったドキュメントサイトをhttps://almin.js.org/で公開していました。最近、OSS向けのドキュメントサイト作成ツールであるDocusaurusが公開されたのを受けて、GitBookからDocusaurusに移行しました。">
+    
+    <meta name="keywords" content="docusaurus,Almin" />
+    
+    <meta name="author" content="azu">
+    <!-- Icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="/public/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="http://efcl.info/public/favicon.ico">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/public/css/main.css">
+    <!-- JavaScript -->
+    <!-- Open graph tags -->
+<meta property="og:title" content="AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://efcl.info/2017/12/26/docusaurus-almin/">
+<meta property="og:image" content="http://efcl.info/public/favicon.ico">
+
+<meta property="og:description" content="Alminでは元々GitBookを使ったドキュメントサイトをhttps://almin.js.org/で公開していました。最近、OSS向けのドキュメントサイト作成ツールであるDocusaurusが公開されたのを受けて、GitBookからDocusaurusに移行しました。">
+<meta property="og:site_name" content="Web Scratch">
+
+
+
+
+<meta property="article:published_time" content="2017-12-26T09:48:00+09:00">
+<meta property="article:author" content="https://www.facebook.com/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/12/18/textlint-10.0.0/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/12/07/capture-living-timer/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/11/30/shallow-equal/">
+
+
+
+
+
+<meta property="article:section" content="javascript">
+
+
+
+
+
+<meta property="article:tag" content="docusaurus">
+
+<meta property="article:tag" content="Almin">
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-2184335-8', 'auto');
+    ga('send', 'pageview');
+</script>
+    <script>
+var blog_categories = [
+{
+    "title" : "greasemonkey",
+    "count" : 61
+},{
+    "title" : "ニコニコ動画",
+    "count" : 16
+},{
+    "title" : "小説電子化",
+    "count" : 3
+},{
+    "title" : "vista",
+    "count" : 12
+},{
+    "title" : "firefox",
+    "count" : 55
+},{
+    "title" : "その他",
+    "count" : 13
+},{
+    "title" : "webサービス",
+    "count" : 22
+},{
+    "title" : "software",
+    "count" : 59
+},{
+    "title" : "雑記",
+    "count" : 36
+},{
+    "title" : "まとめ",
+    "count" : 11
+},{
+    "title" : "zaurus",
+    "count" : 3
+},{
+    "title" : "ハードウェア",
+    "count" : 8
+},{
+    "title" : "アドオン",
+    "count" : 31
+},{
+    "title" : "wordpress",
+    "count" : 6
+},{
+    "title" : "javascript",
+    "count" : 195
+},{
+    "title" : "インストール設定",
+    "count" : 12
+},{
+    "title" : "iphone",
+    "count" : 10
+},{
+    "title" : "loox u",
+    "count" : 1
+},{
+    "title" : "tombloo",
+    "count" : 3
+},{
+    "title" : "イベント",
+    "count" : 92
+},{
+    "title" : "userchome.js",
+    "count" : 8
+},{
+    "title" : "jetpack",
+    "count" : 7
+},{
+    "title" : "onenote",
+    "count" : 2
+},{
+    "title" : "nilscript",
+    "count" : 4
+},{
+    "title" : "keysnail",
+    "count" : 3
+},{
+    "title" : "ios",
+    "count" : 15
+},{
+    "title" : "shell",
+    "count" : 3
+},{
+    "title" : "r言語",
+    "count" : 2
+},{
+    "title" : "node.js",
+    "count" : 3
+},{
+    "title" : "mac",
+    "count" : 2
+},{
+    "title" : "github",
+    "count" : 11
+},{
+    "title" : "jekyll",
+    "count" : 1
+},{
+    "title" : "golang",
+    "count" : 1
+},{
+    "title" : "web",
+    "count" : 1
+},{
+    "title" : "スライド",
+    "count" : 1
+},{
+    "title" : "ie",
+    "count" : 1
+},{
+    "title" : "書籍",
+    "count" : 2
+},{
+    "title" : "textlint",
+    "count" : 8
+}
+];
+    blog_categories = blog_categories.filter(function(categoryObject){
+        return !/^\d+$/.test(categoryObject.title);
+    });
+</script>
+</head>
+
+
+<body class="layout-reverse theme-base-0d">
+<a href="https://github.com/efcl/efcl.github.io" class="github-ribbon">
+    <img style="position: fixed; z-index:100; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+<header>
+    <div class="site-header">
+    <img src="/public/img/reimu-right.png" class="header-logo">
+
+    <h1 class="site-title">
+        <a href="/">
+            Web Scratch
+        </a>
+    </h1>
+    <p class="lead">ブラウザ/JavaScript等についてのブログ</p>
+
+</div>
+</header>
+<aside>
+    <div class="sidebar">
+    <div class="container">
+        <div class="profile">
+            <a href="/about/" title="About"><img src="/public/img/azu.png" alt="Profile"></a>
+
+            <h2><a href="/about/" title="About">azu</a></h2>
+        </div>
+        <div class="social">
+            <a class="twitter" href="http://twitter.com/azu_re" title="Twitter">
+                <img src="/public/svg/twitter.svg" alt="twitter" width="32" height="32"/>
+            </a>
+            <a class="github" href="https://github.com/azu" title="GitHub">
+                <img src="/public/svg/github.svg" alt="GitHub" width="32" height="32"/>
+            </a>
+            <a class="rss" href="/feed/" title="RSS Feed">
+                <img src="/public/svg/feed.svg" alt="RSS" width="32" height="32"/>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="search">
+                <form class="search-box" method="get" action="https://www.google.co.jp/search">
+                    <label for="search-box-label">検索:</label>
+                    <input type="hidden" name="q" value="site:efcl.info">
+                    <input id="search-box-label" type="search" name="q">
+                    <input type="submit" value="search">
+                </form>
+            </div>
+            <div class="recent">
+    <h3 class="recent-posts-list-title">
+        <a href="/">最近の投稿</a>
+    </h3>
+    <ul class="recent-posts">
+        
+        <li>
+            <a href="/2017/12/26/docusaurus-almin/">
+                AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/12/18/textlint-10.0.0/">
+                textlint 10.0.0 リリース
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/12/07/capture-living-timer/">
+                ページ上でずっと動いているsetTimeout、setInterval、requestAnimationFrameを見つけてパフォーマンス改善する
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/11/30/shallow-equal/">
+                shallow-equal for Object/React props
+            </a>
+        </li>
+        
+    </ul>
+</div>
+            <div class="recent">
+    <h3 class="categories-list-title"><a href="/categories">カテゴリ一覧</a></h3>
+
+    <div class="categories-list" id="js-categories-list">
+
+    </div>
+    <script>
+        (function () {
+            var categoriesList = window.blog_categories;
+            var appendPoint = document.getElementById("js-categories-list");
+            // big ... small
+            var sortedCategories = categoriesList.sort(function (a, b) {
+                return a.count < b.count ? 1 : -1;
+            });
+            var ulTag = document.createElement("ul");
+            var displayCount = sortedCategories.length < 3 ? sortedCategories.length : 3;
+            for (var i = 0; i < displayCount; i++) {
+                var category = sortedCategories[i];
+                var liTag = document.createElement("li");
+                var aTag = document.createElement("a");
+                aTag.href = "/categories#" + category.title;
+                aTag.textContent = category.title;
+                var spanTag = document.createElement("span");
+                spanTag.appendChild(document.createTextNode("[" + category.count + "]"));
+                liTag.appendChild(aTag);
+                liTag.appendChild(spanTag);
+                ulTag.appendChild(liTag);
+            }
+            var lastLiTag = document.createElement("li");
+            var lastATag = document.createElement("a");
+            lastATag.href = "/categories";
+            lastATag.textContent = "その他のタグ…";
+            lastLiTag.appendChild(lastATag);
+            ulTag.appendChild(lastATag);
+            appendPoint.appendChild(ulTag);
+        })();
+    </script>
+</div>
+        </nav>
+    </div>
+</div>
+
+</aside>
+<article>
+    <div class="content container">
+        <div class="post" id="js-post-url" data-post-url="/2017/12/26/docusaurus-almin/">
+    <h1 class="post-title">AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した</h1>
+
+    <div class="pre-post-toolbar">
+        <span class="post-date">2017年12月26日</span>
+        <a class="btn edit-on-github" href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-12-26-docusaurus-almin.md"><span class="edito-on-github-label"></span>Edit on GitHub</a>
+
+    </div>
+    <div class="post-content">
+        <p><a href="https://github.com/almin/almin" title="Almin">Almin</a>では元々GitBookを使ったドキュメントサイトを<a href="https://almin.js.org/">https://almin.js.org/</a>で公開していました。
+最近、OSS向けのドキュメントサイト作成ツールである<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>が公開されたのを受けて、GitBookから<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>に移行しました。</p>
+
+<ul>
+<li>Alminのサイト: <a href="https://almin.js.org/" title="Almin · Flux/CQRS patterns for JavaScript application.">Almin · Flux/CQRS patterns for JavaScript application.</a>
+
+<ul>
+<li><a href="https://github.com/almin/almin">https://github.com/almin/almin</a></li>
+</ul></li>
+</ul>
+
+<p><a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>は説明にあるようにOSSのライブラリやプロダクト向けのドキュメントサイトを作る一種の静的サイトジェネレーターです。</p>
+
+<blockquote>
+<p>Easy to Maintain Open Source Documentation Websites</p>
+</blockquote>
+
+<p>Facebookから公開されていることからも分かるように、<a href="http://facebook.github.io/jest/" title="Jest">Jest</a>や<a href="https://prettier.io/" title="Prettier">Prettier</a>(Facebookプロダクトではないけど中にFacebookの<a href="https://github.com/vjeux" title="vjeux">vjeux</a>さんがいる)などが利用しています。</p>
+
+<p>特徴としてはMarkdownでドキュメントと目次を書いてドキュメントサイトを作ることができます。
+また、Reactを使ったカスタマイズ、バージョニングへの対応、<a href="https://crowdin.com/" title="Crowdin">Crowdin</a>を使った翻訳への対応、ブログ機能やalgoliaを使った検索などライブラリサイト向けの機能を持っています。</p>
+
+<p>ライブラリなどはバージョンで大きく変わったときに旧バージョンのドキュメントを残す仕組みがあると便利です。またリリースノートを書く際に簡単なブログがあると置き場所に困らないので便利です。
+(Organizationのコミュニティとして利用できる仕組みを持ったもとしては<a href="https://dev.to/">dev.to</a>などがあります)</p>
+
+<p>また、ReactやESLintのサイトなどでも見かける<a href="https://community.algolia.com/docsearch/" title="DocSearch">Algolia DocSearch</a>との検索連携もオプションも簡単にできます。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Get search feature🔎<a href="https://t.co/5ArxMldalw">https://t.co/5ArxMldalw</a><br><br>Thanks to <a href="https://twitter.com/algolia?ref_src=twsrc%5Etfw">@algolia</a> DocSearch <a href="https://t.co/0Ort7svZdf">pic.twitter.com/0Ort7svZdf</a></p>&mdash; alminjs (@alminjs) <a href="https://twitter.com/alminjs/status/943113112193941504?ref_src=twsrc%5Etfw">December 19, 2017</a></blockquote>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>そのほかの概要については次の記事で紹介されていますが、Jekyllをドキュメントサイト向けに特化したというのが近い感触です。</p>
+
+<ul>
+<li><a href="https://docusaurus.io/blog/2017/12/14/introducing-docusaurus.html" title="Introducing Docusaurus · Docusaurus">Introducing Docusaurus · Docusaurus</a></li>
+</ul>
+
+<h2 id="gitbookからdocusaurusへの移行">GitBookからDocusaurusへの移行</h2>
+
+<p><a href="https://github.com/almin/almin">https://github.com/almin/almin</a>は元々GitBookで動いていましたが、<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>に移行しています。
+GitBookは便利でプラグインも沢山つくっていますが、ドキュメントサイト向けかというとそうでもない気がします。またファイル数が多くなると<code>gitbook serve</code>が異常なほど重くなる問題があります。
+<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>のサイトを見て代替できそうと思ったのと、ブログ機能なども欲しかったので試しに移行してみました。</p>
+
+<p>詳細は次のPRでまるっと移行しました。
+合わせて<a href="https://www.netlify.com/" title="Netlify">Netlify</a>のPRプレビュー機能を使って、PRを出したら<a href="https://deploy-preview-304--almin.netlify.com/">https://deploy-preview-304--almin.netlify.com/</a>という感じでプレビューできるようにして進めました。</p>
+
+<ul>
+<li>PR: <a href="https://github.com/almin/almin/pull/304" title="docs(website): use docusaurus instead of GitBook by azu · Pull Request #304 · almin/almin">docs(website): use docusaurus instead of GitBook by azu · Pull Request #304 · almin/almin</a></li>
+</ul>
+
+<p>GitBookからDocusaurusへの移行に関するマイグレーションツールは特にありませんが、どちらも次の点が共通しています。</p>
+
+<ul>
+<li>ページをMarkdownで書く
+
+<ul>
+<li>YAMLなヘッダ + Markdown本体でほぼおなじ</li>
+</ul></li>
+<li>目次からページへのリンクを貼る
+
+<ul>
+<li>GitBookは<code>SUMMARY.md</code>からのリンク</li>
+<li>Docusaurusはページに<code>id</code>を振って、<a href="https://github.com/almin/almin/blob/master/website/sidebars.json" title="sidebars.json">sidebars.json</a>から<code>id</code>の一覧をまとめる</li>
+</ul></li>
+</ul>
+
+<p><a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>は<a href="https://docusaurus.io/docs/en/installation.html" title="Installation · Docusaurus">Installation · Docusaurus</a>にあるように、<code>docusaurus-init</code>をインストールして実行するとサイトのテンプレートを作ってくれます。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">npm install --global docusaurus-init
+docusaurus-init
+</code></pre></div>
+<p>テンプレを生成したら、後は地道にリネームして移行しました。</p>
+
+<ul>
+<li><code>docs/</code> にMarkdownファイルをフラットに配置する
+
+<ul>
+<li>それぞれのMarkdownのYAMLヘッダに<code>id</code>と<code>title</code>を振る</li>
+</ul></li>
+<li><code>sidebar.json</code> に <code>id</code> をグループごとにまとめる。</li>
+<li><a href="https://github.com/almin/almin/blob/master/website/siteConfig.js" title="siteConfig.js">siteConfig.js</a>にサイトタイトルとかを設定する
+
+<ul>
+<li>タイトルとかアイコンとかURLとかヘッダとか検索機能の有無、ブログの有無とか</li>
+</ul></li>
+<li>サイトデザインはGridコンポーネントなどよくあるパターンが用意されている
+
+<ul>
+<li>CSSは10行もかかないでいい感じになる</li>
+</ul></li>
+</ul>
+
+<p><code>docs/</code>(このディレクトリ自体は変更できる)以下のフラットにMarkdownファイルを置かないと行けないのは制約のようです。</p>
+
+<blockquote>
+<p>Note that all of your documentation .md files must still reside in a flat hierarchy. You cannot have your documents in nested directories.<br>
+<a href="https://docusaurus.io/docs/en/site-config.html#optional-fields" title="siteConfig.js · Docusaurus">siteConfig.js · Docusaurus</a></p>
+</blockquote>
+
+<p>Alminではフラットにしてかつファイル名を大文字小文字にするようにしました。
+URLは<code>id</code>によって決定されるため、ファイル名とは別で管理できます。</p>
+
+<ul>
+<li><a href="https://github.com/almin/almin/tree/master/docs" title="almin/docs/">almin/docs/</a></li>
+</ul>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/12/26-1514284267.png" alt="dicrectory"></p>
+
+<p>こうしたできたのが次のサイトです。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Almin get new website!<a href="https://t.co/5ArxMldalw">https://t.co/5ArxMldalw</a><br><br>Thanks to <a href="https://twitter.com/docusaurus?ref_src=twsrc%5Etfw">@docusaurus</a> <a href="https://t.co/OmrXn9SI8d">pic.twitter.com/OmrXn9SI8d</a></p>&mdash; alminjs (@alminjs) <a href="https://twitter.com/alminjs/status/942068484560715776?ref_src=twsrc%5Etfw">December 16, 2017</a></blockquote>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<h3 id="algolia-docsearchでの全文検索"><a href="https://community.algolia.com/docsearch/" title="DocSearch">Algolia DocSearch</a>での全文検索</h3>
+
+<p>Docusaurusは<a href="https://community.algolia.com/docsearch/" title="DocSearch">DocSearch</a>での検索連携ができます。
+<a href="https://community.algolia.com/docsearch/" title="DocSearch">DocSearch</a>はクロールしていい感じの検索結果とUIを提供してくれるサービです。(OSS向けで無料でやってくれる)</p>
+
+<p><a href="https://eslint.org/">ESLint</a>や<a href="vuejs.org/guide/">Vue</a>、<a href="https://reactjs.org/">React</a>など最近の有名なツールでドキュメントがしっかりとあるものは、使ってることが多いので見たことがある人も多いかもしれません。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/12/26-1514284622.png" alt="eslint"></p>
+
+<p>とても便利なのですが、この申請フローがなぜかマニュアルだったので有効化の仕方をメモって置きます。</p>
+
+<ol>
+<li><a href="https://community.algolia.com/docsearch/" title="DocSearch">DocSearch</a>のサイトでURLとメールアドレスを入れて申請する</li>
+<li>このサイトのOwnerですかって確認メールがくる
+
+<ul>
+<li>このOrganizationのOwner権限を持ってて、このリポジトリで管理してるサイトだよって伝えた</li>
+<li>後Docusaurusを使ってるサイトだよって書いた</li>
+</ul></li>
+<li>有効化したよってメール来る
+
+<ul>
+<li><a href="https://github.com/algolia/docsearch-configs/blob/master/configs/almin_js.json" title="docsearch-configs/almin_js.json at master · algolia/docsearch-configs">docsearch-configs/almin_js.json at master · algolia/docsearch-configs</a>が配置される</li>
+</ul></li>
+</ol>
+
+<p>さすがにそのうち自動化される気がしますが、<a href="https://github.com/algolia/docsearch-configs/blob/master/configs/almin_js.json" title="docsearch-configs/almin_js.json at master · algolia/docsearch-configs">docsearch-configs/almin_js.json at master · algolia/docsearch-configs</a>を見る感じだとクロールする設定を追加したら有効化されるようです(申請から2-3日かかります)</p>
+
+<h2 id="おわりに">おわりに</h2>
+
+<p><a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>はまだ公開されたばかりで、おかしなところはいくつかありますが、よくできていてドキュメントに必要な機能が大体あって便利です。
+(<a href="https://github.com/azu/gitbook-plugin-include-codeblock" title="gitbook-plugin-include-codeblock">gitbook-plugin-include-codeblock</a>みたいなコードインポート機能は欲しいけど、プラグインの仕組みがあるので何とかできそう)</p>
+
+<p>オープンソースで公開されているので、色々コントビュートしていきたいなという感じです。</p>
+
+<ul>
+<li><a href="https://github.com/facebook/Docusaurus" title="facebook/Docusaurus: Easy to maintain open source documentation websites.">facebook/Docusaurus: Easy to maintain open source documentation websites.</a></li>
+</ul>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">ドキュメントツール なんか個性的なデザインをつくれる柔軟性よりも、簡単に作れるとかなんとなくいい感じになるが求められてる感じ</p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/944196537126567937?ref_src=twsrc%5Etfw">December 22, 2017</a></blockquote>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>Docusaurusはこんなツールです。(GitBookもそうではあった)</p>
+
+<p><a href="https://almin.js.org/">https://almin.js.org/</a> はDocusaurusが公開された翌日にDocusaurus化したので、Facebook関係以外で初めて<a href="docusaurus.io/en/users.html">Docusaurus User</a>に載せてもらいました。</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://t.co/x6IYfCujya">https://t.co/x6IYfCujya</a><br><br>Almin is new user of docusaurus! <a href="https://t.co/r6XHhUvEHK">pic.twitter.com/r6XHhUvEHK</a></p>&mdash; alminjs (@alminjs) <a href="https://twitter.com/alminjs/status/942896757024866304?ref_src=twsrc%5Etfw">December 18, 2017</a></blockquote>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+    </div>
+    <div class="post-post-toolbar">
+        <a class="btn edit-on-github"
+           href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-12-26-docusaurus-almin.md"><span
+                class="edit-on-github-label"></span>修正リクエストをする</a>
+        <nav class="tags"
+             id="js-post-tags"
+             data-post-tags='["docusaurus","Almin"]'>
+            <span>タグ:</span>
+            <ul>
+                
+                <li><a href="/tags/?q=docusaurus">docusaurus</a></li>
+                
+                <li><a href="/tags/?q=Almin">Almin</a></li>
+                
+            </ul>
+        </nav>
+    </div>
+    <div class="announce-area">
+        <h3>お知らせ欄</h3>
+        <div class="announce-text">
+            <!--お知らせ-->
+JavaScriptに関する最新情報は週一で<a href="http://jser.info/" title="JSer.info">JSer.info</a>を更新しています。
+
+        </div>
+        <h3>次に書くかもしれない記事候補</h3>
+        <p>興味がありましたら<a href="https://github.com/efcl/efcl.github.io/labels/%E8%A8%98%E4%BA%8B%E5%80%99%E8%A3%9C" title="Issues · efcl/efcl.github.io">Issues · efcl/efcl.github.io</a>からご意見下さい</p>
+        <div class="announce-text">
+            <iframe src="https://azu.github.io/github-issue-widget/?owner=efcl&repo=efcl.github.io&labels=記事候補&limit=4&random"
+                    allowtransparency="true" frameborder="0" scrolling="0" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+    <div class="related-articles" id="js-related-articles">
+        <h3>関連記事</h3>
+    </div>
+</div>
+<div class="zenback-embed">
+    <!-- X:S ZenBackWidget --><div id="zenback-widget-loader"></div><script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var r=Math.ceil((new Date()*1)*Math.random());var j=d.createElement("script");j.id=i;j.async=true;j.src="//w.zenback.jp/v1/?base_uri=http%3A//efcl.info/&nsid=89229392978401102%3A%3A89229398078677080&rand="+r;d.body.appendChild(j);}}(document,"zenback-widget-js");</script><!-- X:E ZenBackWidget -->
+</div>
+<div class="disqus-embed" id="js-disqus-embed">
+    <button class="comment-button" id="js-comment-button">コメントを表示</button>
+</div>
+
+<script type="text/javascript" src="/public/js/tag-fetcher.js"></script>
+<script type="text/javascript" src="/public/js/show-related-article.js"></script>
+<script type="text/javascript" src="/public/js/show-disqus.js"></script>
+
+    </div>
+</article>
+</body>
+</html>
