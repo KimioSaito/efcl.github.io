@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-12-26T20:10:43+09:00</updated>
+ <updated>2017-12-26T20:45:44+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -31,6 +31,8 @@
 </ul>
 
 <p><a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>は説明にあるようにOSSのライブラリやプロダクト向けのドキュメントサイトを作る一種の静的サイトジェネレーターです。</p>
+
+<p><a href="https://docusaurus.io/"><img src="http://efcl.info/wp-content/uploads/2017/12/26-1514286444.png" alt="Docusaurus"></a></p>
 
 <blockquote>
 <p>Easy to Maintain Open Source Documentation Websites</p>
@@ -131,6 +133,12 @@ URLは<code>id</code>によって決定されるため、ファイル名とは�
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Almin get new website!<a href="https://t.co/5ArxMldalw">https://t.co/5ArxMldalw</a><br><br>Thanks to <a href="https://twitter.com/docusaurus?ref_src=twsrc%5Etfw">@docusaurus</a> <a href="https://t.co/OmrXn9SI8d">pic.twitter.com/OmrXn9SI8d</a></p>&mdash; alminjs (@alminjs) <a href="https://twitter.com/alminjs/status/942068484560715776?ref_src=twsrc%5Etfw">December 16, 2017</a></blockquote>
 
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>次の記事でも使い方を解説されてるので併せてみるといいかもしれません。</p>
+
+<ul>
+<li><a href="https://qiita.com/takeyuichi/items/835f2f5a882e3144e759" title="(OSS向け)ドキュメントツールDocusaurus - Qiita">(OSS向け)ドキュメントツールDocusaurus - Qiita</a></li>
+</ul>
 
 <h3 id="algolia-docsearchでの全文検索"><a href="https://community.algolia.com/docsearch/" title="DocSearch">Algolia DocSearch</a>での全文検索</h3>
 
