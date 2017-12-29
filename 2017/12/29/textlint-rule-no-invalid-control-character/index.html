@@ -9,7 +9,7 @@
         文中に制御文字が混じっているのを見つけて自動修正するtextlintルール | Web Scratch
         
     </title>
-    <meta name="description" content="制御文字は色々ありますが、通常の文中に出てくる制御文字は復帰(r)、改行(\n)、タブ(\t)など限られたものだけだと思います。">
+    <meta name="description" content="制御文字は色々ありますが、通常の文中に出てくる制御文字は復帰(r)、改行(\n)、タブ(\t)など限られたものだけだと思います。それ以外の制御文字は文中に入ると文字化けしたりします。">
     
     <meta name="keywords" content="JavaScripts,textlint" />
     
@@ -30,7 +30,7 @@
 <meta property="og:url" content="http://efcl.info/2017/12/29/textlint-rule-no-invalid-control-character/">
 <meta property="og:image" content="http://efcl.info/public/favicon.ico">
 
-<meta property="og:description" content="制御文字は色々ありますが、通常の文中に出てくる制御文字は復帰(r)、改行(\n)、タブ(\t)など限られたものだけだと思います。">
+<meta property="og:description" content="制御文字は色々ありますが、通常の文中に出てくる制御文字は復帰(r)、改行(\n)、タブ(\t)など限られたものだけだと思います。それ以外の制御文字は文中に入ると文字化けしたりします。">
 <meta property="og:site_name" content="Web Scratch">
 
 
@@ -328,11 +328,11 @@ var blog_categories = [
 
     </div>
     <div class="post-content">
-        <p><a href="https://ja.wikipedia.org/wiki/%E5%88%B6%E5%BE%A1%E6%96%87%E5%AD%97" title="制御文字">制御文字</a>は色々ありますが、通常の文中に出てくる制御文字は復帰(<code>r</code>)、改行(<code>\n</code>)、タブ(<code>\t</code>)など限られたものだけだと思います。</p>
+        <p><a href="https://ja.wikipedia.org/wiki/%E5%88%B6%E5%BE%A1%E6%96%87%E5%AD%97" title="制御文字">制御文字</a>は色々ありますが、通常の文中に出てくる制御文字は復帰(<code>r</code>)、改行(<code>\n</code>)、タブ(<code>\t</code>)など限られたものだけだと思います。それ以外の制御文字は文中に入ると文字化けしたりします。</p>
 
-<p>次の記事のように、文中に制御文字が混じっていると、文字化けしたりします。</p>
+<p><img src="https://monosnap.com/file/UjfDjfC7pmKgAJtz52Eot0DQn3MSP1.png" alt="cc"></p>
 
-<p><img src="http://efcl.info/wp-content/uploads/2017/12/29-1514518900.png" alt="cc"></p>
+<p>次の記事では文中に制御文字が入った場合の問題を紹介しています。</p>
 
 <ul>
 <li><a href="https://dev.classmethod.jp/non-programming/texteditor_garbled_letter/" title="テキストエディタ内の「見えない何か」を見つける #atom #sublime ｜ Developers.IO">テキストエディタ内の「見えない何か」を見つける #atom #sublime ｜ Developers.IO</a></li>
@@ -357,7 +357,7 @@ var blog_categories = [
 <li><code>\t</code></li>
 </ul>
 
-<h3 id="許可されていていない制御文字">許可されていていない制御文字</h3>
+<h3 id="許可されていない制御文字">許可されていない制御文字</h3>
 
 <p>その他の<a href="https://en.wikipedia.org/wiki/Control_character" title="Control character">Control character</a>であるもの</p>
 
