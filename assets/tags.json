@@ -813,7 +813,9 @@
         
         "modules",
         
-        "docusaurus"
+        "docusaurus",
+        
+        "JavaScripts"
         
     ]
 }

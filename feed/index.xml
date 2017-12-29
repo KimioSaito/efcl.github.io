@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-12-26T21:18:51+09:00</updated>
+ <updated>2017-12-29T12:54:04+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,91 @@
  </author>
  
 
+ 
+ <entry>
+   <title>文中に制御文字が混じっているのを見つけて自動修正するtextlintルール</title>
+   <link href="http://efcl.info/2017/12/29/textlint-rule-no-invalid-control-character/"/>
+   <updated>2017-12-29T12:33:00+09:00</updated>
+   <id>http://efcl.info/2017/12/29/textlint-rule-no-invalid-control-character</id>
+   <content type="html"><![CDATA[ <p><a href="https://ja.wikipedia.org/wiki/%E5%88%B6%E5%BE%A1%E6%96%87%E5%AD%97" title="制御文字">制御文字</a>は色々ありますが、通常の文中に出てくる制御文字は復帰(<code>r</code>)、改行(<code>\n</code>)、タブ(<code>\t</code>)など限られたものだけだと思います。</p>
+
+<p>次の記事のように、文中に制御文字が混じっていると、文字化けしたりします。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/12/29-1514518900.png" alt="cc"></p>
+
+<ul>
+<li><a href="https://dev.classmethod.jp/non-programming/texteditor_garbled_letter/" title="テキストエディタ内の「見えない何か」を見つける #atom #sublime ｜ Developers.IO">テキストエディタ内の「見えない何か」を見つける #atom #sublime ｜ Developers.IO</a></li>
+</ul>
+
+<p>最近、Slackアプリでバックスペースがおかしな文字が入っていたのも同じような原因です。</p>
+
+<ul>
+<li><a href="http://fortkle.hatenablog.com/entry/2017/05/24/104014" title="【10/2 追記 】MacのSlack.appで日本語入力すると変なスペースが入る問題への対応 - Today Fortkle Learned.">【10/2 追記 】MacのSlack.appで日本語入力すると変なスペースが入る問題への対応 - Today Fortkle Learned.</a></li>
+</ul>
+
+<p>これらを見つける<a href="https://github.com/textlint/textlint" title="textlint">textlint</a>ルールとして<a href="https://github.com/textlint-rule/textlint-rule-no-invalid-control-character" title="@textlint-rule/textlint-rule-no-invalid-control-character">@textlint-rule/textlint-rule-no-invalid-control-character</a>を作りました。</p>
+
+<p>すべての制御文字を禁止すると改行すら出来なくなってしまうので次の制御文字は許可されています。
+また、チェックするのはただの文字列中に制御文字が混じってる場合のみで、CodeBlockの中などはチェックしないので問題ありません。</p>
+
+<h3 id="許可されている制御文字">許可されている制御文字</h3>
+
+<ul>
+<li><code>\r</code></li>
+<li><code>\n</code></li>
+<li><code>\t</code></li>
+</ul>
+
+<h3 id="許可されていていない制御文字">許可されていていない制御文字</h3>
+
+<p>その他の<a href="https://en.wikipedia.org/wiki/Control_character" title="Control character">Control character</a>であるもの</p>
+
+<ul>
+<li><code></code>(<code>\u0010</code> DATA LINK ESCAPE)</li>
+<li><code></code>(<code>\u0019</code> ND OF MEDIUM)</li>
+<li>etc...</li>
+</ul>
+
+<h2 id="インストール">インストール</h2>
+
+<p><a href="https://github.com/textlint-rule/textlint-rule-no-invalid-control-character" title="@textlint-rule/textlint-rule-no-invalid-control-character">@textlint-rule/textlint-rule-no-invalid-control-character</a>はnpmでインストールできます。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">npm install @textlint-rule/textlint-rule-no-invalid-control-character
+</code></pre></div>
+<h2 id="使い方">使い方</h2>
+
+<p><code>.textlintrc</code>に設定するだけです。</p>
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
+    <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;@textlint-rule/no-invalid-control-character&quot;</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="オプション">オプション</h2>
+
+<ul>
+<li><code>allow</code>: <code>string[]</code>
+
+<ul>
+<li>例外として許可したい制御文字を指定</li>
+</ul></li>
+</ul>
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
+    <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;@textlint-rule/no-invalid-control-character&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;allow&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;\v&quot;</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="おわりに">おわりに</h2>
+
+<p><code>\u0019</code>などの制御文字が文中に入るのはIMのバグとか何らかの問題がある場合が殆どだと思うので、デフォルトで弾くのが良い気がします。</p>
+
+<p><a href="https://github.com/textlint-rule/textlint-rule-no-invalid-control-character" title="@textlint-rule/textlint-rule-no-invalid-control-character">@textlint-rule/textlint-rule-no-invalid-control-character</a>に似たルールとして、Macでコピペすると濁点が分離する問題を見つける<a href="https://github.com/azu/textlint-rule-no-nfd" title="textlint-rule-no-nfd">textlint-rule-no-nfd</a>などがあります。</p>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した</title>
@@ -1993,54 +2078,6 @@ NLCSTは<a href="https://github.com/wooorm/retext">retext</a>などが使って�
 <ul>
 <li><a href="http://efcl.info/2016/12/14/create-textlint-rule/" title="textlintのルールを簡単に作り始めることができるツールを作りました | Web Scratch">textlintのルールを簡単に作り始めることができるツールを作りました | Web Scratch</a></li>
 </ul>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>Alfred上で自分のはてなブックマークを検索できるWorkflow</title>
-   <link href="http://efcl.info/2017/10/20/alfred-hatenabookmark/"/>
-   <updated>2017-10-20T19:48:00+09:00</updated>
-   <id>http://efcl.info/2017/10/20/alfred-hatenabookmark</id>
-   <content type="html"><![CDATA[ <p>Alfredで自分のはてブデータを取得して絞り込んで検索できるWorkflowを書きました。</p>
-
-<ul>
-<li><a href="https://github.com/azu/alfred-hantebookmark-mydata" title="azu/alfred-hantebookmark-mydata: Search My HatenaBookmark in Alfred">azu/alfred-hantebookmark-mydata: Search My HatenaBookmark in Alfred</a></li>
-</ul>
-
-<p><img src="https://media.giphy.com/media/3ov9k8YySjxOsxvNHW/giphy.gif" alt="screenshot"></p>
-
-<p>このWorkflowはNode.jsでAlfred Workflowを書ける<a href="https://github.com/sindresorhus/alfy" title="alfy">alfy</a>というフレームワークを使っています。
-そのため、npmでWorkflowをインストール、更新できます。
-(必然的にNode.js環境が必要です)</p>
-
-<h2 id="インストール">インストール</h2>
-<div class="highlight"><pre><code class="language-text" data-lang="text">npm install --global alfred-hantebookmark-mydata
-</code></pre></div>
-<h2 id="設定">設定</h2>
-
-<p>どのはてなアカウントのブックマークを検索するかの設定が必要なので、Workflowの設定から<code>HATENA_ACCOUNT_NAME</code>という変数に自分のアカウント名を入れる必要があります。</p>
-
-<ol>
-<li>Open workflow settings</li>
-<li>Set Your hatena account name to <code>HATENA_ACCOUNT_NAME</code></li>
-</ol>
-
-<p><img src="https://monosnap.com/file/cTzt4ieHD2wGDYb2ANoUh5IXeS6SQA.png" alt="setting"></p>
-
-<h2 id="制限">制限</h2>
-
-<p><a href="https://github.com/sindresorhus/alfy" title="alfy">alfy</a>は基本的に一度きりの実行を想定した作りになっているようです。
-なので、入力 -&gt; Nodeでスクリプトを実行 -&gt; 結果を表示の一回だけで終わってる感じです。</p>
-
-<p>ほしかったのは、スクリプトを実行 -&gt; 結果をAlfredで絞り込み という感じのものでした。</p>
-
-<p><code>Script Filter</code>の<a href="https://www.alfredapp.com/help/workflows/inputs/script-filter/#alfred-filters-results" title="Match Mode">Match Mode</a>を使うとそれが実現できる(このWorkflowもこれ)のですが、このMatch Modeのフィルタリングは日本語に対応してない感じがします。</p>
-
-<p>境界となる文字列が記号やスペースのみとなっていて、その結果に対して先頭からのマッチのみなので、必然的に日本語だと上手くマッチしない問題があります。形態素解析とかして分解すればいいのですが、処理時間的に現実的じゃない感じがしました。(差分更新、キャッシュを上手く使えばできそうな気がするけど、PR歓迎)</p>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">自分のはてなブックマークをAlfredから検索してして絞り込むやつ書いた。<br>もっと早く動くようにできないかな?(後マッチングが日本語不安定な気はする)<a href="https://t.co/8z3GzWGzwW">https://t.co/8z3GzWGzwW</a> <a href="https://t.co/DmhYJ8Dh6v">pic.twitter.com/DmhYJ8Dh6v</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/921017924898275328?ref_src=twsrc%5Etfw">October 19, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
  ]]></content>
  </entry>
  

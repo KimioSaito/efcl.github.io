@@ -2,6 +2,12 @@
     "posts": [
         
         {
+            "title": "文中に制御文字が混じっているのを見つけて自動修正するtextlintルール",
+            "url": "http://efcl.info/2017/12/29/textlint-rule-no-invalid-control-character/",
+            "date": "2017-12-29T12:33:00+09:00"
+        },
+        
+        {
             "title": "AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した",
             "url": "http://efcl.info/2017/12/26/docusaurus-almin/",
             "date": "2017-12-26T09:48:00+09:00"
