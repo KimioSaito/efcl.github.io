@@ -2,6 +2,12 @@
     "posts": [
         
         {
+            "title": "今年のOSS活動振り返り @ 2017",
+            "url": "http://efcl.info/2017/12/30/oss-in-2017/",
+            "date": "2017-12-30T21:04:00+09:00"
+        },
+        
+        {
             "title": "文中に制御文字が混じっているのを見つけて自動修正するtextlintルール",
             "url": "http://efcl.info/2017/12/29/textlint-rule-no-invalid-control-character/",
             "date": "2017-12-29T12:33:00+09:00"

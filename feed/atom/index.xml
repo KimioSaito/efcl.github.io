@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-12-30T21:13:23+09:00</updated>
+ <updated>2017-12-30T23:40:41+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,544 @@
  </author>
  
 
+ 
+ <entry>
+   <title>今年のOSS活動振り返り @ 2017</title>
+   <link href="http://efcl.info/2017/12/30/oss-in-2017/"/>
+   <updated>2017-12-30T21:04:00+09:00</updated>
+   <id>http://efcl.info/2017/12/30/oss-in-2017</id>
+   <content type="html"><![CDATA[ <p>2017年のOSS活動の振り返り記事です。</p>
+
+<p>今までの振り返り。</p>
+
+<ul>
+<li><a href="http://efcl.info/2016/12/31/oss-in-2016/">今年のOSS活動振り返り @ 2016 | Web Scratch</a></li>
+<li><a href="http://efcl.info/2015/12/31/oss-in-2015/">今年のOSS活動振り返り @ 2015 | Web Scratch</a></li>
+<li><a href="http://efcl.info/2014/12/31/oss-in-2014/">今年のOSS活動振り返り @ 2014 | Web Scratch</a></li>
+</ul>
+
+<p>2017年のGitHubのContributionsは8000~10000ぐらいを推移していました。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/12/30-1514635832.png" alt="GitHub contributions"></p>
+
+<p>まあ1/3ぐらいは<a href="https://jser.info/" title="JSer.info">JSer.info</a>関連だと思います。</p>
+
+<p>今はGitHubに表示されないけど、Current Streakは1507日でした。(1507/365 = 4.128767123年)</p>
+
+<ul>
+<li><a href="https://azu.github.io/github-longest-streak/?user=azu" title="GitHub Full Longest Streak">GitHub Full Longest Streak:azu</a>
+
+<ul>
+<li>GitHubのLongest Streakを出してくれるツール</li>
+</ul></li>
+</ul>
+
+<h2 id="issue-pr">Issue/PR</h2>
+
+<ul>
+<li><a href="https://github.com/search?o=asc&amp;q=author%3Aazu+created%3A2017-01-01..2018-01-01+is%3Apr+&amp;s=updated&amp;type=Issues&amp;utf8=%E2%9C%93" title="Search · author:azu created:2017-01-01..2018-01-01 is:pr">PR</a>: 527
+
+<ul>
+<li>去年: 457</li>
+</ul></li>
+<li><a href="https://github.com/search?utf8=%E2%9C%93&amp;q=author%3Aazu+created%3A2017-01-01..2018-01-01+is%3Aissue+&amp;type=Issues">Issue</a>: 485
+
+<ul>
+<li>去年: 392</li>
+</ul></li>
+</ul>
+
+<p>大体同じ程度増えている感じらしい</p>
+
+<h2 id="作ったもの"><a href="https://github.com/search?utf8=%E2%9C%93&amp;q=user%3Atextlint+user%3Atextlint-rule+user%3Atextlint-ja+user%3Aalmin+user%3Aazu+created%3A2017-01-01..2018-01-01&amp;type=Repositories">作ったもの</a></h2>
+
+<blockquote>
+<p><a href="https://github.com/search?utf8=%E2%9C%93&amp;q=user%3Atextlint+user%3Atextlint-rule+user%3Atextlint-ja+user%3Aalmin+user%3Aazu+created%3A2017-01-01..2018-01-01&amp;type=Repositories">https://github.com/search?utf8=%E2%9C%93&amp;q=user%3Atextlint+user%3Atextlint-rule+user%3Atextlint-ja+user%3Aalmin+user%3Aazu+created%3A2017-01-01..2018-01-01&amp;type=Repositories</a></p>
+</blockquote>
+
+<ul>
+<li>今年: 95</li>
+<li>去年: 108</li>
+</ul>
+
+<p>去年より減ってる。</p>
+
+<p><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>、<a href="https://github.com/almin/almin">almin</a>、<a href="https://github.com/azu/searchive">searchive</a>、<a href="https://github.com/azu/immutable-array-prototype" title="immutable-array-prototype">immutable-array-prototype</a>などmonorepoを結構積極的に使うようになったのでその影響もあるのかも。</p>
+
+<p>順番に何を作ってたのかを見ていく</p>
+
+<ul>
+<li><a href="https://github.com/azu/web-application-template-2016" title="azu/web-application-template-2016">azu/web-application-template-2016</a>
+
+<ul>
+<li>ウェブアプリを書くときこういうテンプレ使ってる的なやつ</li>
+<li>今は<a href="https://qiita.com/azu/items/a149501ca1b5864000a3" title="React + TypeScript (+ Electron)でアプリを書き始めるときにやってること - Qiita">React + TypeScript (+ Electron)でアプリを書き始めるときにやってること - Qiita</a>みたいな感じになってる</li>
+<li>手元では<code>init*.sh</code>みたいのがなんこかあってそこから選んでるだけなので変わってない</li>
+</ul></li>
+<li><a href="https://github.com/azu/negaposi-analyzer-ja" title="negaposi-analyzer-ja">negaposi-analyzer-ja</a>
+
+<ul>
+<li>形態素解析したテキストからネガティブ/ポジティブ(単語感情極性)を判定したスコアを返すJavaScriptライブラリ</li>
+<li><a href="https://jser.info/2017/01/15/jser-info-6years/" title="JSer.info 6周年記念イベントを開催しました - JSer.info">JSer.info 6周年記念イベント</a>で<a href="http://azu.github.io/slide/2017/jser_info/how_to_make_jser_info.html" title="JSer.infoの作り方">JSer.infoの作り方</a>の発表のために作った気がする</li>
+<li>JSer.infoの紹介記事は偏りのある言葉を嫌うので、実際に今までのデータを解析するために作った</li>
+<li>実際にネガ・ポジは0に収束してそうだった的な話をした</li>
+</ul></li>
+</ul>
+
+<p><img src="http://azu.github.io/slide/2017/jser_info/resources/feeling-words.png" alt="JSer.infoの感情情極性"></p>
+
+<ul>
+<li><a href="https://github.com/azu/access-limit-http-proxy" title="access-limit-http-proxy">access-limit-http-proxy</a>
+
+<ul>
+<li>たしか数回リクエストした時の挙動を調べるテストを書くために作った気がする。</li>
+<li>3回アクセスしたら500返すみたいなプロキシ</li>
+</ul></li>
+<li><a href="https://github.com/azu/env-development" title="azu/env-development: Set $NODE_ENV to &amp;#34;development&amp;#34; works best with mocha --require=env-development">azu/env-development: Set $NODE_ENV to &quot;development&quot; works best with mocha --require=env-development</a>
+
+<ul>
+<li><code>process.env.NODE_ENV = &quot;development&quot;</code>するだけ</li>
+<li><code>mocha --require env-development</code> したかった</li>
+</ul></li>
+<li><a href="https://github.com/azu/uni-gitbook-server" title="azu/uni-gitbook-server: [WIP] [Unofficial] Alternative of GitBook server.">azu/uni-gitbook-server: [WIP] [Unofficial] Alternative of GitBook server.</a>
+
+<ul>
+<li>GitBookのビルドがあまりにも遅くて作ってた</li>
+<li>GitBookのwatch buildは変更 -&gt; サーバを止める -&gt; ビルド -&gt; サーバ再開 みたいな結構やばい感じだった</li>
+<li>GitBook 開発チームのレスポンスもあまりにも悪かったりしてちょこちょこ不満がある(PR出しても数ヶ月放置とかがよくある)</li>
+<li><a href="https://github.com/GitbookIO/gitbook/issues/1808" title="Is GitBook still alive? · Issue #1808 · GitbookIO/gitbook">Is GitBook still alive? · Issue #1808 · GitbookIO/gitbook</a></li>
+<li>小さな技術書を作るためのツールはやっぱり欲しいので、どうにかしたい</li>
+</ul></li>
+<li><a href="https://github.com/azu/search-prototype.js" title="azu/search-prototype.js: Search usage of prototype.js in your codes.">azu/search-prototype.js: Search usage of prototype.js in your codes.</a>
+
+<ul>
+<li>コード中に<a href="http://prototypejs.org/">prototype.js</a>のメソッドがないかを検出するツール</li>
+<li>公式のAPIレスポンスからメソッドのリストを作ってgraspを使ってASTで検索してる</li>
+<li><a href="http://efcl.info/2017/04/26/search-prototype.js/" title="コード中にあるprototype.jsの拡張メソッドを使ってる部分を検索するツール | Web Scratch">コード中にあるprototype.jsの拡張メソッドを使ってる部分を検索するツール | Web Scratch</a></li>
+<li>さすがにそろそろ亡くなったでしょうみたいな感じではあるけど、prototype拡張という性質上静的検索が難しいので、専用のツールを作った</li>
+</ul></li>
+<li><a href="https://github.com/azu/path-to-glob-pattern" title="azu/path-to-glob-pattern: Convert file/directory path to glob pattern.">azu/path-to-glob-pattern: Convert file/directory path to glob pattern.</a>
+
+<ul>
+<li><code>src/</code> =&gt; <code>src/**/*</code> みたいにglobに変換するライブラリ</li>
+<li><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>で使ってる</li>
+</ul></li>
+<li><a href="https://github.com/azu/get-github-pr-review-comments" title="azu/get-github-pr-review-comments: Get PR review comments from command line.">azu/get-github-pr-review-comments: Get PR review comments from command line.</a>
+
+<ul>
+<li><a href="http://efcl.info/2017/03/06/get-pull-request-review-comments/" title="GitHubのPull Requestのレビューコメントをコマンドラインから取得するツール | Web Scratch">GitHubのPull Requestのレビューコメントをコマンドラインから取得するツール | Web Scratch</a></li>
+</ul></li>
+<li><a href="https://github.com/azu/position-map-text-to-markdown" title="azu/position-map-text-to-markdown: Map rendered text/html position to Markdown position.">azu/position-map-text-to-markdown: Map rendered text/html position to Markdown position.</a>
+
+<ul>
+<li>Markdownのレンダリング済みテキストから、指定した文字列が元のMarkdownでどの位置にあるかを返すライブラリ</li>
+<li><a href="https://github.com/azu/gitbook-plugin-github-issue-feedback" title="gitbook-plugin-github-issue-feedback">gitbook-plugin-github-issue-feedback</a>のために作った</li>
+<li><a href="http://efcl.info/2017/05/29/gitbook-plugin-github-issue-for-review/" title="書いた文章をレビューしてGitHubにIssueを切るためのGitBookプラグイン | Web Scratch">書いた文章をレビューしてGitHubにIssueを切るためのGitBookプラグイン | Web Scratch</a></li>
+<li>レンダリング済みのHTMLから元のMarkdownの行数を見つける感じ</li>
+</ul></li>
+<li><a href="https://github.com/azu/strip-X-Frame-Options-proxy" title="azu/strip-X-Frame-Options-proxy: strip X-Frame-Options header for embedding on iframe.">azu/strip-X-Frame-Options-proxy: strip X-Frame-Options header for embedding on iframe.</a>
+
+<ul>
+<li>GitHubに3段階のiframe埋め込み拒否機能があってそれの検証</li>
+<li>CSP -&gt; <code>X-Frame-Options</code> -&gt; 埋め込みJavaScriptで<code>window.top</code>をとかをみてる拒否してくる</li>
+<li>結局は<code>Webview</code>とか使わないと埋め込めない</li>
+</ul></li>
+<li><a href="https://github.com/azu/can-use-webview" title="azu/can-use-webview: Detect if you can use electron&amp;#39; &amp;lt;webview&amp;gt;">azu/can-use-webview: Detect if you can use electron&#39; <webview></a>
+
+<ul>
+<li><code>webview</code>要素が使えるかどうかの判定</li>
+</ul></li>
+<li><a href="https://github.com/azu/check-invalid-control-characters" title="azu/check-invalid-control-characters: Check invalid control characters like `\u0008` in plain text.">azu/check-invalid-control-characters: Check invalid control characters like <code>\u0008</code> in plain text.</a>
+
+<ul>
+<li>Slack.app 、Electron、Chromeあたりで問題になった制御文字の問題を検出するツール</li>
+<li>最近textlintでもっと便利な感じのを書いた</li>
+<li><a href="http://efcl.info/2017/12/29/textlint-rule-no-invalid-control-character/" title="文中に制御文字が混じっているのを見つけて自動修正するtextlintルール | Web Scratch">文中に制御文字が混じっているのを見つけて自動修正するtextlintルール | Web Scratch</a></li>
+</ul></li>
+<li><a href="https://github.com/azu/localstorage-ponyfill" title="azu/localstorage-ponyfill: Universal LocalStorage for browser and Node.js.">azu/localstorage-ponyfill: Universal LocalStorage for browser and Node.js.</a>
+
+<ul>
+<li>ブラウザ、Node、Electronで動くみたいな目的の<code>localstorage</code></li>
+</ul></li>
+<li><a href="https://github.com/azu/video-events-debugger" title="azu/video-events-debugger: [WIP] HTML5 Video element events debugging tools.">azu/video-events-debugger: [WIP] HTML5 Video element events debugging tools.</a>
+
+<ul>
+<li><code>video</code>要素とかのイベントをひたすら見られるデバッガー</li>
+</ul></li>
+<li><a href="https://github.com/azu/faao" title="azu/faao: Faao is a GitHub issue/pull-request client on Electron.">azu/faao: Faao is a GitHub issue/pull-request client on Electron.</a>
+
+<ul>
+<li><a href="https://github.com/almin/almin" title="Almin">Almin</a>の技術ショーケースもかねて作ってたGitHub Issueクライアント</li>
+<li>ドメインモデルとかもしっかり考えて開発してる</li>
+<li><a href="http://azu.github.io/slide/2017/teppeis-sushi/client-side-ddd-on-github.html" title="Faao - ドメイン駆動設計で作るGitHub Issue Client -">Faao - ドメイン駆動設計で作るGitHub Issue Client -</a></li>
+<li>方向がしっかり決まってなかったけど、<a href="https://github.com/azu/faao/issues/85" title="Redesign Faao · Issue #85 · azu/faao">Redesign Faao · Issue #85 · azu/faao</a>で方向をちゃんと定め直して開発中</li>
+<li>単純に言えばGitHub Issueを使ってちゃんとTODO管理したいという話</li>
+</ul></li>
+<li><a href="https://github.com/azu/immutable-array-prototype" title="azu/immutable-array-prototype: A collection of Immutable Array prototype methods(Per method packages).">azu/immutable-array-prototype: A collection of Immutable Array prototype methods(Per method packages).</a>
+
+<ul>
+<li><code>Array#push</code> とかのImmutable版ほしいよねって感じで作った</li>
+<li><a href="http://efcl.info/2017/07/11/immutable-array/" title="Array.prototypeのImmutable版メソッドを個別のパッケージで使えるものを作った | Web Scratch">Array.prototypeのImmutable版メソッドを個別のパッケージで使えるものを作った | Web Scratch</a></li>
+<li><a href="https://github.com/azu/faao" title="Faao">Faao</a>でも使ってる
+
+<ul>
+<li>ドメインモデルもImmutableにしたいときにこういうシンプルで小さいパーツが便利で欲しかった</li>
+</ul></li>
+</ul></li>
+<li><a href="https://github.com/azu/node-browser-shim-gap" title="azu/node-browser-shim-gap: The gap issue between Node.js and Browser shims.">azu/node-browser-shim-gap: The gap issue between Node.js and Browser shims.</a>
+
+<ul>
+<li><a href="https://gist.github.com/azu/96471e0405afa20819e2eaeb91c944db" title="Node.jsコアモジュールとブラウザ向けShimの挙動の違い(ギャップ)について">Node.jsコアモジュールとブラウザ向けShimの挙動の違い(ギャップ)について</a>の問題</li>
+</ul></li>
+<li><a href="https://github.com/azu/text-map-kuromoji" title="azu/text-map-kuromoji: テキストを形態素解析した結果とテキストの関係をビジュアライズするエディタ">azu/text-map-kuromoji: テキストを形態素解析した結果とテキストの関係をビジュアライズするエディタ</a>
+
+<ul>
+<li><a href="http://efcl.info/2017/10/19/text-map-kuromoji/" title="kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする | Web Scratch">kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする | Web Scratch</a></li>
+<li>ビジュアライズしたくなった</li>
+</ul></li>
+<li><a href="https://github.com/azu/mp3cat-bin" title="azu/mp3cat-bin: Binary wrapper for mp3cat - concat mp3 files.">azu/mp3cat-bin: Binary wrapper for mp3cat - concat mp3 files.</a>
+
+<ul>
+<li>mp3の結合</li>
+<li><a href="https://github.com/jser/podcast" title="jser/podcast: JSer.info podcast creator">jser/podcast: JSer.info podcast creator</a>関連</li>
+</ul></li>
+<li><a href="https://github.com/azu/git-commit-push-via-github-api" title="azu/git-commit-push-via-github-api: Git commit and push by using GitHub API. No depended on Git binary.">azu/git-commit-push-via-github-api: Git commit and push by using GitHub API. No depended on Git binary.</a>
+
+<ul>
+<li>GitHub APIだけでコミットやプッシュするライブラリ</li>
+<li>lambdaからpushしたかった</li>
+</ul></li>
+<li><a href="https://github.com/azu/pronunciation-lexicon-specification-json">azu/pronunciation-lexicon-specification-json: Convert JSON to Pronunciation Lexicon Specification (PLS) XML.</a></li>
+<li><a href="https://github.com/azu/pronunciation-lexicon-specification-yaml">azu/pronunciation-lexicon-specification-yaml: Convert YAML(YML) to Pronunciation Lexicon Specification(PLS) XML.</a>
+
+<ul>
+<li><a href="https://aws.amazon.com/jp/polly/" title="Amazon Polly">Amazon Polly</a>関係</li>
+<li>JSON or YAMLから<a href="http://www.asahi-net.or.jp/%7Eax2s-kmtn/ref/accessibility/REC-pronunciation-lexicon-20081014.html" title="発音辞書仕様（PLS）バージョン1.0">発音辞書仕様（PLS）バージョン1.0</a>を再生する</li>
+</ul></li>
+<li><a href="https://github.com/azu/move-github-repository" title="azu/move-github-repository: Move GitHub repository(Update description &amp;amp;&amp;amp; URL &amp;amp;&amp;amp; default branch &amp;amp;&amp;amp; Archived).">azu/move-github-repository: Move GitHub repository(Update description &amp;&amp; URL &amp;&amp; default branch &amp;&amp; Archived).</a>
+
+<ul>
+<li>monorepo化した後のリポジトリの後片付けツール</li>
+<li><a href="http://efcl.info/2017/05/22/move-github-repository/" title="GitHubのリポジトリをDeprecatedにするスクリプト | Web Scratch">GitHubのリポジトリをDeprecatedにするスクリプト | Web Scratch</a></li>
+<li>GitHubはTransferできないときに、そのリポジトリからリダイレクトとかできないのでその辺をいい感じにするツール</li>
+<li>最近追加されたArchieveにも対応した</li>
+</ul></li>
+<li><a href="https://github.com/azu/VideoPlaybackQuality-polyfill" title="azu/VideoPlaybackQuality-polyfill: A ponyfill/polyfill for VideoPlaybackQuality.">azu/VideoPlaybackQuality-polyfill: A ponyfill/polyfill for VideoPlaybackQuality.</a>
+
+<ul>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/API/HTMLVideoElement/getVideoPlaybackQuality" title="getVideoPlaybackQuality()">getVideoPlaybackQuality()</a>というAPIを知ったけど、Chromeが残念だったのでpolyfillを書いた</li>
+</ul></li>
+<li><a href="https://github.com/azu/alfred-hantebookmark-mydata" title="azu/alfred-hantebookmark-mydata: Search My HatenaBookmark in Alfred">azu/alfred-hantebookmark-mydata: Search My HatenaBookmark in Alfred</a>
+
+<ul>
+<li><a href="http://efcl.info/2017/10/20/alfred-hatenabookmark/" title="Alfred上で自分のはてなブックマークを検索できるWorkflow | Web Scratch">Alfred上で自分のはてなブックマークを検索できるWorkflow | Web Scratch</a></li>
+<li>検索 はてブ</li>
+</ul></li>
+<li><a href="https://github.com/azu/performance-mark-metadata" title="azu/performance-mark-metadata: `performance.mark` with custom meta data.">azu/performance-mark-metadata: <code>performance.mark</code> with custom meta data.</a>
+
+<ul>
+<li>クライアントサイドのメトリクスを作成するためのライブラリ</li>
+<li><a href="https://dev.to/azu/performancemark-with-medata-is-useful-for-real-user-monitoring-54p"><code>performance.mark</code> with metadata is useful for Real user monitoring</a></li>
+<li><a href="http://efcl.info/2017/11/15/performance.mark-metadata/">performance.markにメタデータを紐付けできるライブラリを書いた | Web Scratch</a></li>
+<li><a href="http://efcl.info/2017/09/20/almin-performance-profile-0.14.0/">Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch</a></li>
+<li>最近60ページぐらいのウェブアプリのパフォーマンス改善事例集(問題の見つけ方や修正方法、計測方法、動画とか実際のプロファイルみたいなやつ)を書いたけど、そこでも結構使った</li>
+</ul></li>
+<li><a href="https://github.com/azu/rc-config-loader" title="azu/rc-config-loader: Load config from .{product}rc.{json,yml,js} file">azu/rc-config-loader: Load config from .{product}rc.{json,yml,js} file</a>
+
+<ul>
+<li><code>.textlintrc</code>とかみたいによく見る設定ファイルを探して読み込むローダ</li>
+<li><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>で使ってる</li>
+<li><a href="https://github.com/davidtheclark/cosmiconfig" title="cosmiconfig">cosmiconfig</a>が昔非同期だけで、同期版が欲しくて作った</li>
+</ul></li>
+<li><a href="https://github.com/azu/github-label-setup" title="azu/github-label-setup: 📦 Setup GitHub label without configuration.">azu/github-label-setup: 📦 Setup GitHub label without configuration.</a>
+
+<ul>
+<li>最近リポジトリを作るときはラベルも設定するようにしてる</li>
+<li>そのテンプレラベルを集めたもの</li>
+<li><a href="http://efcl.info/2017/05/17/github-label/" title="GitHubのラベルをいい感じにセットアップするツール | Web Scratch">GitHubのラベルをいい感じにセットアップするツール | Web Scratch</a></li>
+<li>知見としてはGitHubは<code>good first issue</code>など特定のラベルは優遇(Issueの画面に案内が表示される)されているのでその辺はGitHubに合わせたほうがいい</li>
+</ul></li>
+<li><a href="https://github.com/azu/avoid-json-stringify-on-react" title="azu/avoid-json-stringify-on-react: Deep equal vs. Shallow equal on React&amp;#39;s shouldComponentUpdate">azu/avoid-json-stringify-on-react: Deep equal vs. Shallow equal on React&#39;s shouldComponentUpdate</a>
+
+<ul>
+<li>Reactの<code>shouldComponentUpdate</code>でshallow equalとdeep equalの話</li>
+<li><a href="https://reactjs.org/docs/react-component.html#shouldcomponentupdate">Reactの公式ドキュメントでJSON.stringifyとかで比較するな</a>って話があるのでそれを検証した</li>
+<li><a href="http://efcl.info/2017/11/30/shallow-equal/" title="shallow-equal for Object/React props | Web Scratch">shallow-equal for Object/React props | Web Scratch</a></li>
+</ul></li>
+<li><a href="https://github.com/azu/shallow-equal-object">azu/shallow-equal-object: Shallow equal check object that support TypeScript.</a></li>
+<li><a href="https://github.com/azu/shallow-equal-props">azu/shallow-equal-props: Shallow Equal for React&#39;s props. Help to implement shouldComponentUpdate.</a>
+
+<ul>
+<li>上の検証時に作ったshallow equalライブラリ</li>
+<li>デバッグオプションがあって何が違っているのかが確認できるので特徴</li>
+</ul></li>
+<li><a href="https://github.com/azu/what-is-this" title="azu/what-is-this: What value is `this` in Strict, Script, or Module?">azu/what-is-this: What value is <code>this</code> in Strict, Script, or Module?</a>
+
+<ul>
+<li>いろんなコンテキストで<code>this</code>の値を確認するサイト</li>
+<li><a href="https://azu.github.io/what-is-this/">https://azu.github.io/what-is-this/</a></li>
+<li><a href="https://asciidwango.github.io/js-primer/basic/function-this/" title="関数とthis · JavaScriptの入門書 #jsprimer">関数とthis · JavaScriptの入門書 #jsprimer</a>を書くために色々検証する目的で作った</li>
+<li>このツールでV8のモジュールコンテキストでは<code>this</code>がバグってるのを見つけて報告した</li>
+<li><a href="https://bugs.chromium.org/p/chromium/issues/detail?id=791334" title="791334 - `this` in top level Arrow Function in Module Context should be `undefined` - chromium - Monorail">791334 - <code>this</code> in top level Arrow Function in Module Context should be <code>undefined</code> - chromium - Monorail</a></li>
+</ul></li>
+<li><a href="https://github.com/azu/nlp-pattern-match" title="azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.">azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.</a>
+
+<ul>
+<li><a href="http://efcl.info/2017/10/31/nlp-pattern-match/" title="自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた | Web Scratch">自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた | Web Scratch</a></li>
+<li>言語処理をもっと楽にしたい！みたいな方向で書いてた</li>
+<li>最近は逆に言語処理をもっと丁寧にしたい！みたいな方向で<a href="https://github.com/azu/sentence-splitter" title="sentence-splitter">sentence-splitter</a>を書き直したりした</li>
+<li>多くの言語処理はただの文字列として扱ってるのが問題でその分いろんな情報がなくなってることに気づいてきた</li>
+<li><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>では文章はASTにしてから扱えるので、ASTのまま言語処理してコンテキストを維持して扱いたいみたいな方向を最近やっている</li>
+<li><a href="https://github.com/textlint/textlint/issues/366" title="Core rule utility · Issue #366 · textlint/textlint">Core rule utility · Issue #366 · textlint/textlint</a></li>
+</ul></li>
+</ul>
+
+<h2 id="searchive"><a href="https://github.com/azu/searchive" title="azu/searchive: Search All My Documents{PDF}.">Searchive</a></h2>
+
+<blockquote>
+<p><a href="https://github.com/azu/searchive" title="azu/searchive: Search All My Documents{PDF}.">azu/searchive: Search All My Documents{PDF}.</a></p>
+</blockquote>
+
+<p><a href="https://github.com/azu/searchive" title="azu/searchive: Search All My Documents{PDF}.">Searchive</a>というローカルのPDFを全文検索、串刺し検索するアプリを書いた。</p>
+
+<ul>
+<li><a href="http://efcl.info/2017/11/17/searchive/" title="ローカルのPDFを全文検索するクライアント/サーバ/Electronアプリを書いた | Web Scratch">ローカルのPDFを全文検索するクライアント/サーバ/Electronアプリを書いた | Web Scratch</a></li>
+</ul>
+
+<p>これもmonorepoでリポジトリにアプリ、クライアント、サーバ、CLIなどが全部入ってる。</p>
+
+<p>副産物</p>
+
+<ul>
+<li><a href="https://github.com/azu/search-query-tester" title="azu/search-query-tester: Test object with search query syntax.">azu/search-query-tester: Test object with search query syntax.</a>
+
+<ul>
+<li>GitHubみたいな検索演算子をパースしてオブジェクトにしてマッチしてくれる<br></li>
+</ul></li>
+</ul>
+
+<h2 id="ldr">LDR</h2>
+
+<p>残念ながらLDRが閉鎖したので<a href="http://www.inoreader.com/">Inoreader</a>に移行した。
+<a href="http://www.inoreader.com/">Inoreader</a>のクライアントは満足できなかったので、<a href="https://github.com/azu/irodr" title="azu/irodr: RSS reader client like LDR for Inoreader.">irodr</a>を作って使ってる</p>
+
+<ul>
+<li><a href="https://github.com/azu/ldr-export-opml" title="azu/ldr-export-opml: Convert exported json from LDR to opml with Rate.">azu/ldr-export-opml: Convert exported json from LDR to opml with Rate.</a>
+
+<ul>
+<li>LDR閉鎖にともなってエクスポートツールを作成した</li>
+<li><a href="http://efcl.info/2017/07/29/ldr-rate-export/" title="LDRのフィードをレート情報付きでエクスポートする | Web Scratch">LDRのフィードをレート情報付きでエクスポートする | Web Scratch</a></li>
+</ul></li>
+<li><a href="https://github.com/azu/irodr" title="azu/irodr: RSS reader client like LDR for Inoreader.">azu/irodr: RSS reader client like LDR for Inoreader.</a>
+
+<ul>
+<li><a href="http://efcl.info/2017/08/31/ldr-to-irodr/" title="LDRがサービス終了のため、Inoreader/Feedlyをバックエンドに動くRSSリーダを書いている | Web Scratch">LDRがサービス終了のため、Inoreader/Feedlyをバックエンドに動くRSSリーダを書いている | Web Scratch</a></li>
+</ul></li>
+<li><a href="http://irodr.netlify.com/">http://irodr.netlify.com/</a></li>
+</ul>
+
+<p>NetlifyのおかげてCORSも特に問題なくなった。
+ウェブで動くInoreaderのクライアントという感じで、LDRのときと同じぐらい使ってる。</p>
+
+<p>細かいバグとかもあるのでPR歓迎しています。
+基本的にまだレート読みしか考えて作ってないのでその辺のオプションが欲しい人もIssueなどどうぞ。</p>
+
+<ul>
+<li><a href="https://github.com/azu/irodr/issues" title="Issues · azu/irodr">Issues · azu/irodr</a></li>
+</ul>
+
+<p><a href="https://github.com/almin/almin" title="Almin">Almin</a>と<a href="https://developer.microsoft.com/en-us/fabric" title="Office UI Fabric">Office UI Fabric</a>(React)を使って作った。
+(2-3日ぐらいで突貫的に作れてよかった)</p>
+
+<h2 id="almin"><a href="https://github.com/almin/almin" title="Almin">Almin</a></h2>
+
+<p>最近Alminのサイトを<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>で作り直した。</p>
+
+<ul>
+<li><a href="http://efcl.info/2017/12/26/docusaurus-almin/" title="AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した | Web Scratch">AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した | Web Scratch</a></li>
+</ul>
+
+<p>Almin自体はあいかわらずアプリを作る際にもっとドメインに集中できるようにすることを目的に作ってる。最近、よそでも使ってくれてる人が増えてきてる。</p>
+
+<ul>
+<li><a href="https://qiita.com/kmdsbng/items/dc03d89c0ca5acc30a44" title="Almin.js がやってくれること - Qiita">Almin.js がやってくれること - Qiita</a></li>
+<li><a href="https://qiita.com/tsuwatch/items/d53c4bb940ecde7016de" title="Electronアプリをリリースするまでにあった知見 - Qiita">Electronアプリをリリースするまでにあった知見 - Qiita</a></li>
+</ul>
+
+<p>既にあるAPIを使ってアプリを作るみたいなところには<a href="https://github.com/almin/almin" title="Almin">Almin</a>は結構強い部分はあるし(クライアントに裁量を強く持たせられる)、<a href="https://github.com/azu/searchive" title="azu/searchive: Search All My Documents{PDF}.">Searchive</a>みたいにほぼReduxみたいなこともできるので、その辺はちゃんとドキュメントを整備していきたい。</p>
+
+<p><a href="https://github.com/almin/almin" title="Almin">Almin</a>へのコントビュートはいつでも歓迎しています。
+興味がある人は<a href="https://github.com/almin/almin/blob/master/.github/CONTRIBUTING.md" title="Contributing Guide">Contributing Guide</a>や<a href="https://github.com/almin/almin/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22">`label:&quot;good first issue&quot;</a>から見てくれると手が出しやすい気がします。</p>
+
+<p>増えたライブラリとかツール</p>
+
+<ul>
+<li><a href="https://github.com/almin/almin/tree/master/packages/almin-react-container" title="almin-react-container">almin-react-container</a>
+
+<ul>
+<li>AlminとReactを連携するContainerコンポーネント </li>
+</ul></li>
+<li><a href="https://github.com/almin/almin-usecase-map-generator" title="almin/almin-usecase-map-generator: Command line tool that generate UseCase map from almin&amp;#39;s UseCases.">almin/almin-usecase-map-generator: Command line tool that generate UseCase map from almin&#39;s UseCases.</a>
+
+<ul>
+<li>Alminのユースケースからユースケース図を自動生成するツール</li>
+<li>例) <a href="https://azu.github.io/faao/meta/use-case.html" title="Faao - UseCase architecture">Faao - UseCase architecture</a></li>
+</ul></li>
+</ul>
+
+<p><img src="https://github.com/almin/almin-usecase-map-generator/raw/master/out.png" alt="https://github.com/almin/almin-usecase-map-generator/raw/master/out.png"></p>
+
+<ul>
+<li><a href="https://github.com/almin/almin-devtools" title="almin/almin-devtools: Integrate almin into redux-devtools">almin/almin-devtools: Integrate almin into redux-devtools</a>
+
+<ul>
+<li><a href="https://github.com/zalmoxisus/redux-devtools-extension" title="redux-devtools-extension">redux-devtools-extension</a>をAlminを繋ぐ開発者ツール</li>
+<li>ActionとかStateを開発者ツール的に見られる</li>
+</ul></li>
+<li><a href="https://github.com/almin/migration-tools" title="almin/migration-tools: Migration scripts for Almin.">almin/migration-tools: Migration scripts for Almin.</a>
+
+<ul>
+<li>マイグレーションツール</li>
+<li><a href="https://github.com/avajs/ava-codemods" title="avajs/ava-codemods: Codemods for AVA">avajs/ava-codemods: Codemods for AVA</a>がかっこよかったので作った</li>
+<li>最近<a href="https://github.com/facebook/jscodeshift" title="jscodeshift">jscodeshift</a>があんまりアクティブじゃなくてちょっとリスクあるかもと思った</li>
+<li>Babelのメジャーアップデートもあるので</li>
+</ul></li>
+<li><a href="https://github.com/almin/ddd-base" title="almin/ddd-base: DDD base class library for JavaScript application.">almin/ddd-base: DDD base class library for JavaScript application.</a>
+
+<ul>
+<li>DDDには別にベースはいらないんだけど、やっぱり毎回同じような基礎部品がでてきてしまうのでその辺をとりあえず書いてみた</li>
+<li>これ自体が何かできるというわけでもないので、ちょっとだけ便利になるかも的な補助ライブラリ(設計は助けてくれない)<br></li>
+</ul></li>
+</ul>
+
+<p>本体もかなり書き換えてTypeScript化したり基盤部分のライフサイクルをしっかりもつようになった。後はどういうユースケースがあるかに基づいて進んでいく段階になっていると思う。</p>
+
+<ul>
+<li><a href="http://efcl.info/2017/07/24/almin-0.13/" title="Almin 0.13リリース - アプリケーションレイヤーのトランザクション | Web Scratch">Almin 0.13リリース - アプリケーションレイヤーのトランザクション | Web Scratch</a><br></li>
+<li><a href="http://efcl.info/2017/07/17/JavaScript-to-TypeScript/" title="JavaScriptのライブラリを徐々にTypeScriptに移行する | Web Scratch">JavaScriptのライブラリを徐々にTypeScriptに移行する | Web Scratch</a></li>
+<li><a href="http://efcl.info/2017/03/08/almim0.10/" title="Inroducing Almin 0.10.0: TypeScript, FlowType, Logger | Web Scratch">Inroducing Almin 0.10.0: TypeScript, FlowType, Logger | Web Scratch</a></li>
+</ul>
+
+<h2 id="textlint"><a href="https://github.com/textlint/textlint" title="textlint">textlint</a></h2>
+
+<p>自然言語のLintツールの<a href="https://github.com/textlint/textlint" title="textlint">textlint</a>はあいかわらず開発してて、色々なルールや本体の改善をした。</p>
+
+<p>この一年で</p>
+
+<ul>
+<li>TypeScript化
+
+<ul>
+<li><a href="http://efcl.info/2017/11/06/textlint-core-refactoring/" title="textlintのコアをTypeScriptで書き直した、textlintの今後について | Web Scratch">textlintのコアをTypeScriptで書き直した、textlintの今後について | Web Scratch</a></li>
+</ul></li>
+<li>monorepo化</li>
+<li>メインのコントビューターが2人増えた
+
+<ul>
+<li><a href="http://efcl.info/2017/12/18/textlint-10.0.0/" title="textlint 10.0.0 リリース | Web Scratch">textlint 10.0.0 リリース | Web Scratch</a></li>
+<li>人も増えて開発も活発化しています</li>
+</ul></li>
+</ul>
+
+<p>こちらも<a href="https://github.com/textlint/textlint/blob/master/.github/CONTRIBUTING.md" title="Contributing Guide">Contributing Guide</a>や初めてでも手が付けやすい<a href="https://github.com/textlint/textlint/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"><code>label:&quot;good first issue&quot;</code></a>がついたIssueがあります。</p>
+
+<ul>
+<li><a href="https://gist.github.com/azu/2b482e8e2aa636970f5f6110f6488719" title="textlintの直し方">textlintの直し方</a></li>
+</ul>
+
+<p>コントビュートはいつでも歓迎してるので、何かやってみたいという人はお知らせください。</p>
+
+<p><a href="https://gitter.im/textlint-ja/textlint-ja?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/textlint-ja/textlint-ja.svg" alt="Gitter"></a></p>
+
+<p>アプリ</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint-app" title="textlint/textlint-app: textlint standalone application top on Electron.">textlint/textlint-app: textlint standalone application top on Electron.</a>
+
+<ul>
+<li>Nodeのインストールもいらない単独で動くtextlintアプリ</li>
+<li><a href="http://efcl.info/2017/05/12/textlint-app/" title="textlintのElectronアプリを作った | Web Scratch">textlintのElectronアプリを作った | Web Scratch</a></li>
+<li>メンテしたいなー</li>
+</ul></li>
+</ul>
+
+<p>ルール</p>
+
+<ul>
+<li><a href="https://github.com/textlint-ja/textlint-rule-no-mixed-zenkaku-and-hankaku-alphabet" title="textlint-ja/textlint-rule-no-mixed-zenkaku-and-hankaku-alphabet: 全角と半角アルファベットを混在をチェックするtextlintルール">textlint-ja/textlint-rule-no-mixed-zenkaku-and-hankaku-alphabet: 全角と半角アルファベットを混在をチェックするtextlintルール</a></li>
+<li><a href="https://github.com/textlint-ja/textlint-rule-ja-unnatural-alphabet" title="textlint-ja/textlint-rule-ja-unnatural-alphabet: 不自然なアルファベットを検知するtextlintルール">textlint-ja/textlint-rule-ja-unnatural-alphabet: 不自然なアルファベットを検知するtextlintルール</a></li>
+<li><a href="https://github.com/azu/textlint-rule-period-in-list-item" title="azu/textlint-rule-period-in-list-item: textlint rule that check with or without period in list item.">azu/textlint-rule-period-in-list-item: textlint rule that check with or without period in list item.</a></li>
+<li><a href="https://github.com/textlint-ja/textlint-rule-no-insert-dropping-sa" title="textlint-ja/textlint-rule-no-insert-dropping-sa: サ抜き、サ入れ表現の誤用をチェックするtextlintルール">textlint-ja/textlint-rule-no-insert-dropping-sa: サ抜き、サ入れ表現の誤用をチェックするtextlintルール</a></li>
+<li><a href="https://github.com/azu/textlint-rule-abbr-within-parentheses" title="azu/textlint-rule-abbr-within-parentheses: textlint rule check if write abbreviations within parentheses.">azu/textlint-rule-abbr-within-parentheses: textlint rule check if write abbreviations within parentheses.</a></li>
+<li><a href="https://github.com/textlint-ja/textlint-rule-prefer-tari-tari" title="textlint-ja/textlint-rule-prefer-tari-tari: 例示・並列・対表現の「〜たり〜たりする」をチェックするtextlintルール">textlint-ja/textlint-rule-prefer-tari-tari: 例示・並列・対表現の「〜たり〜たりする」をチェックするtextlintルール</a></li>
+<li><a href="https://github.com/textlint-rule/textlint-rule-en-capitalization" title="textlint-rule/textlint-rule-en-capitalization: textlint rule that check capitalization in english text.">textlint-rule/textlint-rule-en-capitalization: textlint rule that check capitalization in english text.</a></li>
+<li><a href="https://github.com/textlint-rule/textlint-rule-preset-google" title="textlint-rule/textlint-rule-preset-google: [WIP] Google Developer Documentation Style Guide for textlint.">textlint-rule/textlint-rule-preset-google: [WIP] Google Developer Documentation Style Guide for textlint.</a>
+
+<ul>
+<li>Google開発者ドキュメントガイドのルール化</li>
+</ul></li>
+<li></li>
+</ul>
+
+<p>ライブラリ</p>
+
+<ul>
+<li><a href="https://github.com/azu/check-ends-with-period" title="azu/check-ends-with-period: Check the text is ends with period mark.">azu/check-ends-with-period: Check the text is ends with period mark.</a></li>
+<li><a href="https://github.com/azu/english-article-classifier" title="azu/english-article-classifier: Classifier english article(a, an).">azu/english-article-classifier: Classifier english article(a, an).</a></li>
+</ul>
+
+<p>関連</p>
+
+<ul>
+<li><a href="https://github.com/textlint-ja/technological-book-corpus-ja" title="textlint-ja/technological-book-corpus-ja: 日本語で書かれた技術書のコーパス">textlint-ja/technological-book-corpus-ja: 日本語で書かれた技術書のコーパス</a>
+
+<ul>
+<li>コーパス</li>
+</ul></li>
+<li><a href="https://github.com/azu/textlint-reviewdog-example" title="azu/textlint-reviewdog-example: textlint + reviewdog example project">azu/textlint-reviewdog-example: textlint + reviewdog example project</a>
+
+<ul>
+<li><a href="https://qiita.com/azu/items/c563da0b5455a1b1dca2" title="reviewdogを使ってtextlintの結果をPull Requestに書き込む方法 - Qiita">reviewdogを使ってtextlintの結果をPull Requestに書き込む方法 - Qiita</a>のサンプル</li>
+</ul></li>
+</ul>
+
+<h2 id="javascript入門本">JavaScript入門本</h2>
+
+<p><a href="https://github.com/asciidwango/js-primer" title="js-primer">js-primer</a>というJavaScriptの入門書を書いています。書く部分自体については殆ど決まっていていて、書く項目をあと少しになってきました。来年中にはなんとかなるはず。</p>
+
+<ul>
+<li><a href="https://asciidwango.github.io/js-primer/" title="この書籍について · JavaScriptの入門書 #jsprimer">この書籍について · JavaScriptの入門書 #jsprimer</a></li>
+</ul>
+
+<p>既にウェブで見られるので、おかしなところは気軽にIssue登録とかPR出してみてください。</p>
+
+<h2 id="その他">その他</h2>
+
+<h3 id="sc22-ecmascript-ad-hoc委員会"><a href="http://azu.github.io/slide/2016/jser5years/sc22-ecmascript-ahodc.html" title="SC22 ECMAScript Ad hoc委員会">SC22 ECMAScript Ad hoc委員会</a></h3>
+
+<p><a href="http://azu.github.io/slide/2016/jser5years/sc22-ecmascript-ahodc.html" title="SC22 ECMAScript Ad hoc委員会">SC22 ECMAScript Ad hoc委員会</a>の活動としてECMA 404やECMA 414のISO標準化のレビューをした。</p>
+
+<ul>
+<li><a href="http://efcl.info/2017/02/27/ecma-414/" title="ECMA-414 ECMAScript Specification Suiteについて | Web Scratch">ECMA-414 ECMAScript Specification Suiteについて | Web Scratch</a></li>
+<li><a href="https://dev.to/azu/ecma-404json-and-ecmascript-will-be-iso-standards-9g3" title="ECMA 404(JSON) and ECMAScript will be ISO standards">ECMA 404(JSON) and ECMAScript will be ISO standards</a></li>
+<li><a href="http://efcl.info/2017/04/24/node-25/" title="Node学園 25時限目でECMAScriptの国際標準化の話をした | Web Scratch">Node学園 25時限目でECMAScriptの国際標準化の話をした | Web Scratch</a></li>
+</ul>
+
+<h2 id="書けなかった">書けなかった</h2>
+
+<ul>
+<li><a href="https://github.com/azu/technical-writing-tips" title="azu/technical-writing-tips">azu/technical-writing-tips</a></li>
+<li><a href="https://github.com/azu/information-technology" title="azu/information-technology: 情報の読み方と伝え方">azu/information-technology: 情報の読み方と伝え方</a></li>
+</ul>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>完全に新規で作ってるものがちょっと減っている気がする。
+この辺はリソース配分の問題もあるけど、ちゃんと作っていきたい。</p>
+
+<p>後、手をつけようとしてちゃんと終わりまで持っていけてないものがちょこちょこ出てきているので、その辺をどうやれば進められるかを考えていきたい。</p>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>文中に制御文字が混じっているのを見つけて自動修正するtextlintルール</title>
@@ -1814,270 +2352,6 @@ textlint 9.0.0では<a href="https://github.com/textlint/textlint/tree/master/pa
 <h2 id="その他">その他</h2>
 
 <p><a href="https://gist.github.com/azu/2b482e8e2aa636970f5f6110f6488719" title="textlintの直し方">textlintの直し方</a>に簡単にコントビューション方法についてまとめています。</p>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた</title>
-   <link href="http://efcl.info/2017/10/31/nlp-pattern-match/"/>
-   <updated>2017-10-31T11:23:00+09:00</updated>
-   <id>http://efcl.info/2017/10/31/nlp-pattern-match</id>
-   <content type="html"><![CDATA[ <p><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>のルールを色々書いていて自然言語のマッチの問題がいくつかありました。</p>
-
-<p><a href="https://github.com/textlint-ja/textlint-rule-preset-JTF-style" title="textlint-ja/textlint-rule-preset-JTF-style: JTF日本語標準スタイルガイド for textlint.">textlint-ja/textlint-rule-preset-JTF-style: JTF日本語標準スタイルガイド for textlint.</a>は基本的に正規表現をベースに実装していました。
-正規表現で自然言語に対してマッチするのは簡単でいいのですが、意図しない範囲にマッチすることもあるためfalse-positiveになりやすい問題がありました。</p>
-
-<p>一方、ですます or である調の混在をチェックする<a href="https://github.com/textlint-ja/textlint-rule-no-mix-dearu-desumasu" title="textlint-rule-no-mix-dearu-desumasu">textlint-rule-no-mix-dearu-desumasu</a>では、<a href="https://github.com/takuyaa/kuromoji.js#api" title="kuromoji.js">kuromoji.js</a>などで形態素解析した結果を使っています。
-形態素解析をすることで(正しい日本語なら)より正確にマッチできます。</p>
-
-<p>しかし、形態素解析のトークンに対してマッチする処理やその情報を元に置換するのは結構面倒です。
-kuromojiが出力するトークンにマッチするライブラリなどを書いて使っていますが、それでもそこそこ面倒です。</p>
-
-<ul>
-<li><a href="https://github.com/azu/morpheme-match">azu/morpheme-match: match function that match token(形態素解析) with sentence.</a></li>
-<li><a href="https://github.com/azu/morpheme-match-all">azu/morpheme-match-all: A wrapper of morpheme-match API. Match all kuromoji&#39;s tokens.</a></li>
-</ul>
-
-<p>また、<a href="https://github.com/textlint-ja/textlint-rule-ja-no-abusage" title="textlint-ja/textlint-rule-ja-no-abusage: よくある日本語の誤用をチェックするtextlintルール">textlint-ja/textlint-rule-ja-no-abusage: よくある日本語の誤用をチェックするtextlintルール</a>などはマッチする範囲もトークンで指定するため、コードとしてもあまり読みやすくありません(単語が分解された大きなJSONを持つ形)</p>
-
-<p>この簡単にマッチできるが誤判定し易い正規表現と正確にマッチできるが面倒臭いトークンベースの中間なライブラリをつくりました。</p>
-
-<h2 id="nlp-pattern-match"><a href="https://github.com/azu/nlp-pattern-match" title="azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.">nlp-pattern-match</a></h2>
-
-<p><a href="https://github.com/azu/nlp-pattern-match" title="azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.">azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.</a>というリポジトリはmonorepoなのでいろんなライブラリが入っていますが、大きく分けて二種類のライブラリがあります。</p>
-
-<h3 id="パーサ">パーサ</h3>
-
-<p>一つは正確にマッチするのに必要な自然言語を分解するパーサ(形態素解析レベル)です。</p>
-
-<ul>
-<li><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-parse-english" title="nlcst-parse-english">nlcst-parse-english</a>
-
-<ul>
-<li>英語のテキストを単語に分解してPart-of-speech(POS)情報を付加したNLCST</li>
-</ul></li>
-<li><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-parse-japanese" title="nlcst-parse-japanese">nlcst-parse-japanese</a>
-
-<ul>
-<li>日本語のテキストを形態素解析したNLCST</li>
-</ul></li>
-</ul>
-
-<p><a href="https://github.com/syntax-tree/nlcst">NLCST</a>はNatural Language Concrete Syntax Treeのことで、自然言語のCST(スペースなどの位置情報も扱うASTみたいなもの)フォーマットです。
-NLCSTは<a href="https://github.com/wooorm/retext">retext</a>などが使っている形式で、ParagraphやSentence、WordなどのNodeから構成されます。</p>
-
-<p>たとえば、<code>&quot;ようこそ、日本へ。&quot;</code>のようなテキストをNLCSTにすると次のような巨大なNodeになります。(長いの省略)</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span><span class="nx">JapaneseParser</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-parse-japanese&quot;</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">japaneseParse</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">JapaneseParser</span><span class="p">();</span>
-<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;ようこそ、日本へ。&quot;</span><span class="p">;</span>
-<span class="nx">japaneseParse</span><span class="p">.</span><span class="nx">ready</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="kr">const</span> <span class="nx">CST</span> <span class="o">=</span> <span class="nx">japaneseParse</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">CST</span><span class="p">)</span>
-<span class="p">});</span>
-<span class="cm">/*</span>
-<span class="cm">{</span>
-<span class="cm">  &quot;type&quot;: &quot;RootNode&quot;,</span>
-<span class="cm">  &quot;children&quot;: [</span>
-<span class="cm">    {</span>
-<span class="cm">      &quot;type&quot;: &quot;ParagraphNode&quot;,</span>
-<span class="cm">      &quot;children&quot;: [</span>
-<span class="cm">        {</span>
-<span class="cm">          &quot;type&quot;: &quot;SentenceNode&quot;,</span>
-<span class="cm">          &quot;children&quot;: [</span>
-<span class="cm">            {</span>
-<span class="cm">              &quot;type&quot;: &quot;WordNode&quot;,</span>
-<span class="cm">              &quot;children&quot;: [</span>
-<span class="cm">                {</span>
-<span class="cm">                  &quot;type&quot;: &quot;TextNode&quot;,</span>
-<span class="cm">                  &quot;value&quot;: &quot;ようこそ&quot;,</span>
-<span class="cm">                  &quot;position&quot;: {</span>
-<span class="cm">                    &quot;start&quot;: {</span>
-<span class="cm">                      &quot;line&quot;: 1,</span>
-<span class="cm">                      &quot;column&quot;: 1,</span>
-<span class="cm">                      &quot;offset&quot;: 0</span>
-<span class="cm">                    },</span>
-<span class="cm">                    &quot;end&quot;: {</span>
-<span class="cm">                      &quot;line&quot;: 1,</span>
-<span class="cm">                      &quot;column&quot;: 5,</span>
-<span class="cm">                      &quot;offset&quot;: 4</span>
-<span class="cm">                    }</span>
-<span class="cm">                  },</span>
-<span class="cm">                  &quot;data&quot;: {</span>
-<span class="cm">                    &quot;word_id&quot;: 34120,</span>
-<span class="cm">                    &quot;word_type&quot;: &quot;KNOWN&quot;,</span>
-<span class="cm">                    &quot;word_position&quot;: 1,</span>
-<span class="cm">                    &quot;surface_form&quot;: &quot;ようこそ&quot;,</span>
-<span class="cm">                    &quot;pos&quot;: &quot;感動詞&quot;,</span>
-<span class="cm">                    &quot;pos_detail_1&quot;: &quot;*&quot;,</span>
-<span class="cm">                    &quot;pos_detail_2&quot;: &quot;*&quot;,</span>
-<span class="cm">                    &quot;pos_detail_3&quot;: &quot;*&quot;,</span>
-<span class="cm">                    &quot;conjugated_type&quot;: &quot;*&quot;,</span>
-<span class="cm">                    &quot;conjugated_form&quot;: &quot;*&quot;,</span>
-<span class="cm">                    &quot;basic_form&quot;: &quot;ようこそ&quot;,</span>
-<span class="cm">                    &quot;reading&quot;: &quot;ヨウコソ&quot;,</span>
-<span class="cm">                    &quot;pronunciation&quot;: &quot;ヨーコソ&quot;</span>
-<span class="cm">                  }</span>
-<span class="cm">                }</span>
-<span class="cm">              ],</span>
-<span class="cm">     ...</span>
-<span class="cm">}</span>
-<span class="cm">*/</span>
-</code></pre></div>
-<p>これらのパーサは、あるセンテンスの長さが100文字以下といった単語だけではわからない情報などを扱うのに利用できます。また単語の品詞などの情報もあります。</p>
-
-<h3 id="matcher">Matcher</h3>
-
-<p><a href="https://github.com/azu/nlp-pattern-match" title="azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.">nlp-pattern-match</a>に含んでいるもう一方はマッチングライブラリです。</p>
-
-<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-pattern-match" title="nlcst-pattern-match">nlcst-pattern-match</a>というmatcherは先ほどのパース結果のNodeを使った厳密なマッチをするライブラリです。</p>
-
-<p>タグ関数を使って、厳密にマッチしたい部分だけをNodeとして表現できます。 
-次の例では英語の<code>Bob &lt;動詞&gt; it.</code>にマッチする結果を取得できます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">PatternMatcher</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-pattern-match&quot;</span><span class="p">;</span>
-<span class="kr">import</span> <span class="p">{</span> <span class="nx">EnglishParser</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-parse-english&quot;</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">englishParser</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EnglishParser</span><span class="p">();</span>
-<span class="kr">const</span> <span class="nx">patternMatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PatternMatcher</span><span class="p">({</span>
-    <span class="nx">parser</span><span class="o">:</span> <span class="nx">englishParser</span>
-<span class="p">});</span>
-<span class="kr">const</span> <span class="nx">pattern</span> <span class="o">=</span> <span class="nx">patternMatcher</span><span class="p">.</span><span class="nx">tag</span><span class="err">`</span><span class="nx">Bob</span> <span class="nx">$</span><span class="p">{</span> <span class="p">{</span>
-    <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span>
-    <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">pos</span><span class="o">:</span> <span class="sr">/^VB/</span> <span class="c1">// verb</span>
-    <span class="p">}</span>
-<span class="p">}</span> <span class="p">}</span> <span class="nx">it</span><span class="p">.</span><span class="err">`</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;Bob does it.&quot;</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">patternMatcher</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">pattern</span><span class="p">);</span>
-<span class="kr">const</span> <span class="p">[</span><span class="nx">result</span><span class="p">]</span> <span class="o">=</span> <span class="nx">results</span><span class="p">;</span>
-<span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">position</span><span class="p">,</span> <span class="p">{</span>
-    <span class="nx">index</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nx">end</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">column</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
-        <span class="nx">line</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="nx">offset</span><span class="o">:</span> <span class="mi">12</span>
-    <span class="p">},</span>
-    <span class="nx">start</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">column</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="nx">line</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="nx">offset</span><span class="o">:</span> <span class="mi">0</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-</code></pre></div>
-<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-pattern-match" title="nlcst-pattern-match">nlcst-pattern-match</a>はより厳密なマッチをDSL的に書けるようにする趣旨のライブラリでしたが、もっと必要に応じて簡単に書けるライブラリとして<a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>があります。</p>
-
-<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>は名前の通り、とりまえず<code>match</code>して、実際にそれが対象なのかを<code>test</code>し、最後に<code>replace</code>するという三段階のライブラリです。
-正規表現で処理を書く場合に何でも一発の正規表現でやると難しくなるので、段階に分けてしまえばもっと簡単に書けるのではというコンセプトのライブラリです。</p>
-
-<p>最小のコードは、ほぼ<code>String#replace</code>と同じです。</p>
-
-<blockquote>
-<p>Match -&gt; Replace</p>
-</blockquote>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">replaceAll</span><span class="p">,</span> <span class="nx">matchTestReplace</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;match-test-replace&quot;</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;Hello&quot;</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">matchTestReplace</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="p">{</span>
-    <span class="nx">pattern</span><span class="o">:</span> <span class="sr">/hello/i</span><span class="p">,</span>
-    <span class="nx">replace</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">&quot;Hello&quot;</span>
-<span class="p">});</span>
-<span class="nx">assert</span><span class="p">.</span><span class="nx">ok</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">ok</span><span class="p">,</span> <span class="s2">&quot;should be ok: true&quot;</span><span class="p">);</span>
-<span class="c1">// 返り値はコマンドオブジェクト</span>
-<span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;1 replace&quot;</span><span class="p">);</span>
-<span class="cm">/**</span>
-<span class="cm">[ { index: 0, match: &#39;Hello&#39;, replace: &#39;Hello&#39;, message: undefined } ]</span>
-<span class="cm">*/</span>
-</code></pre></div>
-<p>少し複雑にして<code>/webkit/i</code>という文字列を<code>WebKit</code>に統一したいという例です。
-単純に<code>/webkit/i</code>でマッチすると<code>node-webkit</code>も含まれてしまうため、<code>node-</code>から始まる<code>webkit</code>は除外するというルールを<code>test</code>に追加しています。</p>
-
-<blockquote>
-<p>Match -&gt; Test -&gt; Replace</p>
-</blockquote>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">replaceAll</span><span class="p">,</span> <span class="nx">matchTestReplace</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;match-test-replace&quot;</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;webkit is matched,but node-webkit is not match&quot;</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">matchTestReplace</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="p">{</span>
-    <span class="nx">pattern</span><span class="o">:</span> <span class="sr">/(\S*?)webkit/g</span><span class="p">,</span>
-    <span class="nx">test</span><span class="o">:</span> <span class="p">({</span> <span class="nx">captures</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">captures</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!==</span> <span class="s2">&quot;node-&quot;</span><span class="p">;</span>
-    <span class="p">},</span>
-    <span class="nx">replace</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">&quot;WebKit&quot;</span>
-<span class="p">});</span>
-<span class="nx">assert</span><span class="p">.</span><span class="nx">ok</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">ok</span> <span class="o">===</span> <span class="kc">true</span><span class="p">,</span> <span class="s2">&quot;should be ok: false&quot;</span><span class="p">);</span>
-<span class="c1">// 返り値はコマンドオブジェクト</span>
-<span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;no replace&quot;</span><span class="p">);</span>
-<span class="c1">// 実際に置換を適応する</span>
-<span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">replaceAll</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">res</span><span class="p">.</span><span class="nx">results</span><span class="p">).</span><span class="nx">output</span><span class="p">,</span> <span class="s2">&quot;WebKit is matched,but node-webkit is not match&quot;</span><span class="p">);</span>
-</code></pre></div>
-<p>先ほどの<a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-pattern-match" title="nlcst-pattern-match">nlcst-pattern-match</a>を組み合わせると、適当にマッチした文字列の品詞をチェックしてから、それが意図した品詞なら置換するという処理が書けます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">assert</span> <span class="nx">from</span> <span class="s2">&quot;assert&quot;</span><span class="p">;</span>
-<span class="kr">import</span> <span class="p">{</span> <span class="nx">replaceAll</span><span class="p">,</span> <span class="nx">matchTestReplace</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;match-test-replace&quot;</span><span class="p">;</span>
-<span class="kr">import</span> <span class="p">{</span> <span class="nx">PatternMatcher</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-pattern-match&quot;</span><span class="p">;</span>
-<span class="kr">import</span> <span class="p">{</span> <span class="nx">EnglishParser</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;nlcst-parse-english&quot;</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">englishParser</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EnglishParser</span><span class="p">();</span>
-<span class="kr">const</span> <span class="nx">matcher</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PatternMatcher</span><span class="p">({</span> <span class="nx">parser</span><span class="o">:</span> <span class="nx">englishParser</span> <span class="p">});</span>
-<span class="c1">// https://developers.google.com/style/clause-order</span>
-<span class="c1">// NG: Click Delete if you want to delete the entire document.</span>
-<span class="c1">// OK: To delete the entire document, click Delete.</span>
-<span class="kr">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="s1">&#39;Click Delete if you want to delete the entire document.&#39;</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">matchTestReplace</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="p">{</span>
-    <span class="nx">pattern</span><span class="o">:</span> <span class="sr">/Click (\w+) if you want to (.+)./</span><span class="p">,</span>
-    <span class="nx">replace</span><span class="o">:</span> <span class="p">({</span> <span class="nx">captures</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">captures</span><span class="p">);</span>
-        <span class="k">return</span> <span class="err">`</span><span class="nx">To</span> <span class="nx">$</span><span class="p">{</span><span class="nx">captures</span><span class="p">[</span><span class="mi">1</span><span class="p">]},</span> <span class="nx">click</span> <span class="nx">$</span><span class="p">{</span><span class="nx">captures</span><span class="p">[</span><span class="mi">0</span><span class="p">]}.</span><span class="err">`</span>
-    <span class="p">},</span>
-    <span class="nx">test</span><span class="o">:</span> <span class="p">({</span> <span class="nx">all</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="kr">const</span> <span class="nx">pattern</span> <span class="o">=</span> <span class="nx">matcher</span><span class="p">.</span><span class="nx">tag</span><span class="err">`</span><span class="nx">Click</span> <span class="nx">$</span><span class="p">{</span> <span class="p">{</span>
-            <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;WordNode&quot;</span><span class="p">,</span>
-            <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
-                <span class="c1">// Verb</span>
-                <span class="nx">pos</span><span class="o">:</span> <span class="sr">/^VB/</span>
-            <span class="p">}</span>
-        <span class="p">}</span> <span class="p">}</span><span class="err">`</span><span class="p">;</span>
-        <span class="k">return</span> <span class="nx">matcher</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">all</span><span class="p">,</span> <span class="nx">pattern</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-<span class="nx">assert</span><span class="p">.</span><span class="nx">ok</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">ok</span> <span class="o">===</span> <span class="kc">true</span><span class="p">,</span> <span class="s2">&quot;should be ok: true&quot;</span><span class="p">);</span>
-<span class="kr">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="nx">replaceAll</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">res</span><span class="p">.</span><span class="nx">results</span><span class="p">).</span><span class="nx">output</span><span class="p">;</span>
-<span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">output</span><span class="p">,</span> <span class="s2">&quot;To delete the entire document, click Delete.&quot;</span><span class="p">);</span>
-</code></pre></div>
-<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>は大雑把に正規表現でマッチして、testで本当に意図したものかをチェックしてから置換するという工程を書くためのものです。</p>
-
-<p>このアプローチだと結構正規表現の気軽さを持ちつつ必要な部分で詳細な指定ができるため便利です。
-一方、今わかってる問題として大雑把に一度マッチするため、後からマッチする範囲を狭めることができない(無駄な範囲をReplaceしてしまう)という問題があります。</p>
-
-<p>いい案がある方はIssueとかPRを待ってます。</p>
-
-<h2 id="ユースケース">ユースケース</h2>
-
-<p>今このライブラリなどを使ってGoogleの<a href="https://developers.google.com/style/" title="About this guide  |  Google Developer Documentation Style Guide  |  Google Developers">Google Developer Documentation Style Guide</a>という開発者向けのドキュメントスタイルガイドを<a href="https://github.com/textlint/textlint" title="textlint">textlint</a>のルールとして実装しています。</p>
-
-<ul>
-<li><a href="https://github.com/textlint-rule/textlint-rule-preset-google%22textlint-rule/textlint-rule-preset-google:%20%5BWIP%5D%20Google%20Developer%20Documentation%20Style%20Guide%20for%20textlint.%22">textlint-rule/textlint-rule-preset-google: [WIP] Google Developer Documentation Style Guide for textlint.</a></li>
-</ul>
-
-<p><a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>や<a href="https://github.com/finnlp/en-pos" title="en-pos">en-pos</a>を中心に使って実装しています。
-感触としては30分~1時間ぐらいで1つのルール(1つのページ)を実装できているので、まあまあ効率的に実装できているかなーと思います。</p>
-
-<p>自分が英文法がよく分かってなかったり、係り受け解析ができない問題、そもそも主観的なルールなどもあるのですべてが実装できるわけではないですが、大雑把にマッチして意図して結果へ置換する処理を書けている感じがします。</p>
-
-<p>興味がある人は<a href="https://github.com/textlint-rule/textlint-rule-preset-google#rules" title="textlint-rule/textlint-rule-preset-google: [WIP] Google Developer Documentation Style Guide for textlint.">textlint-rule/textlint-rule-preset-google</a>にPull Request待っています。</p>
-
-<h2 id="おわりに">おわりに</h2>
-
-<p>textlintのルールなどを書くときに使える<a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/nlcst-pattern-match" title="nlcst-pattern-match">nlcst-pattern-match</a>というライブラリ群について紹介しました。</p>
-
-<p>文字列処理は色々文脈に依存したり、そもそも自然言語は壊れた文字列がエラーにならないなどの問題があるため難しいです。完璧な方法はないため目的にあった方法を使う必要があります。
-たとえば、今回作った<a href="https://github.com/azu/nlp-pattern-match/tree/master/packages/match-test-replace" title="match-test-replace">match-test-replace</a>は平面的に文字列マッチするだけなので、文字列を構造として捉えるならば色々不足している感じがします。</p>
-
-<p>これ以外にもセンテンス分解やピリオドの位置チェック、ですます・である調の分析などいろんなライブラリを書いています。</p>
-
-<ul>
-<li><a href="https://github.com/textlint/textlint/wiki/Collection-of-textlint-rule#global" title="Collection of textlint rule · textlint/textlint Wiki">Collection of textlint rule · textlint/textlint Wiki</a></li>
-</ul>
-
-<p>textlintをコマンド一発で作り始めることができる<code>create-textlint-rule</code>というコマンドもあるので、色々作って見ると面白いかもしれません。</p>
-
-<ul>
-<li><a href="http://efcl.info/2016/12/14/create-textlint-rule/" title="textlintのルールを簡単に作り始めることができるツールを作りました | Web Scratch">textlintのルールを簡単に作り始めることができるツールを作りました | Web Scratch</a></li>
-</ul>
  ]]></content>
  </entry>
  

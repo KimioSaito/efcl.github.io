@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+    <title>
+        
+        今年のOSS活動振り返り @ 2017 | Web Scratch
+        
+    </title>
+    <meta name="description" content="2017年のOSS活動の振り返り記事です。">
+    
+    <meta name="keywords" content="GitHub,OSS,JavaScript" />
+    
+    <meta name="author" content="azu">
+    <!-- Icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="/public/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="http://efcl.info/public/favicon.ico">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/public/css/main.css">
+    <!-- JavaScript -->
+    <!-- Open graph tags -->
+<meta property="og:title" content="今年のOSS活動振り返り @ 2017">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://efcl.info/2017/12/30/oss-in-2017/">
+<meta property="og:image" content="http://efcl.info/public/favicon.ico">
+
+<meta property="og:description" content="2017年のOSS活動の振り返り記事です。">
+<meta property="og:site_name" content="Web Scratch">
+
+
+
+
+<meta property="article:published_time" content="2017-12-30T21:04:00+09:00">
+<meta property="article:author" content="https://www.facebook.com/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/12/29/textlint-rule-no-invalid-control-character/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/12/26/docusaurus-almin/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/12/18/textlint-10.0.0/">
+
+
+
+
+
+<meta property="article:section" content="雑記">
+
+
+
+
+
+<meta property="article:tag" content="GitHub">
+
+<meta property="article:tag" content="OSS">
+
+<meta property="article:tag" content="JavaScript">
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-2184335-8', 'auto');
+    ga('send', 'pageview');
+</script>
+    <script>
+var blog_categories = [
+{
+    "title" : "greasemonkey",
+    "count" : 61
+},{
+    "title" : "ニコニコ動画",
+    "count" : 16
+},{
+    "title" : "小説電子化",
+    "count" : 3
+},{
+    "title" : "vista",
+    "count" : 12
+},{
+    "title" : "firefox",
+    "count" : 55
+},{
+    "title" : "その他",
+    "count" : 13
+},{
+    "title" : "webサービス",
+    "count" : 22
+},{
+    "title" : "software",
+    "count" : 59
+},{
+    "title" : "雑記",
+    "count" : 37
+},{
+    "title" : "まとめ",
+    "count" : 11
+},{
+    "title" : "zaurus",
+    "count" : 3
+},{
+    "title" : "ハードウェア",
+    "count" : 8
+},{
+    "title" : "アドオン",
+    "count" : 31
+},{
+    "title" : "wordpress",
+    "count" : 6
+},{
+    "title" : "javascript",
+    "count" : 195
+},{
+    "title" : "インストール設定",
+    "count" : 12
+},{
+    "title" : "iphone",
+    "count" : 10
+},{
+    "title" : "loox u",
+    "count" : 1
+},{
+    "title" : "tombloo",
+    "count" : 3
+},{
+    "title" : "イベント",
+    "count" : 92
+},{
+    "title" : "userchome.js",
+    "count" : 8
+},{
+    "title" : "jetpack",
+    "count" : 7
+},{
+    "title" : "onenote",
+    "count" : 2
+},{
+    "title" : "nilscript",
+    "count" : 4
+},{
+    "title" : "keysnail",
+    "count" : 3
+},{
+    "title" : "ios",
+    "count" : 15
+},{
+    "title" : "shell",
+    "count" : 3
+},{
+    "title" : "r言語",
+    "count" : 2
+},{
+    "title" : "node.js",
+    "count" : 3
+},{
+    "title" : "mac",
+    "count" : 2
+},{
+    "title" : "github",
+    "count" : 11
+},{
+    "title" : "jekyll",
+    "count" : 1
+},{
+    "title" : "golang",
+    "count" : 1
+},{
+    "title" : "web",
+    "count" : 1
+},{
+    "title" : "スライド",
+    "count" : 1
+},{
+    "title" : "ie",
+    "count" : 1
+},{
+    "title" : "書籍",
+    "count" : 2
+},{
+    "title" : "textlint",
+    "count" : 9
+}
+];
+    blog_categories = blog_categories.filter(function(categoryObject){
+        return !/^\d+$/.test(categoryObject.title);
+    });
+</script>
+</head>
+
+
+<body class="layout-reverse theme-base-0d">
+<a href="https://github.com/efcl/efcl.github.io" class="github-ribbon">
+    <img style="position: fixed; z-index:100; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+<header>
+    <div class="site-header">
+    <img src="/public/img/reimu-right.png" class="header-logo">
+
+    <h1 class="site-title">
+        <a href="/">
+            Web Scratch
+        </a>
+    </h1>
+    <p class="lead">ブラウザ/JavaScript等についてのブログ</p>
+
+</div>
+</header>
+<aside>
+    <div class="sidebar">
+    <div class="container">
+        <div class="profile">
+            <a href="/about/" title="About"><img src="/public/img/azu.png" alt="Profile"></a>
+
+            <h2><a href="/about/" title="About">azu</a></h2>
+        </div>
+        <div class="social">
+            <a class="twitter" href="http://twitter.com/azu_re" title="Twitter">
+                <img src="/public/svg/twitter.svg" alt="twitter" width="32" height="32"/>
+            </a>
+            <a class="github" href="https://github.com/azu" title="GitHub">
+                <img src="/public/svg/github.svg" alt="GitHub" width="32" height="32"/>
+            </a>
+            <a class="rss" href="/feed/" title="RSS Feed">
+                <img src="/public/svg/feed.svg" alt="RSS" width="32" height="32"/>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="search">
+                <form class="search-box" method="get" action="https://www.google.co.jp/search">
+                    <label for="search-box-label">検索:</label>
+                    <input type="hidden" name="q" value="site:efcl.info">
+                    <input id="search-box-label" type="search" name="q">
+                    <input type="submit" value="search">
+                </form>
+            </div>
+            <div class="recent">
+    <h3 class="recent-posts-list-title">
+        <a href="/">最近の投稿</a>
+    </h3>
+    <ul class="recent-posts">
+        
+        <li>
+            <a href="/2017/12/30/oss-in-2017/">
+                今年のOSS活動振り返り @ 2017
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/12/29/textlint-rule-no-invalid-control-character/">
+                文中に制御文字が混じっているのを見つけて自動修正するtextlintルール
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/12/26/docusaurus-almin/">
+                AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/12/18/textlint-10.0.0/">
+                textlint 10.0.0 リリース
+            </a>
+        </li>
+        
+    </ul>
+</div>
+            <div class="recent">
+    <h3 class="categories-list-title"><a href="/categories">カテゴリ一覧</a></h3>
+
+    <div class="categories-list" id="js-categories-list">
+
+    </div>
+    <script>
+        (function () {
+            var categoriesList = window.blog_categories;
+            var appendPoint = document.getElementById("js-categories-list");
+            // big ... small
+            var sortedCategories = categoriesList.sort(function (a, b) {
+                return a.count < b.count ? 1 : -1;
+            });
+            var ulTag = document.createElement("ul");
+            var displayCount = sortedCategories.length < 3 ? sortedCategories.length : 3;
+            for (var i = 0; i < displayCount; i++) {
+                var category = sortedCategories[i];
+                var liTag = document.createElement("li");
+                var aTag = document.createElement("a");
+                aTag.href = "/categories#" + category.title;
+                aTag.textContent = category.title;
+                var spanTag = document.createElement("span");
+                spanTag.appendChild(document.createTextNode("[" + category.count + "]"));
+                liTag.appendChild(aTag);
+                liTag.appendChild(spanTag);
+                ulTag.appendChild(liTag);
+            }
+            var lastLiTag = document.createElement("li");
+            var lastATag = document.createElement("a");
+            lastATag.href = "/categories";
+            lastATag.textContent = "その他のタグ…";
+            lastLiTag.appendChild(lastATag);
+            ulTag.appendChild(lastATag);
+            appendPoint.appendChild(ulTag);
+        })();
+    </script>
+</div>
+        </nav>
+    </div>
+</div>
+
+</aside>
+<article>
+    <div class="content container">
+        <div class="post" id="js-post-url" data-post-url="/2017/12/30/oss-in-2017/">
+    <h1 class="post-title">今年のOSS活動振り返り @ 2017</h1>
+
+    <div class="pre-post-toolbar">
+        <span class="post-date">2017年12月30日</span>
+        <a class="btn edit-on-github" href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-12-30-oss-in-2017.md"><span class="edito-on-github-label"></span>Edit on GitHub</a>
+
+    </div>
+    <div class="post-content">
+        <p>2017年のOSS活動の振り返り記事です。</p>
+
+<p>今までの振り返り。</p>
+
+<ul>
+<li><a href="http://efcl.info/2016/12/31/oss-in-2016/">今年のOSS活動振り返り @ 2016 | Web Scratch</a></li>
+<li><a href="http://efcl.info/2015/12/31/oss-in-2015/">今年のOSS活動振り返り @ 2015 | Web Scratch</a></li>
+<li><a href="http://efcl.info/2014/12/31/oss-in-2014/">今年のOSS活動振り返り @ 2014 | Web Scratch</a></li>
+</ul>
+
+<p>2017年のGitHubのContributionsは8000~10000ぐらいを推移していました。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2017/12/30-1514635832.png" alt="GitHub contributions"></p>
+
+<p>まあ1/3ぐらいは<a href="https://jser.info/" title="JSer.info">JSer.info</a>関連だと思います。</p>
+
+<p>今はGitHubに表示されないけど、Current Streakは1507日でした。(1507/365 = 4.128767123年)</p>
+
+<ul>
+<li><a href="https://azu.github.io/github-longest-streak/?user=azu" title="GitHub Full Longest Streak">GitHub Full Longest Streak:azu</a>
+
+<ul>
+<li>GitHubのLongest Streakを出してくれるツール</li>
+</ul></li>
+</ul>
+
+<h2 id="issue-pr">Issue/PR</h2>
+
+<ul>
+<li><a href="https://github.com/search?o=asc&amp;q=author%3Aazu+created%3A2017-01-01..2018-01-01+is%3Apr+&amp;s=updated&amp;type=Issues&amp;utf8=%E2%9C%93" title="Search · author:azu created:2017-01-01..2018-01-01 is:pr">PR</a>: 527
+
+<ul>
+<li>去年: 457</li>
+</ul></li>
+<li><a href="https://github.com/search?utf8=%E2%9C%93&amp;q=author%3Aazu+created%3A2017-01-01..2018-01-01+is%3Aissue+&amp;type=Issues">Issue</a>: 485
+
+<ul>
+<li>去年: 392</li>
+</ul></li>
+</ul>
+
+<p>大体同じ程度増えている感じらしい</p>
+
+<h2 id="作ったもの"><a href="https://github.com/search?utf8=%E2%9C%93&amp;q=user%3Atextlint+user%3Atextlint-rule+user%3Atextlint-ja+user%3Aalmin+user%3Aazu+created%3A2017-01-01..2018-01-01&amp;type=Repositories">作ったもの</a></h2>
+
+<blockquote>
+<p><a href="https://github.com/search?utf8=%E2%9C%93&amp;q=user%3Atextlint+user%3Atextlint-rule+user%3Atextlint-ja+user%3Aalmin+user%3Aazu+created%3A2017-01-01..2018-01-01&amp;type=Repositories">https://github.com/search?utf8=%E2%9C%93&amp;q=user%3Atextlint+user%3Atextlint-rule+user%3Atextlint-ja+user%3Aalmin+user%3Aazu+created%3A2017-01-01..2018-01-01&amp;type=Repositories</a></p>
+</blockquote>
+
+<ul>
+<li>今年: 95</li>
+<li>去年: 108</li>
+</ul>
+
+<p>去年より減ってる。</p>
+
+<p><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>、<a href="https://github.com/almin/almin">almin</a>、<a href="https://github.com/azu/searchive">searchive</a>、<a href="https://github.com/azu/immutable-array-prototype" title="immutable-array-prototype">immutable-array-prototype</a>などmonorepoを結構積極的に使うようになったのでその影響もあるのかも。</p>
+
+<p>順番に何を作ってたのかを見ていく</p>
+
+<ul>
+<li><a href="https://github.com/azu/web-application-template-2016" title="azu/web-application-template-2016">azu/web-application-template-2016</a>
+
+<ul>
+<li>ウェブアプリを書くときこういうテンプレ使ってる的なやつ</li>
+<li>今は<a href="https://qiita.com/azu/items/a149501ca1b5864000a3" title="React + TypeScript (+ Electron)でアプリを書き始めるときにやってること - Qiita">React + TypeScript (+ Electron)でアプリを書き始めるときにやってること - Qiita</a>みたいな感じになってる</li>
+<li>手元では<code>init*.sh</code>みたいのがなんこかあってそこから選んでるだけなので変わってない</li>
+</ul></li>
+<li><a href="https://github.com/azu/negaposi-analyzer-ja" title="negaposi-analyzer-ja">negaposi-analyzer-ja</a>
+
+<ul>
+<li>形態素解析したテキストからネガティブ/ポジティブ(単語感情極性)を判定したスコアを返すJavaScriptライブラリ</li>
+<li><a href="https://jser.info/2017/01/15/jser-info-6years/" title="JSer.info 6周年記念イベントを開催しました - JSer.info">JSer.info 6周年記念イベント</a>で<a href="http://azu.github.io/slide/2017/jser_info/how_to_make_jser_info.html" title="JSer.infoの作り方">JSer.infoの作り方</a>の発表のために作った気がする</li>
+<li>JSer.infoの紹介記事は偏りのある言葉を嫌うので、実際に今までのデータを解析するために作った</li>
+<li>実際にネガ・ポジは0に収束してそうだった的な話をした</li>
+</ul></li>
+</ul>
+
+<p><img src="http://azu.github.io/slide/2017/jser_info/resources/feeling-words.png" alt="JSer.infoの感情情極性"></p>
+
+<ul>
+<li><a href="https://github.com/azu/access-limit-http-proxy" title="access-limit-http-proxy">access-limit-http-proxy</a>
+
+<ul>
+<li>たしか数回リクエストした時の挙動を調べるテストを書くために作った気がする。</li>
+<li>3回アクセスしたら500返すみたいなプロキシ</li>
+</ul></li>
+<li><a href="https://github.com/azu/env-development" title="azu/env-development: Set $NODE_ENV to &amp;#34;development&amp;#34; works best with mocha --require=env-development">azu/env-development: Set $NODE_ENV to &quot;development&quot; works best with mocha --require=env-development</a>
+
+<ul>
+<li><code>process.env.NODE_ENV = &quot;development&quot;</code>するだけ</li>
+<li><code>mocha --require env-development</code> したかった</li>
+</ul></li>
+<li><a href="https://github.com/azu/uni-gitbook-server" title="azu/uni-gitbook-server: [WIP] [Unofficial] Alternative of GitBook server.">azu/uni-gitbook-server: [WIP] [Unofficial] Alternative of GitBook server.</a>
+
+<ul>
+<li>GitBookのビルドがあまりにも遅くて作ってた</li>
+<li>GitBookのwatch buildは変更 -&gt; サーバを止める -&gt; ビルド -&gt; サーバ再開 みたいな結構やばい感じだった</li>
+<li>GitBook 開発チームのレスポンスもあまりにも悪かったりしてちょこちょこ不満がある(PR出しても数ヶ月放置とかがよくある)</li>
+<li><a href="https://github.com/GitbookIO/gitbook/issues/1808" title="Is GitBook still alive? · Issue #1808 · GitbookIO/gitbook">Is GitBook still alive? · Issue #1808 · GitbookIO/gitbook</a></li>
+<li>小さな技術書を作るためのツールはやっぱり欲しいので、どうにかしたい</li>
+</ul></li>
+<li><a href="https://github.com/azu/search-prototype.js" title="azu/search-prototype.js: Search usage of prototype.js in your codes.">azu/search-prototype.js: Search usage of prototype.js in your codes.</a>
+
+<ul>
+<li>コード中に<a href="http://prototypejs.org/">prototype.js</a>のメソッドがないかを検出するツール</li>
+<li>公式のAPIレスポンスからメソッドのリストを作ってgraspを使ってASTで検索してる</li>
+<li><a href="http://efcl.info/2017/04/26/search-prototype.js/" title="コード中にあるprototype.jsの拡張メソッドを使ってる部分を検索するツール | Web Scratch">コード中にあるprototype.jsの拡張メソッドを使ってる部分を検索するツール | Web Scratch</a></li>
+<li>さすがにそろそろ亡くなったでしょうみたいな感じではあるけど、prototype拡張という性質上静的検索が難しいので、専用のツールを作った</li>
+</ul></li>
+<li><a href="https://github.com/azu/path-to-glob-pattern" title="azu/path-to-glob-pattern: Convert file/directory path to glob pattern.">azu/path-to-glob-pattern: Convert file/directory path to glob pattern.</a>
+
+<ul>
+<li><code>src/</code> =&gt; <code>src/**/*</code> みたいにglobに変換するライブラリ</li>
+<li><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>で使ってる</li>
+</ul></li>
+<li><a href="https://github.com/azu/get-github-pr-review-comments" title="azu/get-github-pr-review-comments: Get PR review comments from command line.">azu/get-github-pr-review-comments: Get PR review comments from command line.</a>
+
+<ul>
+<li><a href="http://efcl.info/2017/03/06/get-pull-request-review-comments/" title="GitHubのPull Requestのレビューコメントをコマンドラインから取得するツール | Web Scratch">GitHubのPull Requestのレビューコメントをコマンドラインから取得するツール | Web Scratch</a></li>
+</ul></li>
+<li><a href="https://github.com/azu/position-map-text-to-markdown" title="azu/position-map-text-to-markdown: Map rendered text/html position to Markdown position.">azu/position-map-text-to-markdown: Map rendered text/html position to Markdown position.</a>
+
+<ul>
+<li>Markdownのレンダリング済みテキストから、指定した文字列が元のMarkdownでどの位置にあるかを返すライブラリ</li>
+<li><a href="https://github.com/azu/gitbook-plugin-github-issue-feedback" title="gitbook-plugin-github-issue-feedback">gitbook-plugin-github-issue-feedback</a>のために作った</li>
+<li><a href="http://efcl.info/2017/05/29/gitbook-plugin-github-issue-for-review/" title="書いた文章をレビューしてGitHubにIssueを切るためのGitBookプラグイン | Web Scratch">書いた文章をレビューしてGitHubにIssueを切るためのGitBookプラグイン | Web Scratch</a></li>
+<li>レンダリング済みのHTMLから元のMarkdownの行数を見つける感じ</li>
+</ul></li>
+<li><a href="https://github.com/azu/strip-X-Frame-Options-proxy" title="azu/strip-X-Frame-Options-proxy: strip X-Frame-Options header for embedding on iframe.">azu/strip-X-Frame-Options-proxy: strip X-Frame-Options header for embedding on iframe.</a>
+
+<ul>
+<li>GitHubに3段階のiframe埋め込み拒否機能があってそれの検証</li>
+<li>CSP -&gt; <code>X-Frame-Options</code> -&gt; 埋め込みJavaScriptで<code>window.top</code>をとかをみてる拒否してくる</li>
+<li>結局は<code>Webview</code>とか使わないと埋め込めない</li>
+</ul></li>
+<li><a href="https://github.com/azu/can-use-webview" title="azu/can-use-webview: Detect if you can use electron&amp;#39; &amp;lt;webview&amp;gt;">azu/can-use-webview: Detect if you can use electron&#39; <webview></a>
+
+<ul>
+<li><code>webview</code>要素が使えるかどうかの判定</li>
+</ul></li>
+<li><a href="https://github.com/azu/check-invalid-control-characters" title="azu/check-invalid-control-characters: Check invalid control characters like `\u0008` in plain text.">azu/check-invalid-control-characters: Check invalid control characters like <code>\u0008</code> in plain text.</a>
+
+<ul>
+<li>Slack.app 、Electron、Chromeあたりで問題になった制御文字の問題を検出するツール</li>
+<li>最近textlintでもっと便利な感じのを書いた</li>
+<li><a href="http://efcl.info/2017/12/29/textlint-rule-no-invalid-control-character/" title="文中に制御文字が混じっているのを見つけて自動修正するtextlintルール | Web Scratch">文中に制御文字が混じっているのを見つけて自動修正するtextlintルール | Web Scratch</a></li>
+</ul></li>
+<li><a href="https://github.com/azu/localstorage-ponyfill" title="azu/localstorage-ponyfill: Universal LocalStorage for browser and Node.js.">azu/localstorage-ponyfill: Universal LocalStorage for browser and Node.js.</a>
+
+<ul>
+<li>ブラウザ、Node、Electronで動くみたいな目的の<code>localstorage</code></li>
+</ul></li>
+<li><a href="https://github.com/azu/video-events-debugger" title="azu/video-events-debugger: [WIP] HTML5 Video element events debugging tools.">azu/video-events-debugger: [WIP] HTML5 Video element events debugging tools.</a>
+
+<ul>
+<li><code>video</code>要素とかのイベントをひたすら見られるデバッガー</li>
+</ul></li>
+<li><a href="https://github.com/azu/faao" title="azu/faao: Faao is a GitHub issue/pull-request client on Electron.">azu/faao: Faao is a GitHub issue/pull-request client on Electron.</a>
+
+<ul>
+<li><a href="https://github.com/almin/almin" title="Almin">Almin</a>の技術ショーケースもかねて作ってたGitHub Issueクライアント</li>
+<li>ドメインモデルとかもしっかり考えて開発してる</li>
+<li><a href="http://azu.github.io/slide/2017/teppeis-sushi/client-side-ddd-on-github.html" title="Faao - ドメイン駆動設計で作るGitHub Issue Client -">Faao - ドメイン駆動設計で作るGitHub Issue Client -</a></li>
+<li>方向がしっかり決まってなかったけど、<a href="https://github.com/azu/faao/issues/85" title="Redesign Faao · Issue #85 · azu/faao">Redesign Faao · Issue #85 · azu/faao</a>で方向をちゃんと定め直して開発中</li>
+<li>単純に言えばGitHub Issueを使ってちゃんとTODO管理したいという話</li>
+</ul></li>
+<li><a href="https://github.com/azu/immutable-array-prototype" title="azu/immutable-array-prototype: A collection of Immutable Array prototype methods(Per method packages).">azu/immutable-array-prototype: A collection of Immutable Array prototype methods(Per method packages).</a>
+
+<ul>
+<li><code>Array#push</code> とかのImmutable版ほしいよねって感じで作った</li>
+<li><a href="http://efcl.info/2017/07/11/immutable-array/" title="Array.prototypeのImmutable版メソッドを個別のパッケージで使えるものを作った | Web Scratch">Array.prototypeのImmutable版メソッドを個別のパッケージで使えるものを作った | Web Scratch</a></li>
+<li><a href="https://github.com/azu/faao" title="Faao">Faao</a>でも使ってる
+
+<ul>
+<li>ドメインモデルもImmutableにしたいときにこういうシンプルで小さいパーツが便利で欲しかった</li>
+</ul></li>
+</ul></li>
+<li><a href="https://github.com/azu/node-browser-shim-gap" title="azu/node-browser-shim-gap: The gap issue between Node.js and Browser shims.">azu/node-browser-shim-gap: The gap issue between Node.js and Browser shims.</a>
+
+<ul>
+<li><a href="https://gist.github.com/azu/96471e0405afa20819e2eaeb91c944db" title="Node.jsコアモジュールとブラウザ向けShimの挙動の違い(ギャップ)について">Node.jsコアモジュールとブラウザ向けShimの挙動の違い(ギャップ)について</a>の問題</li>
+</ul></li>
+<li><a href="https://github.com/azu/text-map-kuromoji" title="azu/text-map-kuromoji: テキストを形態素解析した結果とテキストの関係をビジュアライズするエディタ">azu/text-map-kuromoji: テキストを形態素解析した結果とテキストの関係をビジュアライズするエディタ</a>
+
+<ul>
+<li><a href="http://efcl.info/2017/10/19/text-map-kuromoji/" title="kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする | Web Scratch">kuromoji.jsで形態素解析した結果とテキストの関係をビジュアライズする | Web Scratch</a></li>
+<li>ビジュアライズしたくなった</li>
+</ul></li>
+<li><a href="https://github.com/azu/mp3cat-bin" title="azu/mp3cat-bin: Binary wrapper for mp3cat - concat mp3 files.">azu/mp3cat-bin: Binary wrapper for mp3cat - concat mp3 files.</a>
+
+<ul>
+<li>mp3の結合</li>
+<li><a href="https://github.com/jser/podcast" title="jser/podcast: JSer.info podcast creator">jser/podcast: JSer.info podcast creator</a>関連</li>
+</ul></li>
+<li><a href="https://github.com/azu/git-commit-push-via-github-api" title="azu/git-commit-push-via-github-api: Git commit and push by using GitHub API. No depended on Git binary.">azu/git-commit-push-via-github-api: Git commit and push by using GitHub API. No depended on Git binary.</a>
+
+<ul>
+<li>GitHub APIだけでコミットやプッシュするライブラリ</li>
+<li>lambdaからpushしたかった</li>
+</ul></li>
+<li><a href="https://github.com/azu/pronunciation-lexicon-specification-json">azu/pronunciation-lexicon-specification-json: Convert JSON to Pronunciation Lexicon Specification (PLS) XML.</a></li>
+<li><a href="https://github.com/azu/pronunciation-lexicon-specification-yaml">azu/pronunciation-lexicon-specification-yaml: Convert YAML(YML) to Pronunciation Lexicon Specification(PLS) XML.</a>
+
+<ul>
+<li><a href="https://aws.amazon.com/jp/polly/" title="Amazon Polly">Amazon Polly</a>関係</li>
+<li>JSON or YAMLから<a href="http://www.asahi-net.or.jp/%7Eax2s-kmtn/ref/accessibility/REC-pronunciation-lexicon-20081014.html" title="発音辞書仕様（PLS）バージョン1.0">発音辞書仕様（PLS）バージョン1.0</a>を再生する</li>
+</ul></li>
+<li><a href="https://github.com/azu/move-github-repository" title="azu/move-github-repository: Move GitHub repository(Update description &amp;amp;&amp;amp; URL &amp;amp;&amp;amp; default branch &amp;amp;&amp;amp; Archived).">azu/move-github-repository: Move GitHub repository(Update description &amp;&amp; URL &amp;&amp; default branch &amp;&amp; Archived).</a>
+
+<ul>
+<li>monorepo化した後のリポジトリの後片付けツール</li>
+<li><a href="http://efcl.info/2017/05/22/move-github-repository/" title="GitHubのリポジトリをDeprecatedにするスクリプト | Web Scratch">GitHubのリポジトリをDeprecatedにするスクリプト | Web Scratch</a></li>
+<li>GitHubはTransferできないときに、そのリポジトリからリダイレクトとかできないのでその辺をいい感じにするツール</li>
+<li>最近追加されたArchieveにも対応した</li>
+</ul></li>
+<li><a href="https://github.com/azu/VideoPlaybackQuality-polyfill" title="azu/VideoPlaybackQuality-polyfill: A ponyfill/polyfill for VideoPlaybackQuality.">azu/VideoPlaybackQuality-polyfill: A ponyfill/polyfill for VideoPlaybackQuality.</a>
+
+<ul>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/API/HTMLVideoElement/getVideoPlaybackQuality" title="getVideoPlaybackQuality()">getVideoPlaybackQuality()</a>というAPIを知ったけど、Chromeが残念だったのでpolyfillを書いた</li>
+</ul></li>
+<li><a href="https://github.com/azu/alfred-hantebookmark-mydata" title="azu/alfred-hantebookmark-mydata: Search My HatenaBookmark in Alfred">azu/alfred-hantebookmark-mydata: Search My HatenaBookmark in Alfred</a>
+
+<ul>
+<li><a href="http://efcl.info/2017/10/20/alfred-hatenabookmark/" title="Alfred上で自分のはてなブックマークを検索できるWorkflow | Web Scratch">Alfred上で自分のはてなブックマークを検索できるWorkflow | Web Scratch</a></li>
+<li>検索 はてブ</li>
+</ul></li>
+<li><a href="https://github.com/azu/performance-mark-metadata" title="azu/performance-mark-metadata: `performance.mark` with custom meta data.">azu/performance-mark-metadata: <code>performance.mark</code> with custom meta data.</a>
+
+<ul>
+<li>クライアントサイドのメトリクスを作成するためのライブラリ</li>
+<li><a href="https://dev.to/azu/performancemark-with-medata-is-useful-for-real-user-monitoring-54p"><code>performance.mark</code> with metadata is useful for Real user monitoring</a></li>
+<li><a href="http://efcl.info/2017/11/15/performance.mark-metadata/">performance.markにメタデータを紐付けできるライブラリを書いた | Web Scratch</a></li>
+<li><a href="http://efcl.info/2017/09/20/almin-performance-profile-0.14.0/">Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch</a></li>
+<li>最近60ページぐらいのウェブアプリのパフォーマンス改善事例集(問題の見つけ方や修正方法、計測方法、動画とか実際のプロファイルみたいなやつ)を書いたけど、そこでも結構使った</li>
+</ul></li>
+<li><a href="https://github.com/azu/rc-config-loader" title="azu/rc-config-loader: Load config from .{product}rc.{json,yml,js} file">azu/rc-config-loader: Load config from .{product}rc.{json,yml,js} file</a>
+
+<ul>
+<li><code>.textlintrc</code>とかみたいによく見る設定ファイルを探して読み込むローダ</li>
+<li><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>で使ってる</li>
+<li><a href="https://github.com/davidtheclark/cosmiconfig" title="cosmiconfig">cosmiconfig</a>が昔非同期だけで、同期版が欲しくて作った</li>
+</ul></li>
+<li><a href="https://github.com/azu/github-label-setup" title="azu/github-label-setup: 📦 Setup GitHub label without configuration.">azu/github-label-setup: 📦 Setup GitHub label without configuration.</a>
+
+<ul>
+<li>最近リポジトリを作るときはラベルも設定するようにしてる</li>
+<li>そのテンプレラベルを集めたもの</li>
+<li><a href="http://efcl.info/2017/05/17/github-label/" title="GitHubのラベルをいい感じにセットアップするツール | Web Scratch">GitHubのラベルをいい感じにセットアップするツール | Web Scratch</a></li>
+<li>知見としてはGitHubは<code>good first issue</code>など特定のラベルは優遇(Issueの画面に案内が表示される)されているのでその辺はGitHubに合わせたほうがいい</li>
+</ul></li>
+<li><a href="https://github.com/azu/avoid-json-stringify-on-react" title="azu/avoid-json-stringify-on-react: Deep equal vs. Shallow equal on React&amp;#39;s shouldComponentUpdate">azu/avoid-json-stringify-on-react: Deep equal vs. Shallow equal on React&#39;s shouldComponentUpdate</a>
+
+<ul>
+<li>Reactの<code>shouldComponentUpdate</code>でshallow equalとdeep equalの話</li>
+<li><a href="https://reactjs.org/docs/react-component.html#shouldcomponentupdate">Reactの公式ドキュメントでJSON.stringifyとかで比較するな</a>って話があるのでそれを検証した</li>
+<li><a href="http://efcl.info/2017/11/30/shallow-equal/" title="shallow-equal for Object/React props | Web Scratch">shallow-equal for Object/React props | Web Scratch</a></li>
+</ul></li>
+<li><a href="https://github.com/azu/shallow-equal-object">azu/shallow-equal-object: Shallow equal check object that support TypeScript.</a></li>
+<li><a href="https://github.com/azu/shallow-equal-props">azu/shallow-equal-props: Shallow Equal for React&#39;s props. Help to implement shouldComponentUpdate.</a>
+
+<ul>
+<li>上の検証時に作ったshallow equalライブラリ</li>
+<li>デバッグオプションがあって何が違っているのかが確認できるので特徴</li>
+</ul></li>
+<li><a href="https://github.com/azu/what-is-this" title="azu/what-is-this: What value is `this` in Strict, Script, or Module?">azu/what-is-this: What value is <code>this</code> in Strict, Script, or Module?</a>
+
+<ul>
+<li>いろんなコンテキストで<code>this</code>の値を確認するサイト</li>
+<li><a href="https://azu.github.io/what-is-this/">https://azu.github.io/what-is-this/</a></li>
+<li><a href="https://asciidwango.github.io/js-primer/basic/function-this/" title="関数とthis · JavaScriptの入門書 #jsprimer">関数とthis · JavaScriptの入門書 #jsprimer</a>を書くために色々検証する目的で作った</li>
+<li>このツールでV8のモジュールコンテキストでは<code>this</code>がバグってるのを見つけて報告した</li>
+<li><a href="https://bugs.chromium.org/p/chromium/issues/detail?id=791334" title="791334 - `this` in top level Arrow Function in Module Context should be `undefined` - chromium - Monorail">791334 - <code>this</code> in top level Arrow Function in Module Context should be <code>undefined</code> - chromium - Monorail</a></li>
+</ul></li>
+<li><a href="https://github.com/azu/nlp-pattern-match" title="azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.">azu/nlp-pattern-match: Natural Language pattern matching library for JavaScript.</a>
+
+<ul>
+<li><a href="http://efcl.info/2017/10/31/nlp-pattern-match/" title="自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた | Web Scratch">自然言語にマッチする正規表現を書いて、形態素解析結果でテストして、置換するライブラリを書いた | Web Scratch</a></li>
+<li>言語処理をもっと楽にしたい！みたいな方向で書いてた</li>
+<li>最近は逆に言語処理をもっと丁寧にしたい！みたいな方向で<a href="https://github.com/azu/sentence-splitter" title="sentence-splitter">sentence-splitter</a>を書き直したりした</li>
+<li>多くの言語処理はただの文字列として扱ってるのが問題でその分いろんな情報がなくなってることに気づいてきた</li>
+<li><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>では文章はASTにしてから扱えるので、ASTのまま言語処理してコンテキストを維持して扱いたいみたいな方向を最近やっている</li>
+<li><a href="https://github.com/textlint/textlint/issues/366" title="Core rule utility · Issue #366 · textlint/textlint">Core rule utility · Issue #366 · textlint/textlint</a></li>
+</ul></li>
+</ul>
+
+<h2 id="searchive"><a href="https://github.com/azu/searchive" title="azu/searchive: Search All My Documents{PDF}.">Searchive</a></h2>
+
+<blockquote>
+<p><a href="https://github.com/azu/searchive" title="azu/searchive: Search All My Documents{PDF}.">azu/searchive: Search All My Documents{PDF}.</a></p>
+</blockquote>
+
+<p><a href="https://github.com/azu/searchive" title="azu/searchive: Search All My Documents{PDF}.">Searchive</a>というローカルのPDFを全文検索、串刺し検索するアプリを書いた。</p>
+
+<ul>
+<li><a href="http://efcl.info/2017/11/17/searchive/" title="ローカルのPDFを全文検索するクライアント/サーバ/Electronアプリを書いた | Web Scratch">ローカルのPDFを全文検索するクライアント/サーバ/Electronアプリを書いた | Web Scratch</a></li>
+</ul>
+
+<p>これもmonorepoでリポジトリにアプリ、クライアント、サーバ、CLIなどが全部入ってる。</p>
+
+<p>副産物</p>
+
+<ul>
+<li><a href="https://github.com/azu/search-query-tester" title="azu/search-query-tester: Test object with search query syntax.">azu/search-query-tester: Test object with search query syntax.</a>
+
+<ul>
+<li>GitHubみたいな検索演算子をパースしてオブジェクトにしてマッチしてくれる<br></li>
+</ul></li>
+</ul>
+
+<h2 id="ldr">LDR</h2>
+
+<p>残念ながらLDRが閉鎖したので<a href="http://www.inoreader.com/">Inoreader</a>に移行した。
+<a href="http://www.inoreader.com/">Inoreader</a>のクライアントは満足できなかったので、<a href="https://github.com/azu/irodr" title="azu/irodr: RSS reader client like LDR for Inoreader.">irodr</a>を作って使ってる</p>
+
+<ul>
+<li><a href="https://github.com/azu/ldr-export-opml" title="azu/ldr-export-opml: Convert exported json from LDR to opml with Rate.">azu/ldr-export-opml: Convert exported json from LDR to opml with Rate.</a>
+
+<ul>
+<li>LDR閉鎖にともなってエクスポートツールを作成した</li>
+<li><a href="http://efcl.info/2017/07/29/ldr-rate-export/" title="LDRのフィードをレート情報付きでエクスポートする | Web Scratch">LDRのフィードをレート情報付きでエクスポートする | Web Scratch</a></li>
+</ul></li>
+<li><a href="https://github.com/azu/irodr" title="azu/irodr: RSS reader client like LDR for Inoreader.">azu/irodr: RSS reader client like LDR for Inoreader.</a>
+
+<ul>
+<li><a href="http://efcl.info/2017/08/31/ldr-to-irodr/" title="LDRがサービス終了のため、Inoreader/Feedlyをバックエンドに動くRSSリーダを書いている | Web Scratch">LDRがサービス終了のため、Inoreader/Feedlyをバックエンドに動くRSSリーダを書いている | Web Scratch</a></li>
+</ul></li>
+<li><a href="http://irodr.netlify.com/">http://irodr.netlify.com/</a></li>
+</ul>
+
+<p>NetlifyのおかげてCORSも特に問題なくなった。
+ウェブで動くInoreaderのクライアントという感じで、LDRのときと同じぐらい使ってる。</p>
+
+<p>細かいバグとかもあるのでPR歓迎しています。
+基本的にまだレート読みしか考えて作ってないのでその辺のオプションが欲しい人もIssueなどどうぞ。</p>
+
+<ul>
+<li><a href="https://github.com/azu/irodr/issues" title="Issues · azu/irodr">Issues · azu/irodr</a></li>
+</ul>
+
+<p><a href="https://github.com/almin/almin" title="Almin">Almin</a>と<a href="https://developer.microsoft.com/en-us/fabric" title="Office UI Fabric">Office UI Fabric</a>(React)を使って作った。
+(2-3日ぐらいで突貫的に作れてよかった)</p>
+
+<h2 id="almin"><a href="https://github.com/almin/almin" title="Almin">Almin</a></h2>
+
+<p>最近Alminのサイトを<a href="https://docusaurus.io/" title="Docusaurus">Docusaurus</a>で作り直した。</p>
+
+<ul>
+<li><a href="http://efcl.info/2017/12/26/docusaurus-almin/" title="AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した | Web Scratch">AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した | Web Scratch</a></li>
+</ul>
+
+<p>Almin自体はあいかわらずアプリを作る際にもっとドメインに集中できるようにすることを目的に作ってる。最近、よそでも使ってくれてる人が増えてきてる。</p>
+
+<ul>
+<li><a href="https://qiita.com/kmdsbng/items/dc03d89c0ca5acc30a44" title="Almin.js がやってくれること - Qiita">Almin.js がやってくれること - Qiita</a></li>
+<li><a href="https://qiita.com/tsuwatch/items/d53c4bb940ecde7016de" title="Electronアプリをリリースするまでにあった知見 - Qiita">Electronアプリをリリースするまでにあった知見 - Qiita</a></li>
+</ul>
+
+<p>既にあるAPIを使ってアプリを作るみたいなところには<a href="https://github.com/almin/almin" title="Almin">Almin</a>は結構強い部分はあるし(クライアントに裁量を強く持たせられる)、<a href="https://github.com/azu/searchive" title="azu/searchive: Search All My Documents{PDF}.">Searchive</a>みたいにほぼReduxみたいなこともできるので、その辺はちゃんとドキュメントを整備していきたい。</p>
+
+<p><a href="https://github.com/almin/almin" title="Almin">Almin</a>へのコントビュートはいつでも歓迎しています。
+興味がある人は<a href="https://github.com/almin/almin/blob/master/.github/CONTRIBUTING.md" title="Contributing Guide">Contributing Guide</a>や<a href="https://github.com/almin/almin/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22">`label:&quot;good first issue&quot;</a>から見てくれると手が出しやすい気がします。</p>
+
+<p>増えたライブラリとかツール</p>
+
+<ul>
+<li><a href="https://github.com/almin/almin/tree/master/packages/almin-react-container" title="almin-react-container">almin-react-container</a>
+
+<ul>
+<li>AlminとReactを連携するContainerコンポーネント </li>
+</ul></li>
+<li><a href="https://github.com/almin/almin-usecase-map-generator" title="almin/almin-usecase-map-generator: Command line tool that generate UseCase map from almin&amp;#39;s UseCases.">almin/almin-usecase-map-generator: Command line tool that generate UseCase map from almin&#39;s UseCases.</a>
+
+<ul>
+<li>Alminのユースケースからユースケース図を自動生成するツール</li>
+<li>例) <a href="https://azu.github.io/faao/meta/use-case.html" title="Faao - UseCase architecture">Faao - UseCase architecture</a></li>
+</ul></li>
+</ul>
+
+<p><img src="https://github.com/almin/almin-usecase-map-generator/raw/master/out.png" alt="https://github.com/almin/almin-usecase-map-generator/raw/master/out.png"></p>
+
+<ul>
+<li><a href="https://github.com/almin/almin-devtools" title="almin/almin-devtools: Integrate almin into redux-devtools">almin/almin-devtools: Integrate almin into redux-devtools</a>
+
+<ul>
+<li><a href="https://github.com/zalmoxisus/redux-devtools-extension" title="redux-devtools-extension">redux-devtools-extension</a>をAlminを繋ぐ開発者ツール</li>
+<li>ActionとかStateを開発者ツール的に見られる</li>
+</ul></li>
+<li><a href="https://github.com/almin/migration-tools" title="almin/migration-tools: Migration scripts for Almin.">almin/migration-tools: Migration scripts for Almin.</a>
+
+<ul>
+<li>マイグレーションツール</li>
+<li><a href="https://github.com/avajs/ava-codemods" title="avajs/ava-codemods: Codemods for AVA">avajs/ava-codemods: Codemods for AVA</a>がかっこよかったので作った</li>
+<li>最近<a href="https://github.com/facebook/jscodeshift" title="jscodeshift">jscodeshift</a>があんまりアクティブじゃなくてちょっとリスクあるかもと思った</li>
+<li>Babelのメジャーアップデートもあるので</li>
+</ul></li>
+<li><a href="https://github.com/almin/ddd-base" title="almin/ddd-base: DDD base class library for JavaScript application.">almin/ddd-base: DDD base class library for JavaScript application.</a>
+
+<ul>
+<li>DDDには別にベースはいらないんだけど、やっぱり毎回同じような基礎部品がでてきてしまうのでその辺をとりあえず書いてみた</li>
+<li>これ自体が何かできるというわけでもないので、ちょっとだけ便利になるかも的な補助ライブラリ(設計は助けてくれない)<br></li>
+</ul></li>
+</ul>
+
+<p>本体もかなり書き換えてTypeScript化したり基盤部分のライフサイクルをしっかりもつようになった。後はどういうユースケースがあるかに基づいて進んでいく段階になっていると思う。</p>
+
+<ul>
+<li><a href="http://efcl.info/2017/07/24/almin-0.13/" title="Almin 0.13リリース - アプリケーションレイヤーのトランザクション | Web Scratch">Almin 0.13リリース - アプリケーションレイヤーのトランザクション | Web Scratch</a><br></li>
+<li><a href="http://efcl.info/2017/07/17/JavaScript-to-TypeScript/" title="JavaScriptのライブラリを徐々にTypeScriptに移行する | Web Scratch">JavaScriptのライブラリを徐々にTypeScriptに移行する | Web Scratch</a></li>
+<li><a href="http://efcl.info/2017/03/08/almim0.10/" title="Inroducing Almin 0.10.0: TypeScript, FlowType, Logger | Web Scratch">Inroducing Almin 0.10.0: TypeScript, FlowType, Logger | Web Scratch</a></li>
+</ul>
+
+<h2 id="textlint"><a href="https://github.com/textlint/textlint" title="textlint">textlint</a></h2>
+
+<p>自然言語のLintツールの<a href="https://github.com/textlint/textlint" title="textlint">textlint</a>はあいかわらず開発してて、色々なルールや本体の改善をした。</p>
+
+<p>この一年で</p>
+
+<ul>
+<li>TypeScript化
+
+<ul>
+<li><a href="http://efcl.info/2017/11/06/textlint-core-refactoring/" title="textlintのコアをTypeScriptで書き直した、textlintの今後について | Web Scratch">textlintのコアをTypeScriptで書き直した、textlintの今後について | Web Scratch</a></li>
+</ul></li>
+<li>monorepo化</li>
+<li>メインのコントビューターが2人増えた
+
+<ul>
+<li><a href="http://efcl.info/2017/12/18/textlint-10.0.0/" title="textlint 10.0.0 リリース | Web Scratch">textlint 10.0.0 リリース | Web Scratch</a></li>
+<li>人も増えて開発も活発化しています</li>
+</ul></li>
+</ul>
+
+<p>こちらも<a href="https://github.com/textlint/textlint/blob/master/.github/CONTRIBUTING.md" title="Contributing Guide">Contributing Guide</a>や初めてでも手が付けやすい<a href="https://github.com/textlint/textlint/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"><code>label:&quot;good first issue&quot;</code></a>がついたIssueがあります。</p>
+
+<ul>
+<li><a href="https://gist.github.com/azu/2b482e8e2aa636970f5f6110f6488719" title="textlintの直し方">textlintの直し方</a></li>
+</ul>
+
+<p>コントビュートはいつでも歓迎してるので、何かやってみたいという人はお知らせください。</p>
+
+<p><a href="https://gitter.im/textlint-ja/textlint-ja?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/textlint-ja/textlint-ja.svg" alt="Gitter"></a></p>
+
+<p>アプリ</p>
+
+<ul>
+<li><a href="https://github.com/textlint/textlint-app" title="textlint/textlint-app: textlint standalone application top on Electron.">textlint/textlint-app: textlint standalone application top on Electron.</a>
+
+<ul>
+<li>Nodeのインストールもいらない単独で動くtextlintアプリ</li>
+<li><a href="http://efcl.info/2017/05/12/textlint-app/" title="textlintのElectronアプリを作った | Web Scratch">textlintのElectronアプリを作った | Web Scratch</a></li>
+<li>メンテしたいなー</li>
+</ul></li>
+</ul>
+
+<p>ルール</p>
+
+<ul>
+<li><a href="https://github.com/textlint-ja/textlint-rule-no-mixed-zenkaku-and-hankaku-alphabet" title="textlint-ja/textlint-rule-no-mixed-zenkaku-and-hankaku-alphabet: 全角と半角アルファベットを混在をチェックするtextlintルール">textlint-ja/textlint-rule-no-mixed-zenkaku-and-hankaku-alphabet: 全角と半角アルファベットを混在をチェックするtextlintルール</a></li>
+<li><a href="https://github.com/textlint-ja/textlint-rule-ja-unnatural-alphabet" title="textlint-ja/textlint-rule-ja-unnatural-alphabet: 不自然なアルファベットを検知するtextlintルール">textlint-ja/textlint-rule-ja-unnatural-alphabet: 不自然なアルファベットを検知するtextlintルール</a></li>
+<li><a href="https://github.com/azu/textlint-rule-period-in-list-item" title="azu/textlint-rule-period-in-list-item: textlint rule that check with or without period in list item.">azu/textlint-rule-period-in-list-item: textlint rule that check with or without period in list item.</a></li>
+<li><a href="https://github.com/textlint-ja/textlint-rule-no-insert-dropping-sa" title="textlint-ja/textlint-rule-no-insert-dropping-sa: サ抜き、サ入れ表現の誤用をチェックするtextlintルール">textlint-ja/textlint-rule-no-insert-dropping-sa: サ抜き、サ入れ表現の誤用をチェックするtextlintルール</a></li>
+<li><a href="https://github.com/azu/textlint-rule-abbr-within-parentheses" title="azu/textlint-rule-abbr-within-parentheses: textlint rule check if write abbreviations within parentheses.">azu/textlint-rule-abbr-within-parentheses: textlint rule check if write abbreviations within parentheses.</a></li>
+<li><a href="https://github.com/textlint-ja/textlint-rule-prefer-tari-tari" title="textlint-ja/textlint-rule-prefer-tari-tari: 例示・並列・対表現の「〜たり〜たりする」をチェックするtextlintルール">textlint-ja/textlint-rule-prefer-tari-tari: 例示・並列・対表現の「〜たり〜たりする」をチェックするtextlintルール</a></li>
+<li><a href="https://github.com/textlint-rule/textlint-rule-en-capitalization" title="textlint-rule/textlint-rule-en-capitalization: textlint rule that check capitalization in english text.">textlint-rule/textlint-rule-en-capitalization: textlint rule that check capitalization in english text.</a></li>
+<li><a href="https://github.com/textlint-rule/textlint-rule-preset-google" title="textlint-rule/textlint-rule-preset-google: [WIP] Google Developer Documentation Style Guide for textlint.">textlint-rule/textlint-rule-preset-google: [WIP] Google Developer Documentation Style Guide for textlint.</a>
+
+<ul>
+<li>Google開発者ドキュメントガイドのルール化</li>
+</ul></li>
+<li></li>
+</ul>
+
+<p>ライブラリ</p>
+
+<ul>
+<li><a href="https://github.com/azu/check-ends-with-period" title="azu/check-ends-with-period: Check the text is ends with period mark.">azu/check-ends-with-period: Check the text is ends with period mark.</a></li>
+<li><a href="https://github.com/azu/english-article-classifier" title="azu/english-article-classifier: Classifier english article(a, an).">azu/english-article-classifier: Classifier english article(a, an).</a></li>
+</ul>
+
+<p>関連</p>
+
+<ul>
+<li><a href="https://github.com/textlint-ja/technological-book-corpus-ja" title="textlint-ja/technological-book-corpus-ja: 日本語で書かれた技術書のコーパス">textlint-ja/technological-book-corpus-ja: 日本語で書かれた技術書のコーパス</a>
+
+<ul>
+<li>コーパス</li>
+</ul></li>
+<li><a href="https://github.com/azu/textlint-reviewdog-example" title="azu/textlint-reviewdog-example: textlint + reviewdog example project">azu/textlint-reviewdog-example: textlint + reviewdog example project</a>
+
+<ul>
+<li><a href="https://qiita.com/azu/items/c563da0b5455a1b1dca2" title="reviewdogを使ってtextlintの結果をPull Requestに書き込む方法 - Qiita">reviewdogを使ってtextlintの結果をPull Requestに書き込む方法 - Qiita</a>のサンプル</li>
+</ul></li>
+</ul>
+
+<h2 id="javascript入門本">JavaScript入門本</h2>
+
+<p><a href="https://github.com/asciidwango/js-primer" title="js-primer">js-primer</a>というJavaScriptの入門書を書いています。書く部分自体については殆ど決まっていていて、書く項目をあと少しになってきました。来年中にはなんとかなるはず。</p>
+
+<ul>
+<li><a href="https://asciidwango.github.io/js-primer/" title="この書籍について · JavaScriptの入門書 #jsprimer">この書籍について · JavaScriptの入門書 #jsprimer</a></li>
+</ul>
+
+<p>既にウェブで見られるので、おかしなところは気軽にIssue登録とかPR出してみてください。</p>
+
+<h2 id="その他">その他</h2>
+
+<h3 id="sc22-ecmascript-ad-hoc委員会"><a href="http://azu.github.io/slide/2016/jser5years/sc22-ecmascript-ahodc.html" title="SC22 ECMAScript Ad hoc委員会">SC22 ECMAScript Ad hoc委員会</a></h3>
+
+<p><a href="http://azu.github.io/slide/2016/jser5years/sc22-ecmascript-ahodc.html" title="SC22 ECMAScript Ad hoc委員会">SC22 ECMAScript Ad hoc委員会</a>の活動としてECMA 404やECMA 414のISO標準化のレビューをした。</p>
+
+<ul>
+<li><a href="http://efcl.info/2017/02/27/ecma-414/" title="ECMA-414 ECMAScript Specification Suiteについて | Web Scratch">ECMA-414 ECMAScript Specification Suiteについて | Web Scratch</a></li>
+<li><a href="https://dev.to/azu/ecma-404json-and-ecmascript-will-be-iso-standards-9g3" title="ECMA 404(JSON) and ECMAScript will be ISO standards">ECMA 404(JSON) and ECMAScript will be ISO standards</a></li>
+<li><a href="http://efcl.info/2017/04/24/node-25/" title="Node学園 25時限目でECMAScriptの国際標準化の話をした | Web Scratch">Node学園 25時限目でECMAScriptの国際標準化の話をした | Web Scratch</a></li>
+</ul>
+
+<h2 id="書けなかった">書けなかった</h2>
+
+<ul>
+<li><a href="https://github.com/azu/technical-writing-tips" title="azu/technical-writing-tips">azu/technical-writing-tips</a></li>
+<li><a href="https://github.com/azu/information-technology" title="azu/information-technology: 情報の読み方と伝え方">azu/information-technology: 情報の読み方と伝え方</a></li>
+</ul>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>完全に新規で作ってるものがちょっと減っている気がする。
+この辺はリソース配分の問題もあるけど、ちゃんと作っていきたい。</p>
+
+<p>後、手をつけようとしてちゃんと終わりまで持っていけてないものがちょこちょこ出てきているので、その辺をどうやれば進められるかを考えていきたい。</p>
+
+    </div>
+    <div class="post-post-toolbar">
+        <a class="btn edit-on-github"
+           href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2017/2017-12-30-oss-in-2017.md"><span
+                class="edit-on-github-label"></span>修正リクエストをする</a>
+        <nav class="tags"
+             id="js-post-tags"
+             data-post-tags='["GitHub","OSS","JavaScript"]'>
+            <span>タグ:</span>
+            <ul>
+                
+                <li><a href="/tags/?q=GitHub">GitHub</a></li>
+                
+                <li><a href="/tags/?q=OSS">OSS</a></li>
+                
+                <li><a href="/tags/?q=JavaScript">JavaScript</a></li>
+                
+            </ul>
+        </nav>
+    </div>
+    <div class="announce-area">
+        <h3>お知らせ欄</h3>
+        <div class="announce-text">
+            <!--お知らせ-->
+JavaScriptに関する最新情報は週一で<a href="http://jser.info/" title="JSer.info">JSer.info</a>を更新しています。
+
+        </div>
+        <h3>次に書くかもしれない記事候補</h3>
+        <p>興味がありましたら<a href="https://github.com/efcl/efcl.github.io/labels/%E8%A8%98%E4%BA%8B%E5%80%99%E8%A3%9C" title="Issues · efcl/efcl.github.io">Issues · efcl/efcl.github.io</a>からご意見下さい</p>
+        <div class="announce-text">
+            <iframe src="https://azu.github.io/github-issue-widget/?owner=efcl&repo=efcl.github.io&labels=記事候補&limit=4&random"
+                    allowtransparency="true" frameborder="0" scrolling="0" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+    <div class="related-articles" id="js-related-articles">
+        <h3>関連記事</h3>
+    </div>
+</div>
+<div class="zenback-embed">
+    <!-- X:S ZenBackWidget --><div id="zenback-widget-loader"></div><script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var r=Math.ceil((new Date()*1)*Math.random());var j=d.createElement("script");j.id=i;j.async=true;j.src="//w.zenback.jp/v1/?base_uri=http%3A//efcl.info/&nsid=89229392978401102%3A%3A89229398078677080&rand="+r;d.body.appendChild(j);}}(document,"zenback-widget-js");</script><!-- X:E ZenBackWidget -->
+</div>
+<div class="disqus-embed" id="js-disqus-embed">
+    <button class="comment-button" id="js-comment-button">コメントを表示</button>
+</div>
+
+<script type="text/javascript" src="/public/js/tag-fetcher.js"></script>
+<script type="text/javascript" src="/public/js/show-related-article.js"></script>
+<script type="text/javascript" src="/public/js/show-disqus.js"></script>
+
+    </div>
+</article>
+</body>
+</html>
