@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2017-12-30T23:51:44+09:00</updated>
+ <updated>2017-12-31T00:01:45+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -279,7 +279,7 @@
 
 <ul>
 <li>上の検証時に作ったshallow equalライブラリ</li>
-<li>デバッグオプションがあって何が違っているのかが確認できるので特徴</li>
+<li>デバッグオプションがあって何が違っているのかが確認できるのが特徴</li>
 </ul></li>
 <li><a href="https://github.com/azu/what-is-this" title="azu/what-is-this: What value is `this` in Strict, Script, or Module?">azu/what-is-this: What value is <code>this</code> in Strict, Script, or Module?</a>
 
