@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-05T00:12:55+09:00</updated>
+ <updated>2018-01-05T00:14:04+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -800,7 +800,7 @@ Chrome 63では次のコードを&quot;Module&quot;コンテキストで実行�
 <li><a href="https://asciidwango.github.io/js-primer/basic/function-this/" title="関数とthis · JavaScriptの入門書 #jsprimer">関数とthis · JavaScriptの入門書 #jsprimer</a></li>
 </ul>
 
-<p>書籍の方の更新を追いたい方はリポジトリをStarやWatchしてください。</p>
+<p>書籍の更新を追いたい方はリポジトリをStarやWatchしてください。</p>
 
 <blockquote>
 <p><a href="https://github.com/asciidwango/js-primer" title="asciidwango/js-primer: JavaScriptの入門書">asciidwango/js-primer: JavaScriptの入門書</a></p>
