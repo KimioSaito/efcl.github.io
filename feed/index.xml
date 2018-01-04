@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-04T22:43:41+09:00</updated>
+ <updated>2018-01-04T22:55:12+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -40,6 +40,10 @@
 <p><a href="https://asciidwango.github.io/js-primer/basic/function-this/"><img src="http://efcl.info/wp-content/uploads/2018/01/04-1515061693.png" alt="バグ報告のフロー"></a></p>
 
 <p>前置きはこの辺までで、ここから本編。</p>
+
+<blockquote>
+<p>この記事では注釈がないコードはstrict modeとして扱います</p>
+</blockquote>
 
 <h1 id="ecmascript-2015以降のthis">ECMAScript 2015以降の<code>this</code></h1>
 
@@ -216,7 +220,7 @@ Arrow Function以外の関数では、関数の定義だけを見て<code>this</
 <span class="c1">// `outer`関数呼び出しのベースオブジェクトはない</span>
 <span class="nx">outer</span><span class="p">();</span>
 </code></pre></div>
-<p>この書籍では注釈がないコードはstrict modeとして扱いますが、コード例に<code>&quot;use strict&quot;;</code>でstrict modeを明示しています。
+<p>この記事では注釈がないコードはstrict modeとして扱いますが、コード例に<code>&quot;use strict&quot;;</code>でわざわざstrict modeを明示しています。
 なぜなら、strict modeではない場合に<code>this</code>が<code>undefined</code>の場合は、<code>this</code>がグローバルオブジェクトへと暗黙的に変換されてしまう問題があるからです。
 strict modeかどうかによって挙動が異なるのは混乱の元であるため、関数呼び出しする関数においては<code>this</code>を使うべきではありません。</p>
 
