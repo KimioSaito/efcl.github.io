@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-05T02:11:25+09:00</updated>
+ <updated>2018-01-05T07:59:10+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -81,6 +81,12 @@
 <li>関数は<code>fn()</code>と実行した場合の<code>this</code>の評価結果、メソッドは<code>obj.method()</code>と実行した場合の<code>this</code>の評価結果</li>
 </ul>
 
+<p>例えば、実行コンテキストが<strong>Script</strong>でstrict modeではない(NO)、<code>const fn = function(){ return this; }</code>における<code>this</code>は次のように評価した時に結果(<code>???</code>)を表にしたものです。</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script&gt;</span>
+<span class="kr">const</span> <span class="nx">fn</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span> <span class="k">return</span> <span class="k">this</span><span class="p">;</span> <span class="p">}</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">fn</span><span class="p">());</span> <span class="c1">// ???</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
 <p>表の結果がすべてわかっている人にはこの記事は不要だと思います。</p>
 
 <ul>
