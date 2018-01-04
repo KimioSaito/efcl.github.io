@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-04T22:11:53+09:00</updated>
+ <updated>2018-01-04T22:16:06+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -583,11 +583,11 @@ ES2015からはArrow Functionを使うのがもっとも簡潔です。</p>
 そのため、Arrow Function内には<code>this</code>が定義されていません。このときの<code>this</code>は外側のスコープ（関数）の<code>this</code>を参照します。</p>
 
 <p>なぜなら、スコープチェーンの性質として、そのスコープに同じ名前の変数が定義されていない場合には外側のスコープを探索するためです。
-そのため、Arrow Function内の<code>this</code>の参照先は、常に外側のスコープ（関数）へと探索しに行きます（詳細は<a href="../function-scope/README.md##scope-chain%7D">スコープチェーン</a>を参照）。
+そのため、Arrow Function内の<code>this</code>の参照先は、常に外側のスコープ（関数）へと探索しに行きます（詳細は<a href="https://asciidwango.github.io/js-primer/basic/function-scope/##scope-chain%7D">スコープチェーン</a>を参照）。
 また、<code>this</code>は読み取り専用のキーワードであるため、ユーザーが<code>this</code>という変数を定義できません。</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="k">this</span> <span class="o">=</span> <span class="s2">&quot;thisは読み取り専用&quot;</span><span class="p">;</span> <span class="c1">// =&gt; SyntaxError: Unexpected token this</span>
 </code></pre></div>
-<p>これにより、Arrow Functionにおける<code>this</code>は通常の変数と同じように、どの値を参照するかは静的に決まるという性質があります（詳細は<a href="../function-scope/README.md#static-scope">静的スコープ</a>を参照）。
+<p>これにより、Arrow Functionにおける<code>this</code>は通常の変数と同じように、どの値を参照するかは静的に決まるという性質があります（詳細は<a href="https://asciidwango.github.io/js-primer/basic/function-scope/#static-scope">静的スコープ</a>を参照）。
 つまりArrow Functionにおける<code>this</code>の参照先は「Arrow Function自身の外側のスコープにあるもっとも近い関数の<code>this</code>の値」となります。</p>
 
 <p>具体的な例を元にArrow Functionにおける<code>this</code>の動きを見ていきましょう。</p>
@@ -762,9 +762,17 @@ ES2015からはArrow Functionを使うのがもっとも簡潔です。</p>
 
 <h2 id="まとめ">まとめ</h2>
 
-<p><code>this</code>はオブジェクト指向プログラミングの文脈でJavaScriptに導入されました。[^awbjs]
+<p><code>this</code>はオブジェクト指向プログラミングのメソッドでの利用を目的としています。
 メソッド以外においても<code>this</code>は評価できますが、実行コンテキストやstrict modeなどによって結果が異なり混乱の元となります。
 そのため、メソッド以外では<code>this</code>を使うべきではありません（ここでは紹介してないコンストラクタは例外です）</p>
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">+infinity<br>JS `this` is for OO methods, not standalone functions. Never use `this` as a parameter to non-method functions. <a href="https://t.co/tFHkqEepcM">https://t.co/tFHkqEepcM</a></p>&mdash; Allen Wirfs-Brock (@awbjs) <a href="https://twitter.com/awbjs/status/938272440085446657?ref_src=twsrc%5Etfw">December 6, 2017</a></blockquote>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<blockquote>
+<p>ECMAScript 2015の仕様策定者であるAllen Wirfs-Brock‏氏の意見</p>
+</blockquote>
 
 <p>また、メソッドにおいても<code>this</code>は呼び出し方によって異なる値となり、それにより発生する問題と対処法についてを紹介しました。
 コールバック関数における<code>this</code>はArrow Functionを使うことで分かりやすく解決できます。
@@ -860,8 +868,6 @@ ES2015からはArrow Functionを使うのがもっとも簡潔です。</p>
 <li>もっと近い関数(Function Environment Records)の<code>[[ThisValue]]</code>の値が<code>this</code>の値となる</li>
 </ul></li>
 </ul>
-
-<p>[^awbjs]: ES 2015の仕様策定者であるAllen Wirfs-Brock‏氏もただの関数においては<code>this</code>を使うべきではないと述べている。<a href="https://twitter.com/awbjs/status/938272440085446657">https://twitter.com/awbjs/status/938272440085446657</a>;</p>
  ]]></content>
  </entry>
  
