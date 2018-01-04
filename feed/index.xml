@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-04T23:34:59+09:00</updated>
+ <updated>2018-01-04T23:42:50+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -887,7 +887,7 @@ Chrome 63では次のコードを&quot;Module&quot;コンテキストで実行�
 <li>見つかるまで再帰的に外側のEnvironment Recordsを探索する</li>
 <li>見つからない場合は、&quot;Script&quot;や&quot;Module&quot;の実行コンテキストの<code>this</code>の値になる</li>
 <li>&quot;Module&quot;の<a href="https://tc39.github.io/ecma262/#sec-module-environment-records-getthisbinding" title="GetThisBinding ( )">GetThisBinding ( )</a>は常に<code>undefined</code></li>
-<li>&quot;Script&quot;の<a href="https://tc39.github.io/ecma262/#sec-global-environment-records-getthisbinding" title="GetThisBinding ( )">GetThisBinding ( )</a>はグローバルオブジェクト</li>
+<li>&quot;Script&quot;の<a href="https://tc39.github.io/ecma262/#sec-global-environment-records-getthisbinding" title="GetThisBinding ( )">GetThisBinding ( )</a>は<code>[[GlobalThisValue]]</code></li>
 </ul></li>
 <li>ただし、Arrow Functionは<code>[[ThisValue]]</code>を持たないので必ずスキップされる</li>
 <li>もっと近い関数(Function Environment Records)の<code>[[ThisValue]]</code>の値が<code>this</code>の値となる</li>
