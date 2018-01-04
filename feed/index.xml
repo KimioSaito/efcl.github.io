@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-05T00:00:32+09:00</updated>
+ <updated>2018-01-05T00:12:55+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -745,6 +745,10 @@ ES2015からはArrow Functionを使うのがもっとも簡潔です。</p>
 その<code>this</code>の評価結果をまとめると次の表のようになります。</p>
 
 <p><img src="http://efcl.info/wp-content/uploads/2018/01/04-1515062936.png" alt="`this`の評価結果のまとめ"></p>
+
+<ul>
+<li><a href="https://gist.github.com/azu/9833e2f66bc8f0c97258ab0c81258469" title="`this` の穴埋めの解答">Gist: <code>this</code> の穴埋めの解答</a></li>
+</ul>
 
 <!-- textlint-disable -->
 
