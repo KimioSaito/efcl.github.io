@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-04T19:52:18+09:00</updated>
+ <updated>2018-01-04T22:01:14+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,858 @@
  </author>
  
 
+ 
+ <entry>
+   <title>ECMAScript 2015以降のJavaScriptの`this`を理解する</title>
+   <link href="http://efcl.info/2018/01/04/what-is-this/"/>
+   <updated>2018-01-04T19:02:00+09:00</updated>
+   <id>http://efcl.info/2018/01/04/what-is-this</id>
+   <content type="html"><![CDATA[ <p>この記事はJavaScriptの入門書として書いている<a href="https://github.com/asciidwango/js-primer" title="js-primer">js-primer</a>の<code>this</code>に関する部分をベースにしています。
+またjs-primerでは書けなかった現在時点(2018年1月1日)でのブラウザの挙動についてを加えたものです。</p>
+
+<p>次の場所に<a href="https://github.com/asciidwango/js-primer" title="js-primer">js-primer</a>版のか<code>this</code>についての解説があります。
+この記事と違って実際にコードを実行しながら読めるので、学習ソースとしては<a href="https://asciidwango.github.io/js-primer/basic/function-this/">js-primer版</a>を推奨します。</p>
+
+<ul>
+<li><a href="https://asciidwango.github.io/js-primer/basic/function-this/" title="関数とthis · JavaScriptの入門書 #jsprimer">関数とthis · JavaScriptの入門書 #jsprimer</a></li>
+<li><a href="https://github.com/asciidwango/js-primer" title="asciidwango/js-primer: JavaScriptの入門書">asciidwango/js-primer: JavaScriptの入門書</a></li>
+</ul>
+
+<p>また、バグ報告やPRも直接リポジトリにして問題ありません。
+おかしい場所を選択した状態で右下にある&quot;Bug Report&quot;ボタンを押せば、簡単にtypoとかのバグを報告できます。(PRでも歓迎)</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2018/01/04-1515061693.png" alt="バグ報告のフロー"></p>
+
+<p>前置きはこの辺までで、ここから本編。</p>
+
+<h1 id="ecmascript-2015以降のthis">ECMAScript 2015以降の<code>this</code></h1>
+
+<p>この記事では<code>this</code>という特殊な動作をするキーワードについてを見ていきます。
+<code>this</code>は基本的にはメソッドの中で利用し、それ以外では利用しません。
+しかし、<code>this</code>は読み取り専用のグローバル変数のようなものでどこにでも書くことができます。
+また、<code>this</code>の参照先は条件によってさまざまです。</p>
+
+<p><code>this</code>の参照先は主に次の条件によって変化します。</p>
+
+<ul>
+<li>実行コンテキストにおける<code>this</code></li>
+<li>コンストラクタにおける<code>this</code></li>
+<li>関数とメソッドにおける<code>this</code></li>
+<li>Arrow Functionにおける<code>this</code></li>
+</ul>
+
+<p>もっとも複雑な条件が存在するのは「関数とメソッドにおける<code>this</code>」です。
+そのためこの記事では関数と<code>this</code>の関係を主に扱います。
+(コンストラクタにおける<code>this</code>はクラスと一緒に学んだ方がいいので省きます。)</p>
+
+<p>この記事では、さまざまな条件下で変わる<code>this</code>の参照先と関数やArrow Functionとの関係を見ていきます。</p>
+
+<h2 id="目標-thisの評価結果を理解する">目標: <code>this</code>の評価結果を理解する</h2>
+
+<p><code>this</code>はさまざまな条件でその評価結果(参照先)は異なります。
+基本的な関数やメソッドについては次のようなパターンが考えられます。</p>
+
+<p>この記事では<code>???</code>となっている<code>this</code>の評価結果がなぜそうなるのかを理解できることを目標にします。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2018/01/04-1515062180.png" alt="`this`の評価結果の穴埋め"></p>
+
+<ul>
+<li><code>＊</code>はどの場合でも結果に影響しないということを示すワイルドカード</li>
+<li>関数は<code>fn()</code>と実行した場合の<code>this</code>の評価結果、メソッドは<code>obj.method()</code>と実行した場合の<code>this</code>の評価結果</li>
+</ul>
+
+<p>表の結果がすべてわかっている人にはこの記事は不要だと思います。</p>
+
+<ul>
+<li><a href="https://gist.github.com/azu/ca9d5a0f4b7c137bc5e2453f8783bf8c">Gist: 穴埋め用の<code>this</code>表</a></li>
+</ul>
+
+<p>記事の最後に答え合わせ用の表を置いています。</p>
+
+<h2 id="実行コンテキストとthis">実行コンテキストと<code>this</code></h2>
+
+<p>JavaScriptには実行コンテキストとして&quot;Script&quot;と&quot;Module&quot;があります。
+トップレベルにある<code>this</code>は、実行コンテキストによって値が異なります。
+実行コンテキストの違いは意識しにくい部分であり、トップレベルで<code>this</code>を使うことは混乱を生むことになります。
+そのため、コードのトップレベルにおいては<code>this</code>を使うべきではありませんが、それぞれの実行コンテキストにおける動作を紹介します。</p>
+
+<h3 id="スクリプトにおけるthis">スクリプトにおける<code>this</code></h3>
+
+<p>実行コンテキストが&quot;Script&quot;である場合、そのコード直下に書かれた<code>this</code>はグローバルオブジェクトを参照します。
+グローバルオブジェクトとは、実行環境において異なるものが定義されています。
+ブラウザなら<code>window</code>オブジェクト、Node.jsなら<code>global</code>オブジェクトとなります。</p>
+
+<p>ブラウザでは、<code>script</code>要素の<code>type</code>属性を指定してない場合は実行コンテキストが&quot;Script&quot;として実行されます。
+この<code>script</code>要素の直下に書いた<code>this</code>はグローバルオブジェクトである<code>window</code>オブジェクトとなります。</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script&gt;</span>
+<span class="c1">// 実行コンテキストは&quot;Script&quot;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">// =&gt; window</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+<h3 id="モジュールにおけるthis">モジュールにおける<code>this</code></h3>
+
+<p>実行コンテキストが&quot;Module&quot;である場合、そのコード直下に書かれた<code>this</code>は常に<code>undefined</code>となります。</p>
+
+<p>ブラウザでは、<code>script</code>要素の<code>type=&quot;module&quot;</code>属性がついた場合は実行コンテキストが&quot;Module&quot;として実行されます。
+この<code>script</code>要素の直下に書いた<code>this</code>は<code>undefined</code>となります。</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;module&quot;</span><span class="nt">&gt;</span>
+<span class="c1">// 実行コンテキストは&quot;Module&quot;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">// =&gt; undefined</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+<p>このように、コード直下の<code>this</code>は実行コンテキストによって<code>undefined</code>となる場合があります。
+単純にグローバルオブジェクトを参照したい場合は、<code>this</code>ではなく<code>window</code>などのグローバルオブジェクトを直接参照した方がよいです。</p>
+
+<h4 id="memo-note">:memo: Note</h4>
+
+<p>なぜModuleコンテキストではトップレベルの<code>this</code>が<code>undefined</code>となるかは次の記事で解説しています。</p>
+
+<ul>
+<li><a href="http://efcl.info/2015/05/06/this-is-es6-module/" title="ES6 moduleのtop levelにある`this`の値は何になるのか? | Web Scratch">ES6 moduleのtop levelにある<code>this</code>の値は何になるのか? | Web Scratch</a></li>
+</ul>
+
+<p>また現時点では環境へ依存せずにグローバルオブジェクトを取得するのはややこしい方法が必要です。
+しかし、現在(2018-01-01) Stage 3のProposalである<code>global</code>が将来的には利用できます。</p>
+
+<ul>
+<li><a href="https://github.com/tc39/proposal-global" title="tc39/proposal-global: ECMAScript Proposal, specs, and reference implementation for `global`">tc39/proposal-global: ECMAScript Proposal, specs, and reference implementation for <code>global</code></a></li>
+</ul>
+
+<h2 id="関数とメソッドにおけるthis">関数とメソッドにおける<code>this</code></h2>
+
+<p><strong>関数</strong>を定義する方法として、<code>function</code>キーワードによる関数宣言と関数式、Arrow Functionなどがあります。
+<code>this</code>が参照先を決めるルールはArrow Functionとそれ以外の方法で異なります。</p>
+
+<p>まずは<strong>Arrow Function以外</strong>の関数やメソッドにおける<code>this</code>を見ていきます。</p>
+
+<h2 id="arrow-function以外の関数におけるthis">Arrow Function以外の関数における<code>this</code></h2>
+
+<p>Arrow Function以外の関数（メソッドも含む)における<code>this</code>は実行時に決まる値となります。
+言い方をかえると<code>this</code>は関数に渡される暗黙的な引数のようなもので、その渡される値は関数を実行する時に決まります。</p>
+
+<p>次のコードは擬似的なものです。
+関数の中に書かれた<code>this</code>は、関数の呼び出し元から暗黙的に渡される値を参照することになります。
+このルールはArrow Function以外の関数やメソッドで共通した仕組みとなります。Arrow Functionで定義した関数やメソッドはこのルールとは別の仕組みとなります。</p>
+
+<!-- doctest:disable -->
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// 擬似的な`this`の値の仕組み</span>
+<span class="c1">// 関数は引数として暗黙的に`this`の値を受け取るイメージ</span>
+<span class="kd">function</span> <span class="nx">fn</span><span class="p">(</span><span class="err">暗黙的渡される</span><span class="k">this</span><span class="err">の値</span><span class="p">,</span> <span class="err">仮引数</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">// =&gt; 暗黙的渡されるthisの値</span>
+<span class="p">}</span>
+<span class="c1">// 暗黙的に`this`の値を引数として渡しているイメージ</span>
+<span class="nx">fn</span><span class="p">(</span><span class="err">暗黙的に渡す</span><span class="k">this</span><span class="err">の値</span><span class="p">,</span> <span class="err">引数</span><span class="p">);</span>
+</code></pre></div>
+<!-- textlint-disable no-js-function-paren -->
+
+<p>関数における<code>this</code>の基本的な参照先（暗黙的に関数に渡す<code>this</code>の値）は<strong>ベースオブジェクト</strong>となります。
+ベースオブジェクトとは「メソッドを呼ぶ際に、そのメソッドのドット演算子またはブラケット演算子のひとつ左にあるオブジェクト」のことを言います。
+ベースオブジェクトがない場合の<code>this</code>は<code>undefined</code>となります。</p>
+
+<p>たとえば、<code>fn()</code>のように関数を呼び出したとき、この<code>fn</code>関数呼び出しのベースオブジェクトはないため、<code>this</code>は<code>undefiend</code>となります。
+一方、<code>obj.method()</code>のようにメソッドを呼び出したとき、この<code>obj.method</code>メソッド呼び出しのベースオブジェクトは<code>obj</code>オブジェクトとなり、<code>this</code>は<code>obj</code>となります。</p>
+
+<!-- textlint-enable no-js-function-paren -->
+
+<!-- doctest:disable -->
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// `fn`関数はメソッドではないのでベースオブジェクトはない</span>
+<span class="nx">fn</span><span class="p">();</span>
+<span class="c1">// `obj.method`メソッドのベースオブジェクトは`obj`</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">method</span><span class="p">();</span>
+<span class="c1">// `obj1.obj2.method`メソッドのベースオブジェクトは`obj2`</span>
+<span class="c1">// ドット演算子、ブラケット演算子どちらも結果は同じ</span>
+<span class="nx">obj1</span><span class="p">.</span><span class="nx">obj2</span><span class="p">.</span><span class="nx">method</span><span class="p">();</span>
+<span class="nx">obj1</span><span class="p">[</span><span class="s2">&quot;obj2&quot;</span><span class="p">][</span><span class="s2">&quot;method&quot;</span><span class="p">]();</span>
+</code></pre></div>
+<p><code>this</code>は関数の定義ではなく呼び出し方で参照する値が異なります。これは、後述する「<code>this</code>が問題となるパターン」で詳しく紹介します。
+Arrow Function以外の関数では、関数の定義だけを見て<code>this</code>の値が何かということは決定できない点には注意が必要です。</p>
+
+<h3 id="関数宣言や関数式におけるthis">関数宣言や関数式における<code>this</code></h3>
+
+<p>まずは、関数宣言や関数式の場合を見ていきます。</p>
+
+<p>次の例では、関数宣言と関数式で定義した関数の中の<code>this</code>をコンソールに出力しています。
+このとき、<code>fn1</code>と<code>fn2</code>はただの関数として呼び出されています。
+つまり、ベースオブジェクトがないため<code>this</code>は<code>undefined</code>となります。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kd">function</span> <span class="nx">fn1</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kr">const</span> <span class="nx">fn2</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="c1">// 関数の中の`this`が参照する値は呼び出し方によって決まる</span>
+<span class="c1">// `fn1`と`fn2`どちらもただの関数として呼び出している</span>
+<span class="c1">// メソッドとして呼び出していないためベースオブジェクトはない</span>
+<span class="c1">// ベースオブジェクトがない場合、`this`は`undefined`となる</span>
+<span class="nx">fn1</span><span class="p">();</span> <span class="c1">// =&gt; undefined</span>
+<span class="nx">fn2</span><span class="p">();</span> <span class="c1">// =&gt; undefined</span>
+</code></pre></div>
+<p>これは、関数の中に関数を定義して呼びだす場合も同じです。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kd">function</span> <span class="nx">outer</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">// =&gt; undefined</span>
+    <span class="kd">function</span> <span class="nx">inner</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">// =&gt; undefined</span>
+    <span class="p">}</span>
+    <span class="c1">// `inner`関数呼び出しのベースオブジェクトはない</span>
+    <span class="nx">inner</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="c1">// `outer`関数呼び出しのベースオブジェクトはない</span>
+<span class="nx">outer</span><span class="p">();</span>
+</code></pre></div>
+<p>この書籍では注釈がないコードはstrict modeとして扱いますが、コード例に<code>&quot;use strict&quot;;</code>でstrict modeを明示しています。
+なぜなら、strict modeではない場合に<code>this</code>が<code>undefined</code>の場合は、<code>this</code>がグローバルオブジェクトへと暗黙的に変換されてしまう問題があるからです。
+strict modeかどうかによって挙動が異なるのは混乱の元であるため、関数呼び出しする関数においては<code>this</code>を使うべきではありません。</p>
+
+<ul>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/JavaScript/Strict_mode" title="Strict モード - JavaScript | MDN">Strict モード - JavaScript | MDN</a></li>
+</ul>
+
+<h3 id="メソッド呼び出しにおけるthis">メソッド呼び出しにおける<code>this</code></h3>
+
+<p>次に、メソッドの場合を見ていきます。
+メソッドの場合は、そのメソッドは何かしらのオブジェクトに所属しています。
+なぜなら、JavaScriptではオブジェクトのプロパティとして指定される関数のことをメソッドと呼ぶためです。</p>
+
+<p>次の例では<code>method1</code>と<code>method2</code>はそれぞれメソッドとして呼び出されています。
+このとき、それぞれのベースオブジェクトは<code>object</code>となり、<code>this</code>は<code>object</code>となります。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1">// 関数式をプロパティの値にしたメソッド</span>
+    <span class="nx">method1</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="c1">// 短縮記法で定義したメソッド</span>
+    <span class="nx">method2</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// メソッド呼び出しの場合、それぞれの`this`はベースオブジェクト(`object`)を参照する</span>
+<span class="c1">// メソッド呼び出しの`.`の左にあるオブジェクトがベースオブジェクト</span>
+<span class="nx">object</span><span class="p">.</span><span class="nx">method1</span><span class="p">();</span> <span class="c1">// =&gt; object</span>
+<span class="nx">object</span><span class="p">.</span><span class="nx">method2</span><span class="p">();</span> <span class="c1">// =&gt; object</span>
+</code></pre></div>
+<p>これを利用すれば、メソッドの中から同じオブジェクトに所属する別のプロパティを<code>this</code>で参照できます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">fullName</span><span class="o">:</span> <span class="s2">&quot;Brendan Eich&quot;</span><span class="p">,</span>
+    <span class="nx">sayName</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// `person.fullName`と書いているのと同じ</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">fullName</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// `person.fullName`を出力する</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person</span><span class="p">.</span><span class="nx">sayName</span><span class="p">());</span> <span class="c1">// =&gt; &quot;Brendan Eich&quot;</span>
+</code></pre></div>
+<p>このようにメソッドが所属するオブジェクトのプロパティを、<code>オブジェクト名.プロパティ名</code>の代わりに<code>this.プロパティ名</code>で参照できます。</p>
+
+<p>オブジェクトは何重にもネストできますが、<code>this</code>はベースオブジェクトを参照するというルールは同じです。</p>
+
+<p>次のコードを見てみると、ネストしたオブジェクトにおいてメソッド内の<code>this</code>がベースオブジェクトである<code>obj3</code>を参照していることが分かります。
+このときのベースオブジェクトはドットで繋いだ一番左の<code>obj1</code>ではなく、メソッドから見てひとつ左の<code>obj3</code>となります。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">obj1</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">obj2</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">obj3</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">method</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// `obj1.obj2.obj3.method`メソッドの`this`は`obj3`を参照</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj1</span><span class="p">.</span><span class="nx">obj2</span><span class="p">.</span><span class="nx">obj3</span><span class="p">.</span><span class="nx">method</span><span class="p">()</span> <span class="o">===</span> <span class="nx">obj1</span><span class="p">.</span><span class="nx">obj2</span><span class="p">.</span><span class="nx">obj3</span><span class="p">);</span> <span class="c1">// =&gt; true</span>
+</code></pre></div>
+<h2 id="thisが問題となるパターン"><code>this</code>が問題となるパターン</h2>
+
+<p><code>this</code>はその関数（メソッドも含む）呼び出しのベースオブジェクトを参照することがわかりました。
+<code>this</code>は所属するオブジェクトを直接書く代わりとして利用できますが、一方<code>this</code>には色々な問題があります。</p>
+
+<p>この問題の原因は<code>this</code>がどの値を参照するかは関数の呼び出し時に決まるという性質に由来します。
+この<code>this</code>の性質が問題となるパターンの代表的な2つの例とそれぞれの対策についてを見ていきます。</p>
+
+<h3 id="問題-thisを含むメソッドを変数に代入した場合">問題: <code>this</code>を含むメソッドを変数に代入した場合</h3>
+
+<p>JavaScriptではメソッドとして定義したものが、後からただの関数として呼び出されることがあります。
+なぜなら、メソッドは関数を値にもつプロパティのことで、プロパティは変数に代入し直すことができるためです。</p>
+
+<p>そのため、メソッドとして定義した関数も、別の変数に代入してただの関数として呼び出されることがあります。
+この場合には、メソッドとして定義した関数であっても、実行時にはただの関数であるためベースオブジェクトが変わっています。
+これは<code>this</code>が定義した時点ではなく実行した時に決まるという性質そのものです。</p>
+
+<p>具体的に、<code>this</code>が実行時に変わる例を見ていましょう。
+次の例では、<code>person.sayName</code>メソッドを変数<code>say</code>に代入してから実行しています。
+このときの<code>say</code>関数(<code>sayName</code>メソッドを参照)のベースオブジェクトはありません。
+そのため、<code>this</code>は<code>undefined</code>となり、<code>undefined.fullName</code>は参照できずに例外をなげます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">fullName</span><span class="o">:</span> <span class="s2">&quot;Brendan Eich&quot;</span><span class="p">,</span>
+    <span class="nx">sayName</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// `this`は呼び出し元によってことなる</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">fullName</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// `sayName`メソッドは`person`オブジェクトに所属する</span>
+<span class="c1">// `this`は`person`オブジェクトとなる</span>
+<span class="nx">person</span><span class="p">.</span><span class="nx">sayName</span><span class="p">();</span> <span class="c1">// =&gt; &quot;Brendan Eich&quot;</span>
+<span class="c1">// `person.sayName`を`say`変数に代入する</span>
+<span class="kr">const</span> <span class="nx">say</span> <span class="o">=</span> <span class="nx">person</span><span class="p">.</span><span class="nx">sayName</span><span class="p">;</span>
+<span class="c1">// 代入したメソッドを関数として呼ぶ</span>
+<span class="c1">// この`say`関数はどのオブジェクトにも所属していない</span>
+<span class="c1">// `this`はundefinedとなるため例外を投げる</span>
+<span class="nx">say</span><span class="p">();</span> <span class="c1">// =&gt; TypeError: Cannot read property &#39;fullName&#39; of undefined</span>
+</code></pre></div>
+<p>結果的には、次のようなコードが実行されているのと同じです。
+次のコードでは、<code>undefined.fullName</code>を参照しようとして例外が発生しています。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// const sayName = person.sayName; は次のようなイメージ</span>
+<span class="kr">const</span> <span class="nx">say</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">fullName</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="c1">// `this`は`undefined`となるため例外をなげる</span>
+<span class="nx">say</span><span class="p">();</span> <span class="c1">// =&gt; TypeError: Cannot read property &#39;fullName&#39; of undefined</span>
+</code></pre></div>
+<p>このように、Arrow Function以外の関数において、<code>this</code>は定義した時ではなく実行した時に決定されます。
+そのため、関数に<code>this</code>を含んでいる場合、その関数は意図した呼ばれ方がされないと間違った結果が発生するという問題があります。</p>
+
+<p>この問題の対処法法としては大きく分けて2つあります。</p>
+
+<p>ひとつはメソッドとして定義されている関数はメソッドとして呼ぶということです。
+メソッドをわざわざただの関数として呼ばなければそもそもこの問題は発生しません。</p>
+
+<p>もうひとつは、<code>this</code>の値を指定して関数を呼べるメソッドで関数を実行する方法です。</p>
+
+<h3 id="対処法-call、apply、bindメソッド">対処法: call、apply、bindメソッド</h3>
+
+<p>関数やメソッドの<code>this</code>を明示的に指定して関数を実行する方法もあります。
+<code>Function</code>（関数オブジェクト）には<code>call</code>、<code>apply</code>、<code>bind</code>といった明示的に<code>this</code>を指定して関数を実行するメソッドが用意されています。</p>
+
+<p><code>call</code>メソッドは第一引数に<code>this</code>としたい値を指定し、残りの引数は呼びだす関数の引数となります。
+暗黙的に渡される<code>this</code>の値を明示的に渡せるメソッドといえます。</p>
+
+<!-- doctest:disable -->
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">関数</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="err">の値</span><span class="p">,</span> <span class="p">...</span><span class="err">関数の引数</span><span class="p">);</span>
+</code></pre></div>
+<p>次の例では<code>this</code>に<code>person</code>オブジェクトを指定した状態で<code>say</code>関数を呼び出しています。
+<code>call</code>メソッドの第二引数で指定した値が、<code>say</code>関数の仮引数<code>message</code>に入ります。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">say</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="err">`</span><span class="nx">$</span><span class="p">{</span><span class="nx">message</span><span class="p">}</span> <span class="nx">$</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">fullName</span><span class="p">}</span><span class="err">！`</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">fullName</span><span class="o">:</span> <span class="s2">&quot;Brendan Eich&quot;</span>
+<span class="p">};</span>
+<span class="c1">// `this`を`person`にして`say`関数を呼びだす</span>
+<span class="nx">say</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">person</span><span class="p">,</span> <span class="s2">&quot;こんにちは&quot;</span><span class="p">);</span> <span class="c1">// =&gt; &quot;こんにちは Brendan Eich！&quot;</span>
+<span class="c1">// `say`関数をそのまま呼び出すと`this`は`undefined`となるため例外が発生</span>
+<span class="nx">say</span><span class="p">(</span><span class="s2">&quot;こんにちは&quot;</span><span class="p">);</span> <span class="c1">// =&gt; TypeError: Cannot read property &#39;fullName&#39; of undefined</span>
+</code></pre></div>
+<p><code>apply</code>メソッドは第一引数に<code>this</code>とする値を指定し、第二引数に関数の引数を配列として渡します。</p>
+
+<!-- doctest:disable -->
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">関数</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="err">の値</span><span class="p">,</span> <span class="p">[</span><span class="err">関数の引数</span><span class="mi">1</span><span class="p">,</span> <span class="err">関数の引数</span><span class="mi">2</span><span class="p">]);</span>
+</code></pre></div>
+<p>次の例では<code>this</code>に<code>person</code>オブジェクトを指定した状態で<code>say</code>関数を呼び出しています。
+<code>apply</code>メソッドの第二引数で指定した配列は、自動的に展開されて<code>say</code>関数の仮引数<code>message</code>に入ります。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">say</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="err">`</span><span class="nx">$</span><span class="p">{</span><span class="nx">message</span><span class="p">}</span> <span class="nx">$</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">fullName</span><span class="p">}</span><span class="err">！`</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">fullName</span><span class="o">:</span> <span class="s2">&quot;Brendan Eich&quot;</span>
+<span class="p">};</span>
+<span class="c1">// `this`を`person`にして`say`関数を呼びだす</span>
+<span class="c1">// callとは異なり引数を配列として渡す</span>
+<span class="nx">say</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">person</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;こんにちは&quot;</span><span class="p">]);</span> <span class="c1">// =&gt; &quot;こんにちは Brendan Eich！&quot;</span>
+<span class="c1">// `say`関数をそのまま呼び出すと`this`は`undefined`となるため例外が発生</span>
+<span class="nx">say</span><span class="p">(</span><span class="s2">&quot;こんにちは&quot;</span><span class="p">);</span> <span class="c1">// =&gt; TypeError: Cannot read property &#39;fullName&#39; of undefined</span>
+</code></pre></div>
+<p><code>call</code>メソッドと<code>apply</code>メソッドの違いは、関数の引数への値の渡し方が異なるだけです。
+また、どちらのメソッドも<code>this</code>の値が不要な場合は<code>null</code>を渡すのが一般的です。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">add</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// `this`は不要な場合はnullを渡す</span>
+<span class="nx">add</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span> <span class="c1">// =&gt; 3</span>
+<span class="nx">add</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]);</span> <span class="c1">// =&gt; 3</span>
+</code></pre></div>
+<p>最後に<code>bind</code>メソッドについてです。
+名前のとおり<code>this</code>の値を束縛（bind）した新しい関数を作成します。</p>
+
+<!-- doctest:disable -->
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">関数</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="err">の値</span><span class="p">,</span> <span class="p">...</span><span class="err">関数の引数</span><span class="p">);</span> <span class="c1">// =&gt; thisや引数がbindされた関数</span>
+</code></pre></div>
+<p>次の例では<code>this</code>を<code>person</code>オブジェクトに束縛した<code>say</code>関数の関数を作っています。
+<code>bind</code>メソッドの第二引数以降に値を渡すことで、束縛した関数の引数も束縛できます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">say</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="err">`</span><span class="nx">$</span><span class="p">{</span><span class="nx">message</span><span class="p">}</span> <span class="nx">$</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">fullName</span><span class="p">}</span><span class="err">！`</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">fullName</span><span class="o">:</span> <span class="s2">&quot;Brendan Eich&quot;</span>
+<span class="p">};</span>
+<span class="c1">// `this`を`person`に束縛した`say`関数をラップした関数を作る</span>
+<span class="kr">const</span> <span class="nx">sayPerson</span> <span class="o">=</span> <span class="nx">say</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">person</span><span class="p">,</span> <span class="s2">&quot;こんにちは&quot;</span><span class="p">);</span>
+<span class="nx">sayPerson</span><span class="p">();</span> <span class="c1">// =&gt; &quot;こんにちは Brendan Eich！&quot;</span>
+</code></pre></div>
+<p>この<code>bind</code>メソッドをただの関数で表現すると次のように書けます。
+<code>bind</code>は<code>this</code>や引数を束縛した関数を作るメソッドということがわかります。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">say</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="err">`</span><span class="nx">$</span><span class="p">{</span><span class="nx">message</span><span class="p">}</span> <span class="nx">$</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">fullName</span><span class="p">}</span><span class="err">！`</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">fullName</span><span class="o">:</span> <span class="s2">&quot;Brendan Eich&quot;</span>
+<span class="p">};</span>
+<span class="c1">// `this`を`person`に束縛した`say`関数をラップした関数を作る</span>
+<span class="c1">//  say.bind(person, &quot;こんにちは&quot;); は次のようなラップ関数を作る</span>
+<span class="kr">const</span> <span class="nx">sayPerson</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">say</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">person</span><span class="p">,</span> <span class="s2">&quot;こんにちは&quot;</span><span class="p">);</span>
+<span class="p">};</span>
+<span class="nx">sayPerson</span><span class="p">();</span> <span class="c1">// =&gt; &quot;こんにちは Brendan Eich！&quot;</span>
+</code></pre></div>
+<p>このように<code>call</code>、<code>apply</code>、<code>bind</code>メソッドを使うことで<code>this</code>を明示的に指定した状態で関数を呼び出せます。
+しかし、毎回関数を呼びだすたびにこれらのメソッドを使うのは、関数を呼びだすための関数が必要になってしまい手間がかかります。
+そのため、基本的には「メソッドとして定義されている関数はメソッドとして呼ぶこと」でこの問題を回避するほうがよいでしょう。
+その中で、どうしても<code>this</code>を固定したい場合には<code>call</code>、<code>apply</code>、<code>bind</code>メソッドを利用します。</p>
+
+<h3 id="問題-コールバック関数とthis">問題: コールバック関数と<code>this</code></h3>
+
+<p>コールバック関数の中で<code>this</code>を参照すると問題となる場合があります。
+この問題は、メソッドの中で<code>Array#map</code>メソッドなどコールバック関数を扱う場合に発生しやすいです。</p>
+
+<p>具体的に、コールバック関数における<code>this</code>が問題となっている例を見てみましょう。
+次のコードでは<code>prefixArray</code>メソッドの中で<code>Array#map</code>メソッドを使っています。
+このとき、<code>Array#map</code>メソッドのコールバック関数の中で、<code>Prefixer</code>オブジェクトを参照するつもりで<code>this</code>を参照しています。</p>
+
+<p>しかし、このコールバック関数における<code>this</code>は<code>undefined</code>となり、<code>this.prefix</code>は<code>undefined.prefix</code>であるためTypeErrorとなります。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
+    <span class="cm">/**</span>
+<span class="cm">     * `strings`配列の各要素にprefixをつける</span>
+<span class="cm">     */</span>
+    <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// コールバック関数における`this`は`undefined`となる(strict mode)</span>
+            <span class="c1">// そのため`this.prefix`は`undefined.prefix`となり例外が発生する</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">prefix</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nx">string</span><span class="p">;</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// `prefixArray`メソッドにおける`this`は`Prefixer`</span>
+<span class="nx">Prefixer</span><span class="p">.</span><span class="nx">prefixArray</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">]);</span> <span class="c1">// =&gt; TypeError: Cannot read property &#39;prefix&#39; of undefined</span>
+</code></pre></div>
+<p>なぜコールバック関数の中での<code>this</code>が<code>undefined</code>となるのかを見ていきます。
+<code>Array#map</code>メソッドにはコールバック関数として、その場で定義した匿名関数を渡していることに注目してください。</p>
+
+<!-- textlint-disable eslint -->
+
+<!-- doctest:disable -->
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// ...</span>
+    <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 匿名関数をコールバック関数として渡している</span>
+        <span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">prefix</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nx">string</span><span class="p">;</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+<span class="c1">// ...</span>
+</code></pre></div>
+<!-- textlint-enable eslint -->
+
+<!-- textlint-disable no-js-function-paren -->
+
+<p>このとき、<code>Array#map</code>メソッドに渡しているコールバック関数は<code>callback()</code>のようにただの関数として呼び出されます。
+つまり、コールバック関数として呼びだすとき、この関数にはベースオブジェクトはありません。
+そのため<code>callback</code>関数の<code>this</code>は<code>undefined</code>となります。</p>
+
+<p>先ほどの匿名関数をコールバック関数として渡しているのは、一度<code>callback</code>変数に入れてから渡しても結果は同じです。</p>
+
+<!-- textlint-enable no-js-function-paren -->
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
+    <span class="cm">/**</span>
+<span class="cm">     * `strings`配列の各要素にprefixをつける</span>
+<span class="cm">     */</span>
+    <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// コールバック関数は`callback()`のように呼び出される</span>
+        <span class="c1">// そのためコールバック関数における`this`は`undefined`となる(strict mode)</span>
+        <span class="kr">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">prefix</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nx">string</span><span class="p">;</span>
+        <span class="p">};</span>
+        <span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">callback</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// `prefixArray`メソッドにおける`this`は`Prefixer`</span>
+<span class="nx">Prefixer</span><span class="p">.</span><span class="nx">prefixArray</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">]);</span> <span class="c1">// =&gt; TypeError: Cannot read property &#39;prefix&#39; of undefined</span>
+</code></pre></div>
+<h4 id="対処法-thisを一時変数へ代入する">対処法: <code>this</code>を一時変数へ代入する</h4>
+
+<p>コールバック関数内での<code>this</code>の参照先が変わる問題への対処法として、<code>this</code>を別の変数に代入し、その<code>this</code>の参照先を保持するという方法があります。</p>
+
+<p><code>this</code>は関数の呼び出し元で変化し、その参照先は呼び出し元におけるベースオブジェクトです。
+<code>prefixArray</code>メソッドの呼び出しにおいては、<code>this</code>は<code>Prefixer</code>オブジェクトです。
+しかし、コールバック関数はあらためて関数として呼び出されるため<code>this</code>が<code>undefined</code>となってしまうのが問題でした。</p>
+
+<p>そのため、最初の<code>prefixArray</code>メソッド呼び出しにおける<code>this</code>の参照先を一時変数として保存することでこの問題を回避できます。
+つぎのように、<code>prefixArray</code>メソッドの<code>this</code>を<code>that</code>変数に保持しています。
+コールバック関数からは<code>this</code>の代わりに<code>that</code>変数を参照することで、コールバック関数からも<code>prefixArray</code>メソッド呼び出しと同じ<code>this</code>を参照できます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
+    <span class="cm">/**</span>
+<span class="cm">     * `strings`配列の各要素にprefixをつける</span>
+<span class="cm">     */</span>
+    <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// `that`は`prefixArray`メソッド呼び出しにおける`this`となる</span>
+        <span class="c1">// つまり`that`は`Prefixer`オブジェクトを参照する</span>
+        <span class="kr">const</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// `this`ではなく`that`を参照する</span>
+            <span class="k">return</span> <span class="nx">that</span><span class="p">.</span><span class="nx">prefix</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nx">string</span><span class="p">;</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// `prefixArray`メソッドにおける`this`は`Prefixer`</span>
+<span class="kr">const</span> <span class="nx">prefixedStrings</span> <span class="o">=</span> <span class="nx">Prefixer</span><span class="p">.</span><span class="nx">prefixArray</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">]);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prefixedStrings</span><span class="p">);</span> <span class="c1">// =&gt; [&quot;pre-a&quot;, &quot;pre-b&quot;, &quot;pre-c&quot;]</span>
+</code></pre></div>
+<p>もちろん<code>Function#call</code>メソッドなどで明示的に<code>this</code>を渡して関数を呼びだすこともできます。
+また、<code>Arry#map</code>メソッドなどは<code>this</code>となる値引数として渡せる仕組みを持っています。
+そのため、つぎのように第二引数に<code>this</code>となる値を渡すことでも解決できます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
+    <span class="cm">/**</span>
+<span class="cm">     * `strings`配列の各要素にprefixをつける</span>
+<span class="cm">     */</span>
+    <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// `Array#map`メソッドは第二引数に`this`となる値を渡せる</span>
+        <span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// `this`が第二引数の値と同じになる</span>
+            <span class="c1">// つまり`prefixArray`メソッドと同じ`this`となる</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">prefix</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nx">string</span><span class="p">;</span>
+        <span class="p">},</span> <span class="k">this</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// `prefixArray`メソッドにおける`this`は`Prefixer`</span>
+<span class="kr">const</span> <span class="nx">prefixedStrings</span> <span class="o">=</span> <span class="nx">Prefixer</span><span class="p">.</span><span class="nx">prefixArray</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">]);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prefixedStrings</span><span class="p">);</span> <span class="c1">// =&gt; [&quot;pre-a&quot;, &quot;pre-b&quot;, &quot;pre-c&quot;]</span>
+</code></pre></div>
+<p>しかし、これら解決方法はコールバック関数において<code>this</code>が変わることを意識して書く必要があります。
+そもそもの問題としてメソッド呼び出しとその中でのコールバック関数における<code>this</code>が変わってしまうのが問題でした。
+ES2015では<code>this</code>を変えずにコールバック関数を定義する方法として、Arrow Functionが導入されました。</p>
+
+<h3 id="対処法-arrow-functionでコールバック関数を扱う">対処法: Arrow Functionでコールバック関数を扱う</h3>
+
+<p>通常の関数やメソッドは呼び出し時に暗黙的に<code>this</code>の値を受け取り、関数内の<code>this</code>はその値を参照します。
+一方、Arrow Functionはこの暗黙的な<code>this</code>の値を受け取りません。
+そのためArrow Function内の<code>this</code>は、スコープチェーンの仕組みと同様で外側の関数(この場合は<code>prefixArray</code>メソッド)に探索します。
+これにより、Arrow Functionで定義したコールバック関数は呼び出し方には関係なく、常に外側の関数の<code>this</code>をそのまま利用します。</p>
+
+<p>Arrow Functionを使うことで、先ほどのコードは次のように書くことができます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
+    <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="c1">// Arrow Function自体は`this`を持たない</span>
+            <span class="c1">// `this`は外側の`prefixArray`関数がもつ`this`を参照する</span>
+            <span class="c1">// そのため`this.prefix`は&quot;pre&quot;となる</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">prefix</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nx">string</span><span class="p">;</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// この時、`prefixArray`のベースオブジェクトは`Prefixer`となる</span>
+<span class="c1">// つまり、`prefixArray`メソッド内の`this`は`Prefixer`を参照する</span>
+<span class="kr">const</span> <span class="nx">prefixedStrings</span> <span class="o">=</span> <span class="nx">Prefixer</span><span class="p">.</span><span class="nx">prefixArray</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">]);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prefixedStrings</span><span class="p">);</span> <span class="c1">// =&gt; [&quot;pre-a&quot;, &quot;pre-b&quot;, &quot;pre-c&quot;]</span>
+</code></pre></div>
+<p>このように、Arrow Functionでのコールバック関数における<code>this</code>は簡潔です。
+そのため、コールバック関数内での<code>this</code>の対処法として<code>this</code>を代入する方法を紹介しましたが、
+ES2015からはArrow Functionを使うのがもっとも簡潔です。</p>
+
+<p>このArrow Functionと<code>this</code>の関係についてもっと詳しく見ていきます。</p>
+
+<h2 id="arrow-functionとthis">Arrow Functionと<code>this</code></h2>
+
+<p>Arrow Functionで定義された関数やメソッドにおける<code>this</code>がどの値を参照するかは関数の定義時（静的）に決まります。
+一方、Arrow Functionではない関数においては、<code>this</code>は呼び出し元に依存するため関数の実行時（動的）に決まります。</p>
+
+<p>Arrow Functionとそれ以外の関数で大きく違うことは、Arrow Functionは<code>this</code>を暗黙的な引数として受け付けないということです。
+そのため、Arrow Function内には<code>this</code>が定義されていません。このときの<code>this</code>は外側のスコープ（関数）の<code>this</code>を参照します。</p>
+
+<p>なぜなら、スコープチェーンの性質として、そのスコープに同じ名前の変数が定義されていない場合には外側のスコープを探索するためです。
+そのため、Arrow Function内の<code>this</code>の参照先は、常に外側のスコープ（関数）へと探索しに行きます（詳細は<a href="../function-scope/README.md##scope-chain%7D">スコープチェーン</a>を参照）。
+また、<code>this</code>は読み取り専用のキーワードであるため、ユーザーが<code>this</code>という変数を定義できません。</p>
+
+<p><a href="./src/this-is-readonly-invalid.js">import, this-is-readonly</a></p>
+
+<p>これにより、Arrow Functionにおける<code>this</code>は通常の変数と同じように、どの値を参照するかは静的に決まるという性質があります（詳細は<a href="../function-scope/README.md#static-scope">静的スコープ</a>を参照）。
+つまりArrow Functionにおける<code>this</code>の参照先は「Arrow Function自身の外側のスコープにあるもっとも近い関数の<code>this</code>の値」となります。</p>
+
+<p>具体的な例を元にArrow Functionにおける<code>this</code>の動きを見ていきましょう。</p>
+
+<p>まずは、関数式のArrow Functionを見ていきます。</p>
+
+<p>次の例では、関数式で定義したArrow Functionの中の<code>this</code>をコンソールに出力しています。
+このとき、<code>fn</code>の外側には関数はないため、「自身より外側のスコープにあるもっとも近い関数」の条件にあてはまるものはありません。
+このときの<code>this</code>はトップレベルに書かれた<code>this</code>と同じ値になります。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Arrow Functionで定義した関数</span>
+<span class="kr">const</span> <span class="nx">fn</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// この関数の外側には関数は存在しない</span>
+    <span class="c1">// トップレベルの`this`と同じ値</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">fn</span><span class="p">()</span> <span class="o">===</span> <span class="k">this</span><span class="p">;</span> <span class="c1">// =&gt; true</span>
+</code></pre></div>
+<p>トップレベルに書かれた<code>this</code>の値は実行コンテキストによって異なることを紹介しました。
+<code>this</code>の値は、実行コンテキストが&quot;Script&quot;ならばグローバルオブジェクトとなり、&quot;Module&quot;ならば<code>undefined</code>となります。</p>
+
+<p>次の例のように、Arrow Functionを包むように通常の関数が定義されている場合はどうでしょうか。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kd">function</span> <span class="nx">outer</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Arrow Functionで定義した関数を返す</span>
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="c1">// この関数の外側には`outer`関数が存在する</span>
+        <span class="c1">// `outer`関数に`this`を書いた場合と同じ</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+<span class="c1">// `outer`関数の返り値はArrow Functionにて定義された関数</span>
+<span class="kr">const</span> <span class="nx">innerArrowFunction</span> <span class="o">=</span> <span class="nx">outer</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">innerArrowFunction</span><span class="p">());</span> <span class="c1">// =&gt; undefined;</span>
+</code></pre></div>
+<p>Arrow Functionにおける<code>this</code>は「自身の外側のスコープにあるもっとも近い関数の<code>this</code>の値」となります。
+つまり、このArrow Functionにおける<code>this</code>は<code>outer</code>関数で<code>this</code>を参照した場合と同じ値になります。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kd">function</span> <span class="nx">outer</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// `outer`関数直下の`this`</span>
+    <span class="kr">const</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="c1">// Arrow Functionで定義した関数を返す</span>
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="c1">// Arrow Function自身は`this`を持たない</span>
+        <span class="c1">// `outer`関数に`this`を書いた場合と同じ</span>
+        <span class="k">return</span> <span class="nx">that</span><span class="p">;</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+<span class="c1">// `outer()`と呼び出した時の`this`は`undefined`(strict mode)</span>
+<span class="kr">const</span> <span class="nx">innerArrowFunction</span> <span class="o">=</span> <span class="nx">outer</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">innerArrowFunction</span><span class="p">());</span> <span class="c1">// =&gt; undefined;</span>
+</code></pre></div>
+<h3 id="メソッドとコールバック関数とarrow-function">メソッドとコールバック関数とArrow Function</h3>
+
+<p>メソッド内におけるコールバック関数はArrow Functionをもっと活用できるパターンです。
+<code>function</code>キーワードでコールバック関数を定義すると、<code>this</code>の値はコールバック関数の呼ばれ方を意識する必要があります。
+なぜなら、<code>function</code>キーワードで定義した関数における<code>this</code>は呼び出し方によって変わるためです。</p>
+
+<p>コールバック関数側から見ると、どのように呼ばれるかによって変わる<code>this</code>を使うことはエラーとなる場合もあるため使えません。
+そのため、コールバック関数の外側のスコープで<code>this</code>を一時変数に代入し、それを使うという回避を取っていました。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// `callback`関数を受け取り呼び出す関数</span>
+<span class="kr">const</span> <span class="nx">callCallback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// `callback`を呼び出す実装</span>
+<span class="p">};</span>
+
+<span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">method</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">callCallback</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="c1">// ここでの `this` は`callCallback`の実装に依存する</span>
+            <span class="c1">// `callback()`のように単純に呼び出されるなら`this`は`undefined`になる</span>
+            <span class="c1">// `Function#call`などを使い特定のオブジェクトを指定するかもしれない</span>
+            <span class="c1">// この問題を回避するために`const that = this`のような一時変数を使う</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>一方、Arrow Functionでコールバック関数を定義した場合は、1つ外側の関数の<code>this</code>を参照します。
+このときのArrow Functionで定義したコールバック関数における<code>this</code>は呼び出し方によって変化しません。
+そのため、<code>this</code>を一時変数に代入するなどの回避方法は必要ありません。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// `callback`関数を受け取り呼び出す関数</span>
+<span class="kr">const</span> <span class="nx">callCallback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// `callback`を呼び出す実装</span>
+<span class="p">};</span>
+
+<span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">method</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">callCallback</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="c1">// ここでの`this`は1つ外側の関数における`this`と同じ</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>このArrow Functionにおける<code>this</code>は呼び出し方の影響を受けません。
+つまり、コールバック関数がどのように呼ばれるかという実装についてを考えることなく<code>this</code>を扱うことができます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
+    <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="c1">// `Prefixer.prefixArray()` と呼び出されたとき</span>
+            <span class="c1">// `this`は常に`Prefixer`を参照する</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">prefix</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nx">string</span><span class="p">;</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="kr">const</span> <span class="nx">prefixedStrings</span> <span class="o">=</span> <span class="nx">Prefixer</span><span class="p">.</span><span class="nx">prefixArray</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">]);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prefixedStrings</span><span class="p">);</span> <span class="c1">// =&gt; [&quot;pre-a&quot;, &quot;pre-b&quot;, &quot;pre-c&quot;]</span>
+</code></pre></div>
+<h3 id="arrow-functionはthisをbindできない">Arrow Functionは<code>this</code>をbindできない</h3>
+
+<p>Arrow Functionで定義した関数には<code>call</code>、<code>apply</code>、<code>bind</code>を使った<code>this</code>の指定は単に無視されます。
+これは、Arrow Functionは<code>this</code>をもつことができないためです。</p>
+
+<p>次のようにArrow Functionで定義した関数に対して<code>call</code>で<code>this</code>をしても、<code>this</code>の参照先が代わっていないことが分かります。
+同様に<code>apply</code>や<code>bind</code>メソッドを使った場合も<code>this</code>の参照先が変わりません。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">fn</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="c1">// Scriptコンテキストの場合、スクリプト直下のArrow Functionの`this`はグローバルオブジェクト</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">fn</span><span class="p">());</span> <span class="c1">// グローバルオブジェクト</span>
+<span class="c1">// callで`this`を`{}`にしようとしても、`this`は変わらない</span>
+<span class="nx">fn</span><span class="p">.</span><span class="nx">call</span><span class="p">({});</span> <span class="c1">// グローバルオブジェクト</span>
+</code></pre></div>
+<p>最初に述べたよう<code>function</code>キーワードで定義した関数は呼び出し時に、ベースオブジェクトが暗黙的な引数のように<code>this</code>の値として渡されます。
+一方、Arrow Functionの関数は呼び出し時に<code>this</code>を受け取らずに、定義時のArrow Functionにおける<code>this</code>の参照先が静的に決定されます。</p>
+
+<!-- textlint-disable -->
+
+<p>また、<code>this</code>が変わらないのはあくまでArrow Functionで定義した関数だけで、Arrow Functionの<code>this</code>が参照する「自身の外側のスコープにあるもっとも近い関数の<code>this</code>の値」は<code>call</code>メソッドで変更できます。</p>
+
+<!-- textlint-enable -->
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">method</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kr">const</span> <span class="nx">arrowFunction</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+        <span class="p">};</span>
+        <span class="k">return</span> <span class="nx">arrowFunction</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// 通常の`this`は`object.method`の`this`と同じ</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">object</span><span class="p">.</span><span class="nx">method</span><span class="p">());</span> <span class="c1">// =&gt; object</span>
+<span class="c1">// `object.method`の`this`を変更すれば、Arrow Functionの`this`も変更される</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">object</span><span class="p">.</span><span class="nx">method</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s2">&quot;THAT&quot;</span><span class="p">));</span> <span class="c1">// =&gt; &quot;THAT&quot;</span>
+</code></pre></div>
+<h2 id="thisの評価結果のまとめ"><code>this</code>の評価結果のまとめ</h2>
+
+<p><code>this</code>は状況によって異なる値を参照する性質を持ったキーワードであることについてを紹介しました。
+その<code>this</code>の評価結果をまとめると次の表のようになります。</p>
+
+<p><img src="http://efcl.info/wp-content/uploads/2018/01/04-1515062936.png" alt="`this`の評価結果のまとめ"></p>
+
+<!-- textlint-disable -->
+
+<p>実際にブラウザで実行した結果は[What is <code>this</code> value in JavaScript?][]というサイトで確認できます。</p>
+
+<!-- textlint-enable -->
+
+<p>Chrome 63を使ってる人は&quot;Module&quot;コンテキストのトップレベルArrow Functionにおける<code>this</code>の挙動が表と一致しないことに気づいたかもしれません。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// &quot;Module&quot; context @ Chrome 63</span>
+<span class="kr">const</span> <span class="nx">fn</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">fn</span><span class="p">());</span> <span class="c1">// =&gt; window</span>
+</code></pre></div>
+<p>これはChrome(V8)のバグです。すでに報告して最新のCanary(65相当)では修正されています。</p>
+
+<ul>
+<li><a href="https://bugs.chromium.org/p/chromium/issues/detail?id=791334" title="791334 - `this` in top level Arrow Function in Module Context should be `undefined` - chromium - Monorail">791334 - <code>this</code> in top level Arrow Function in Module Context should be <code>undefined</code> - chromium - Monorail</a></li>
+</ul>
+
+<p>Chrome 63とChrome 65では次のサイトの結果は異なることが分かります。</p>
+
+<ul>
+<li><a href="https://azu.github.io/what-is-this/" title="What is `this` value in JavaScript?">What is <code>this</code> value in JavaScript?</a></li>
+</ul>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p><code>this</code>はオブジェクト指向プログラミングの文脈でJavaScriptに導入されました。[^awbjs]
+メソッド以外においても<code>this</code>は評価できますが、実行コンテキストやstrict modeなどによって結果が異なり混乱の元となります。
+そのため、メソッド以外では<code>this</code>を使うべきではありません（ここでは紹介してないコンストラクタは例外です）</p>
+
+<p>また、メソッドにおいても<code>this</code>は呼び出し方によって異なる値となり、それにより発生する問題と対処法についてを紹介しました。
+コールバック関数における<code>this</code>はArrow Functionを使うことで分かりやすく解決できます。
+この背景にはArrow Functionで定義した関数は<code>this</code>を持たないという性質があります。</p>
+
+<p>もっと<code>this</code>について理解してみたい人は、書籍版も実行しながら見ると良さそうです。</p>
+
+<ul>
+<li><a href="https://asciidwango.github.io/js-primer/basic/function-this/" title="関数とthis · JavaScriptの入門書 #jsprimer">関数とthis · JavaScriptの入門書 #jsprimer</a></li>
+</ul>
+
+<h3 id="memo-note-this-binding-syntax-proposal">:memo: Note: This-Binding Syntax proposal</h3>
+
+<p>通常の関数をmixin関数のように扱いやすくする<code>::</code>という構文のProposalがありましたが、しばらくステータスが更新されていません。
+(Proposalの元々のAuthorがTC39メンバーではなくなったのも1つの理由)</p>
+
+<ul>
+<li><a href="https://github.com/tc39/proposal-bind-operator" title="ECMAScript This-Binding Syntax">ECMAScript This-Binding Syntax</a></li>
+</ul>
+
+<h3 id="memo-this名前解決の仕様">:memo: <code>this</code>名前解決の仕様</h3>
+
+<p><code>this</code> bindingの設定は、関数を呼ぶときの次の仕様で決定される。</p>
+
+<ul>
+<li><a href="https://tc39.github.io/ecma262/#sec-evaluatecall">https://tc39.github.io/ecma262/#sec-evaluatecall</a></li>
+<li><a href="https://tc39.github.io/ecma262/#sec-call">https://tc39.github.io/ecma262/#sec-call</a></li>
+<li><a href="https://tc39.github.io/ecma262/#sec-ecmascript-function-objects-call-thisargument-argumentslist">https://tc39.github.io/ecma262/#sec-ecmascript-function-objects-call-thisargument-argumentslist</a></li>
+<li><a href="https://tc39.github.io/ecma262/#sec-ordinarycallbindthis">https://tc39.github.io/ecma262/#sec-ordinarycallbindthis</a></li>
+</ul>
+
+<p>大きく分けると、WriteとReadの２つのフェーズで<code>this</code>が決まる。
+ここでWriteとReadとつけているけど、仕様にそういうフェーズがあるわけじゃなくて自分の解釈です。</p>
+
+<p>Write: 関数呼び出しをする際に、その関数のFunction Environment Recordsの<code>[[ThisValue]]</code>に<code>this</code>の値を入れる</p>
+
+<p><code>[[ThisValue]]</code>には次のステップの結果が入る。
+(ただしArrow Functionはlexicalなので<code>[[ThisValue]]</code>を持たない。<a href="https://tc39.github.io/ecma262/#sec-ordinarycallbindthis">Arrow Functionの詳細</a>)</p>
+
+<p><a href="https://tc39.github.io/ecma262/#sec-evaluatecall" title="12.3.4.2Runtime Semantics: EvaluateCall(func, ref, arguments, tailPosition )">12.3.4.2Runtime Semantics: EvaluateCall(func, ref, arguments, tailPosition )</a>のステップを参照する</p>
+
+<ul>
+<li>プロパティならば
+
+<ul>
+<li><code>this</code>は<code>GetThisValue()</code>の結果
+
+<ul>
+<li><code>super.prop</code>なら
+
+<ul>
+<li><code>super</code>となる</li>
+</ul></li>
+<li>それ以外なら
+
+<ul>
+<li><a href="https://tc39.github.io/ecma262/#sec-getbase" title="6.2.4.1GetBase ( V )">6.2.4.1GetBase ( V )</a>の結果</li>
+<li>ベースオブジェクトが<code>this</code>となる</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>それ以外(ただの関数呼び出し)なら<a href="https://tc39.github.io/ecma262/#sec-object-environment-records-withbaseobject">WithBaseObject</a>の結果
+
+<ul>
+<li>withの場合
+
+<ul>
+<li>with bingingの値</li>
+</ul></li>
+<li>それ以外
+
+<ul>
+<li>undefined</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>Read: <code>this</code>という識別子から、その値が何を参照するかを決めるフェーズ</p>
+
+<ul>
+<li><a href="https://tc39.github.io/ecma262/#sec-getthisenvironment">https://tc39.github.io/ecma262/#sec-getthisenvironment</a>
+
+<ul>
+<li><code>this</code>の解決はスコープと同じく、一個つづ順に内側から外側へ探すのはスコープチェーンと同じ
+
+<ul>
+<li>見つかるまで再帰的に外側のEnvironment Recordsを探索する</li>
+<li>見つからない場合は、&quot;Script&quot;や&quot;Module&quot;の実行コンテキストの<code>this</code>の値になる</li>
+<li>&quot;Module&quot;の<a href="https://tc39.github.io/ecma262/#sec-module-environment-records-getthisbinding" title="GetThisBinding ( )">GetThisBinding ( )</a>は常に<code>undefined</code></li>
+<li>&quot;Script&quot;の<a href="https://tc39.github.io/ecma262/#sec-global-environment-records-getthisbinding" title="GetThisBinding ( )">GetThisBinding ( )</a>はグローバルオブジェクト</li>
+</ul></li>
+<li>ただし、Arrow Functionは<code>[[ThisValue]]</code>を持たないので必ずスキップされる</li>
+<li>もっと近い関数(Function Environment Records)の<code>[[ThisValue]]</code>の値が<code>this</code>の値となる</li>
+</ul></li>
+</ul>
+
+<p>[^awbjs]: ES 2015の仕様策定者であるAllen Wirfs-Brock‏氏もただの関数においては<code>this</code>を使うべきではないと述べている。<a href="https://twitter.com/awbjs/status/938272440085446657">https://twitter.com/awbjs/status/938272440085446657</a>;</p>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>今年のOSS活動振り返り @ 2017</title>
@@ -2128,232 +2980,6 @@ Reduxでよく見るような形になってると思います。</p>
 <li>A. Declarative Custom HTMLとかの議論はあった</li>
 </ul></li>
 </ul>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>textlintのコアをTypeScriptで書き直した、textlintの今後について</title>
-   <link href="http://efcl.info/2017/11/06/textlint-core-refactoring/"/>
-   <updated>2017-11-06T10:43:00+09:00</updated>
-   <id>http://efcl.info/2017/11/06/textlint-core-refactoring</id>
-   <content type="html"><![CDATA[ <p><a href="https://github.com/textlint/textlint/releases/tag/textlint%409.0.0" title="textlint 9.0.0">textlint 9.0.0</a>をリリースしました。
-textlint 9.0.0では<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel" title="@textlint/kernel">@textlint/kernel</a>という内部的に使うコアモジュールをTypeScriptで書き直したバージョンが使われています。</p>
-
-<p>元々textlintはNode.jsで動くように作られたため、<code>fs</code>モジュールなどNode.jsに依存しています。
-そのため、ブラウザなどで動かす場合などはビルド時に色々工夫しないと動きません。</p>
-
-<ul>
-<li><a href="http://io-monad.hatenablog.com/entry/2016/03/14/225800" title="文書校正ツール textlint の Chrome 拡張を作った - もなでぃっく">文書校正ツール textlint の Chrome 拡張を作った - もなでぃっく</a></li>
-<li><a href="https://muunyblue.github.io/823b2d10224a6a29f91fc7c0f46f1b8e.html" title="LocalStorageで誰でも安全にMarkdownでスライドやメモ作れるサービス作ったよ">LocalStorageで誰でも安全にMarkdownでスライドやメモ作れるサービス作ったよ</a></li>
-</ul>
-
-<p>この問題をどうにかするためには、<code>textlint</code>というモジュールからロジックやLint処理部分だけをNode.jsなどに依存しない純粋なJavaScriptとして切り出す必要があります。</p>
-
-<p>アドホックに対応するならブラウザ向けのbundleを<a href="https://qiita.com/shinout/items/911e024368e2cb29fd3d" title="browser field">browser field</a>などで提供すれば終わりですが、長期的なことを考えるとモジュールを分けたほうが建設的です。</p>
-
-<p><a href="https://github.com/textlint" title="textlint">textlint organization</a>を見ると分かるように<a href="https://github.com/textlint" title="textlint">textlint</a>はMarkdownパーサやトラバーサ、フォーマッターなどがモジュールとして各リポジトリに分けられていました。部品となるモジュールとリポジトリを1対1で分けると、Aをアップデートすると、Aに依存するBやCを更新するといったアップデートの連鎖反応が起きる問題があります。
-また、新しいモジュールを切り出す心理的なコストがありました。</p>
-
-<p>そのため、まずは<code>textlint</code>を構成するモジュールを1つのリポジトリにまとめたmonorepo化をすることにしました。</p>
-
-<h2 id="monorepo">monorepo</h2>
-
-<p><a href="https://github.com/textlint" title="textlint">textlint</a>では<a href="https://github.com/lerna/lerna" title="lerna">lerna</a>を使ってmonorepo化しています。これにより、モジュール間の依存のアップデートが1つのPRにまとめられるなどアップデートの連鎖反応がある程度自動化できるメリットがあります。
-また、新しいモジュールを追加するのも単純にディレクトリを切るだけなので心理的なコストは軽減されます。</p>
-
-<ul>
-<li><a href="https://github.com/textlint/textlint/issues/255">Setup monorepo · Issue #255 · textlint/textlint</a></li>
-<li><a href="https://github.com/textlint/textlint/issues/270">Import * to monorepo · Issue #270 · textlint/textlint</a></li>
-</ul>
-
-<p>一方、CIにかかる時間やpublishする際のコストは増加する傾向があります。
-また、まだmonorepoにおけるリリースノートの戦略がイマイチ決まっていないという問題もあります。
-これは<a href="https://github.com/almin/almin" title="almin">almin</a>とか<a href="https://github.com/textlint-rule/textlint-rule-preset-google" title="textlint-rule-preset-google">textlint-rule-preset-google</a>など、他にもmonorepoをやっているのでいい方法を見出したいです。</p>
-
-<ul>
-<li><a href="https://qiita.com/azu/items/4b9fc8d4df78f2216901" title="Lerna(monorepo)とCHANGELOG(リリースノート) - Qiita">Lerna(monorepo)とCHANGELOG(リリースノート) - Qiita</a></li>
-</ul>
-
-<h2 id="textlint-kernel"><a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a></h2>
-
-<p>monorepo化がひとまずできたので、<a href="https://github.com/textlint/textlint/releases/tag/textlint%408.1.0" title="textlint@8.1.0">textlint 8.1.0</a>で<code>textlint</code>モジュールから<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a>というコアモジュールを切り出しました。(Coreという名前じゃないのは既にCoreという名前を使ったものがあったため)
-<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a>は<code>fs</code>などNode.js特有のものに依存してないような作りになっているので普通にwebpackやbrowserifyなどでビルドすれば動作します。</p>
-
-<ul>
-<li><a href="https://github.com/textlint/textlint/pull/292" title="Carve out textlint core logic into @textlint/kernel by azu · Pull Request #292 · textlint/textlint">Carve out textlint core logic into @textlint/kernel by azu · Pull Request #292 · textlint/textlint</a></li>
-</ul>
-
-<p>今回の<a href="https://github.com/textlint/textlint/releases/tag/textlint%409.0.0" title="textlint 9.0.0">textlint 9.0.0</a>ではさらにこの<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel" title="@textlint/kernel">@textlint/kernel</a>をTypeScriptに書き換えました。理由としては<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a>はロジックの塊であることと今後のリファクタリングのしやすさを考えたためです。</p>
-
-<ul>
-<li><a href="https://github.com/textlint/textlint/pull/301" title="refactor(textlint-kernel): Convert JavaScript to TypeScript by azu · Pull Request #301 · textlint/textlint">refactor(textlint-kernel): Convert JavaScript to TypeScript by azu · Pull Request #301 · textlint/textlint</a></li>
-</ul>
-
-<blockquote>
-<p>TL;DR: both Flow and TypeScript are pretty good, and conservatively either of them can prevent about 15% of the bugs that end up in committed code.<br>
-<a href="https://blog.acolyer.org/2017/09/19/to-type-or-not-to-type-quantifying-detectable-bugs-in-javascript/">https://blog.acolyer.org/2017/09/19/to-type-or-not-to-type-quantifying-detectable-bugs-in-javascript/</a></p>
-</blockquote>
-
-<p>JavaScriptに型注釈を加えることで15%程度バグを減らすことができるという話もありますが、IDEなどでリファクタリングがしやすくなるメリットは大きいです。(名前に依存した壊れたリファクタリングが発生しにくい)</p>
-
-<p>JavaScriptからTypeScriptへの移行方法は次の記事で書いてるような手法を取っています。</p>
-
-<ul>
-<li><a href="http://efcl.info/2017/07/17/JavaScript-to-TypeScript/" title="JavaScriptのライブラリを徐々にTypeScriptに移行する | Web Scratch">JavaScriptのライブラリを徐々にTypeScriptに移行する | Web Scratch</a></li>
-</ul>
-
-<p>まだ単に型を付けただけであったり、テストはTypeScriptになってなかったりします。
-本体の<code>textlint</code>の方もTypeScript化したいので興味がある人は次のIssueを参照してください。</p>
-
-<ul>
-<li><a href="https://github.com/textlint/textlint/issues/248" title="Use with TypeScript · Issue #248 · textlint/textlint">Use with TypeScript · Issue #248 · textlint/textlint</a></li>
-</ul>
-
-<p>また、まだルール側をTypeScriptで書きやすくなってはいないのでその辺もどうにかしたいですね。</p>
-
-<h2 id="今後">今後</h2>
-
-<p>textlintはルールを気軽に作れるようにする土台を作ることが目的です。</p>
-
-<ul>
-<li><a href="http://efcl.info/2014/12/30/textlint/" title="JavaScriptでルールを書けるテキスト/Markdownの校正ツール textlint を作った | Web Scratch">JavaScriptでルールを書けるテキスト/Markdownの校正ツール textlint を作った | Web Scratch</a></li>
-</ul>
-
-<p>今回色々リファクタリングして、<a href="https://github.com/textlint/textlint/tree/master/packages/textlint-kernel">@textlint/kernel</a>の分離でLint以外への発展も少し見えてきています。Lintは入力に対して解答(正否)を出さないと行けないですが、<a href="https://github.com/azu/textstat" title="textstat">textstat</a>のように統計データを出したり、<a href="http://www.academia.edu/154001/Glosser_Enhanced_Feedback_for_Student_Writing_Tasks" title="Glosser">Glosser</a>のようなフィードバックエンジンを作ってみたいです。</p>
-
-<p>また、現在textlintに関係する<a href="https://github.com/search?utf8=%E2%9C%93&amp;q=textlint">リポジトリは200以上</a>、textlint<a href="https://github.com/textlint/textlint/wiki/Collection-of-textlint-rule">ルールは100以上</a>あります。
-ただ、半分以上は自分が関連しているものなので、もっと属人性を解消して安定させたいです。</p>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="und" dir="ltr">textlint 200 repositories. <a href="https://t.co/ZpF7DeuSLr">pic.twitter.com/ZpF7DeuSLr</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/924671458898358272?ref_src=twsrc%5Etfw">October 29, 2017</a></blockquote>
-
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<p>もっと安定して良くしていくために、textlint organizationのコラボレーターを募集しています。最初からコラボレーター(リリース権限とかもてる人)というのも互いに変ではあるので、まずはコントビューションしてくれる人を募集しています。</p>
-
-<p>textlintではどういうところが足りてない、直せるのかなどについて簡単にまとめてみます。</p>
-
-<h2 id="textlintへのコントビューション"><a href="https://github.com/textlint/textlint" title="textlint">textlint</a>へのコントビューション</h2>
-
-<p>相談したいことがある場合はGitterに日本語のchatがあるのでそちらを使ってみてください。
-(これどうやって直せばいいのとか？)</p>
-
-<p><a href="https://gitter.im/textlint-ja/textlint-ja?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/textlint-ja/textlint-ja.svg" alt="Gitter"></a></p>
-
-<h2 id="textlintを直す">textlintを直す</h2>
-
-<p><a href="https://github.com/textlint/textlint/blob/master/.github/CONTRIBUTING.md" title="Contributing Guide">Contributing Guide</a>にコミット方法やテスト方法など一通りのやり方は書いてあります。</p>
-
-<h3 id="ドキュメントを直す">ドキュメントを直す</h3>
-
-<ul>
-<li>適当な英語が多いので修正歓迎</li>
-</ul>
-
-<h3 id="ドキュメントを追加する">ドキュメントを追加する</h3>
-
-<ul>
-<li>ルールの作り方とかもっと具体例のドキュメント増やしたい</li>
-<li>こういうのがわからないというIssueを立てるでもよさそう</li>
-</ul>
-
-<h3 id="コアを直す">コアを直す</h3>
-
-<ul>
-<li>textlintはmonorepoになっているので<a href="https://github.com/textlint/textlint" title="textlint">textlint</a>に色々なパッケージが入っています。
-
-<ul>
-<li>monorepoへの移行が完璧ではないのでそれをなおすのも歓迎です</li>
-<li><a href="https://github.com/textlint/textlint/issues/270" title="Import * to monorepo #270">Import * to monorepo #270</a></li>
-</ul></li>
-</ul>
-
-<p><a href="https://github.com/textlint/textlint/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"><code>label:&quot;good first issue</code></a>というラベルが付いてるものは、比較的やることがはっきりしています。
-そのため最初のコントビューションとして手が出しやすいかもしれません。</p>
-
-<p>また、textlintはあまりパフォーマンスの最適化がまだ行われていません。<a href="https://github.com/textlint/textlint/blob/master/packages/markdown-to-ast/src/markdown-parser.js" title="markdown-parser">markdown-parser</a>など明らかに無駄な処理をしている部分があります。
-一方、500以上のユニットテストや典型的なユースケースの<a href="http://efcl.info/2015/07/29/example-test-on-npm/" title="Exampleテスト">Exampleテスト</a>、実際の文章を使った<a href="https://github.com/textlint/textlint/tree/master/test/integration-test" title="Integration test">Integration test</a>などが書かれています。
-そのため、壊れるとテストが落ちるはずなのでパフォーマンスの改善やリファクタリングなどはある程度し易いかもしれません。</p>
-
-<p>TypeScriptで書きたいという人は、textlint本体もTypeScript化したり、型定義を整理したりすると良いかもしれません。</p>
-
-<ul>
-<li><a href="https://github.com/textlint/textlint/issues/248" title="Use with TypeScript #248">Use with TypeScript #248</a></li>
-</ul>
-
-<p>また、textlintをブラウザでもっと簡単に上手く動かしたいという人は次のIssueにどういうものがあると便利なのかやPOCを作ってみると良いかもしれません。</p>
-
-<ul>
-<li><a href="https://github.com/textlint/textlint/issues/299" title="@textlint/browser · Issue #299 · textlint/textlint">@textlint/browser · Issue #299 · textlint/textlint</a></li>
-</ul>
-
-<h2 id="ルールを直す">ルールを直す</h2>
-
-<ul>
-<li>textlintはデフォルトでルールをもっていません</li>
-<li>そのためすべてのルールはプラグイン扱いです</li>
-<li>ルール一覧は<a href="https://github.com/textlint/textlint/wiki/Collection-of-textlint-rule" title="Collection of textlint rule · textlint/textlint Wiki">Collection of textlint rule · textlint/textlint Wiki</a>にあります</li>
-<li>各ルールにPull RequestやIssueを立てるのがよさそうです</li>
-<li><a href="https://github.com/textlint-ja" title="textlint-ja">textlint-ja</a>で管理している日本語専用のルールは、日本語が分かる人じゃないと使わないので、Issueなどは日本語で問題ないです</li>
-</ul>
-
-<h2 id="ルールを追加する">ルールを追加する</h2>
-
-<p>textlintのルールを置く場所には特に制限はありません。また自由にルールを書けます。</p>
-
-<ul>
-<li>ルールの作り方: <a href="https://github.com/textlint/textlint/blob/master/docs/rule.md" title="Creating Rules">Creating Rules</a></li>
-</ul>
-
-<p>ただ一度作ったルールがメンテナンスされなくなってしまうのはもったないので、<a href="https://github.com/textlint-rule/" title="textlint-rule">textlint-rule</a>と<a href="https://github.com/textlint-ja" title="textlint-ja">textlint-ja</a>は<a href="https://maintenance-guidelines-for-organization.github.io/" title="Maintenance Guidelines for Organization">Maintenance Guidelines for Organization</a>というガイドラインの元にしています。</p>
-
-<p>人がボトルネックになることを避けるため、人が正しいことをできるように信用することという原則を元にしてリポジトリやnpmパッケージの権限を共有できるようにするという方針です。
-そのため、textlintルールを作ったはいいけど置き場所や管理が不安というは、Organizationに参加してみるといいかもしれません。</p>
-
-<p>それぞれoranizationも用意してあるので興味がある人は、<a href="https://twitter.com/azu_re">@azu_re</a>か<a href="https://gitter.im/textlint-ja/textlint-ja">Gitter</a>で言ってもらえれば inviteします。</p>
-
-<ul>
-<li>日本語専用のルール: <a href="https://github.com/textlint-ja" title="textlint-ja">textlint-ja</a></li>
-<li>その他のルール: <a href="https://github.com/textlint-rule/" title="textlint-rule">textlint-rule</a></li>
-</ul>
-
-<p><a href="https://github.com/textlint/textlint/releases/tag/textlint%409.1.1" title="textlint@9.1.1">textlint@9.1.1</a>でscoped moduleのサポートを拡張したのもこういったOrganizationでのルール管理のしやすさを改善するためでもあります。</p>
-<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
-  <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;@textlint-rule/preset-google&quot;</span><span class="p">:</span> <span class="kc">true</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<h2 id="ルールを紹介する">ルールを紹介する</h2>
-
-<p>自分が使っているルールや設定をブログなどで紹介するのも貢献です。</p>
-
-<h2 id="ツールを良くする">ツールを良くする</h2>
-
-<p>textlintのElectronアプリがありますがそこまで作り込まれてません。</p>
-
-<ul>
-<li><a href="http://efcl.info/2017/05/12/textlint-app/">textlintのElectronアプリを作った | Web Scratch</a></li>
-<li><a href="https://github.com/textlint/textlint-app">textlint/textlint-app: textlint standalone application top on Electron.</a></li>
-</ul>
-
-<p>textlintのルールをコマンド一発で作り始めることができるツールがあります。
-コーパスを使ってルールをチェックしやすくするなどもっと色々な工夫をして、ルールづくりを簡単にできると嬉しいです。</p>
-
-<ul>
-<li><a href="http://efcl.info/2016/12/14/create-textlint-rule/">textlintのルールを簡単に作り始めることができるツールを作りました | Web Scratch</a></li>
-<li><a href="https://github.com/textlint/create-textlint-rule">textlint/create-textlint-rule: Create textlint rule project with no configuration.</a></li>
-<li><a href="https://github.com/textlint-ja/technological-book-corpus-ja" title="textlint-ja/technological-book-corpus-ja: 日本語で書かれた技術書のコーパス">textlint-ja/technological-book-corpus-ja: 日本語で書かれた技術書のコーパス</a></li>
-</ul>
-
-<h2 id="ウェブサイト">ウェブサイト</h2>
-
-<p>textlintのウェブサイト兼オンラインデモとして<a href="https://textlint.github.io/" title="textlint - pluggable linting tool for text and markdown">textlint - pluggable linting tool for text and markdown</a>があります。</p>
-
-<p>こちらも<a href="https://github.com/textlint/textlint.github.io/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"><code>label:&quot;good first issue&quot;</code></a>のラベルがついたIssueがあります。</p>
-
-<h2 id="その他">その他</h2>
-
-<p><a href="https://gist.github.com/azu/2b482e8e2aa636970f5f6110f6488719" title="textlintの直し方">textlintの直し方</a>に簡単にコントビューション方法についてまとめています。</p>
  ]]></content>
  </entry>
  

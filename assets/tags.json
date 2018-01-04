@@ -815,7 +815,9 @@
         
         "docusaurus",
         
-        "JavaScripts"
+        "JavaScripts",
+        
+        "this"
         
     ]
 }
