@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-05T00:32:38+09:00</updated>
+ <updated>2018-01-05T02:11:25+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -237,7 +237,8 @@ strict modeかどうかによって挙動が異なるのは混乱の元である
 
 <p>次の例では<code>method1</code>と<code>method2</code>はそれぞれメソッドとして呼び出されています。
 このとき、それぞれのベースオブジェクトは<code>object</code>となり、<code>this</code>は<code>object</code>となります。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="p">{</span>
     <span class="c1">// 関数式をプロパティの値にしたメソッド</span>
     <span class="nx">method1</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
@@ -253,7 +254,8 @@ strict modeかどうかによって挙動が異なるのは混乱の元である
 <span class="nx">object</span><span class="p">.</span><span class="nx">method2</span><span class="p">();</span> <span class="c1">// =&gt; object</span>
 </code></pre></div>
 <p>これを利用すれば、メソッドの中から同じオブジェクトに所属する別のプロパティを<code>this</code>で参照できます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">fullName</span><span class="o">:</span> <span class="s2">&quot;Brendan Eich&quot;</span><span class="p">,</span>
     <span class="nx">sayName</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="c1">// `person.fullName`と書いているのと同じ</span>
@@ -440,7 +442,8 @@ strict modeかどうかによって挙動が異なるのは混乱の元である
 このとき、<code>Array#map</code>メソッドのコールバック関数の中で、<code>Prefixer</code>オブジェクトを参照するつもりで<code>this</code>を参照しています。</p>
 
 <p>しかし、このコールバック関数における<code>this</code>は<code>undefined</code>となり、<code>this.prefix</code>は<code>undefined.prefix</code>であるためTypeErrorとなります。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
     <span class="cm">/**</span>
 <span class="cm">     * `strings`配列の各要素にprefixをつける</span>
@@ -482,7 +485,8 @@ strict modeかどうかによって挙動が異なるのは混乱の元である
 <p>先ほどの匿名関数をコールバック関数として渡しているのは、一度<code>callback</code>変数に入れてから渡しても結果は同じです。</p>
 
 <!-- textlint-enable no-js-function-paren -->
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
     <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// コールバック関数は`callback()`のように呼び出される</span>
@@ -507,7 +511,8 @@ strict modeかどうかによって挙動が異なるのは混乱の元である
 <p>そのため、最初の<code>prefixArray</code>メソッド呼び出しにおける<code>this</code>の参照先を一時変数として保存することでこの問題を回避できます。
 つぎのように、<code>prefixArray</code>メソッドの<code>this</code>を<code>that</code>変数に保持しています。
 コールバック関数からは<code>this</code>の代わりに<code>that</code>変数を参照することで、コールバック関数からも<code>prefixArray</code>メソッド呼び出しと同じ<code>this</code>を参照できます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
     <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// `that`は`prefixArray`メソッド呼び出しにおける`this`となる</span>
@@ -526,7 +531,8 @@ strict modeかどうかによって挙動が異なるのは混乱の元である
 <p>もちろん<code>Function#call</code>メソッドなどで明示的に<code>this</code>を渡して関数を呼びだすこともできます。
 また、<code>Arry#map</code>メソッドなどは<code>this</code>となる値引数として渡せる仕組みを持っています。
 そのため、つぎのように第二引数に<code>this</code>となる値を渡すことでも解決できます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
     <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// `Array#map`メソッドは第二引数に`this`となる値を渡せる</span>
@@ -553,7 +559,8 @@ ES2015では<code>this</code>を変えずにコールバック関数を定義す
 これにより、Arrow Functionで定義したコールバック関数は呼び出し方には関係なく、常に外側の関数の<code>this</code>をそのまま利用します。</p>
 
 <p>Arrow Functionを使うことで、先ほどのコードは次のように書くことができます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
     <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
@@ -682,7 +689,8 @@ ES2015からはArrow Functionを使うのがもっとも簡潔です。</p>
 </code></pre></div>
 <p>このArrow Functionにおける<code>this</code>は呼び出し方の影響を受けません。
 つまり、コールバック関数がどのように呼ばれるかという実装についてを考えることなく<code>this</code>を扱うことができます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
     <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
@@ -718,7 +726,8 @@ ES2015からはArrow Functionを使うのがもっとも簡潔です。</p>
 <p>また、<code>this</code>が変わらないのはあくまでArrow Functionで定義した関数だけで、Arrow Functionの<code>this</code>が参照する「自身の外側のスコープにあるもっとも近い関数の<code>this</code>の値」は<code>call</code>メソッドで変更できます。</p>
 
 <!-- textlint-enable -->
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">method</span><span class="p">()</span> <span class="p">{</span>
         <span class="kr">const</span> <span class="nx">arrowFunction</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
             <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
