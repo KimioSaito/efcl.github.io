@@ -338,22 +338,25 @@ var blog_categories = [
 
 <ul>
 <li><a href="https://asciidwango.github.io/js-primer/basic/function-this/" title="関数とthis · JavaScriptの入門書 #jsprimer">関数とthis · JavaScriptの入門書 #jsprimer</a></li>
+</ul>
+
+<p>また、バグ報告やPRも直接リポジトリにして問題ありません。</p>
+
+<ul>
 <li><a href="https://github.com/asciidwango/js-primer" title="asciidwango/js-primer: JavaScriptの入門書">asciidwango/js-primer: JavaScriptの入門書</a></li>
 </ul>
 
-<p>また、バグ報告やPRも直接リポジトリにして問題ありません。
-おかしい場所を選択した状態で右下にある&quot;Bug Report&quot;ボタンを押せば、簡単にtypoとかのバグを報告できます。(PRでも歓迎)</p>
+<p>おかしい場所を選択した状態で右下にある&quot;Bug Report&quot;ボタンを押せば、簡単にtypoとかのバグを報告できます。(PRでも歓迎)</p>
 
-<p><img src="http://efcl.info/wp-content/uploads/2018/01/04-1515061693.png" alt="バグ報告のフロー"></p>
+<p><a href="https://asciidwango.github.io/js-primer/basic/function-this/"><img src="http://efcl.info/wp-content/uploads/2018/01/04-1515061693.png" alt="バグ報告のフロー"></a></p>
 
 <p>前置きはこの辺までで、ここから本編。</p>
 
 <h1 id="ecmascript-2015以降のthis">ECMAScript 2015以降の<code>this</code></h1>
 
 <p>この記事では<code>this</code>という特殊な動作をするキーワードについてを見ていきます。
-<code>this</code>は基本的にはメソッドの中で利用し、それ以外では利用しません。
-しかし、<code>this</code>は読み取り専用のグローバル変数のようなものでどこにでも書くことができます。
-また、<code>this</code>の参照先は条件によってさまざまです。</p>
+<code>this</code>は基本的にはメソッドの中で利用します。しかし、<code>this</code>は読み取り専用のグローバル変数のようなものでどこにでも書くことができます。
+また、<code>this</code>の参照先（値）は条件によってさまざまです。</p>
 
 <p><code>this</code>の参照先は主に次の条件によって変化します。</p>
 
@@ -893,8 +896,8 @@ ES2015からはArrow Functionを使うのがもっとも簡潔です。</p>
 <p>Arrow Functionとそれ以外の関数で大きく違うことは、Arrow Functionは<code>this</code>を暗黙的な引数として受け付けないということです。
 そのため、Arrow Function内には<code>this</code>が定義されていません。このときの<code>this</code>は外側のスコープ（関数）の<code>this</code>を参照します。</p>
 
-<p>なぜなら、スコープチェーンの性質として、そのスコープに同じ名前の変数が定義されていない場合には外側のスコープを探索するためです。
-そのため、Arrow Function内の<code>this</code>の参照先は、常に外側のスコープ（関数）へと探索しに行きます（詳細は<a href="https://asciidwango.github.io/js-primer/basic/function-scope/##scope-chain%7D">スコープチェーン</a>を参照）。
+<p>これは変数におけるスコープチェーンの仕組みと同様で、そのスコープに<code>this</code>が定義されていない場合には外側のスコープを探索するのと同じです。
+そのため、Arrow Function内の<code>this</code>の参照先は、常に外側のスコープ（関数）へと<code>this</code>の定義を探索しに行きます（詳細は<a href="https://asciidwango.github.io/js-primer/basic/function-scope/##scope-chain%7D">スコープチェーン</a>を参照）。
 また、<code>this</code>は読み取り専用のキーワードであるため、ユーザーが<code>this</code>という変数を定義できません。</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="k">this</span> <span class="o">=</span> <span class="s2">&quot;thisは読み取り専用&quot;</span><span class="p">;</span> <span class="c1">// =&gt; SyntaxError: Unexpected token this</span>
 </code></pre></div>
