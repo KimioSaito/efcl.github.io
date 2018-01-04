@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-04T22:22:27+09:00</updated>
+ <updated>2018-01-04T22:23:22+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -115,7 +115,7 @@
 <p>このように、コード直下の<code>this</code>は実行コンテキストによって<code>undefined</code>となる場合があります。
 単純にグローバルオブジェクトを参照したい場合は、<code>this</code>ではなく<code>window</code>などのグローバルオブジェクトを直接参照した方がよいです。</p>
 
-<h4 id="memo-note">:memo: Note</h4>
+<h4 id="📝-note">📝 Note</h4>
 
 <p>なぜModuleコンテキストではトップレベルの<code>this</code>が<code>undefined</code>となるかは次の記事で解説しています。</p>
 
@@ -787,7 +787,7 @@ Chrome 63では次のコードを&quot;Module&quot;コンテキストで実行�
 <li><a href="https://asciidwango.github.io/js-primer/basic/function-this/" title="関数とthis · JavaScriptの入門書 #jsprimer">関数とthis · JavaScriptの入門書 #jsprimer</a></li>
 </ul>
 
-<h3 id="memo-note-this-binding-syntax-proposal">:memo: Note: This-Binding Syntax proposal</h3>
+<h3 id="📝-note-this-binding-syntax-proposal">📝 Note: This-Binding Syntax proposal</h3>
 
 <p>通常の関数をmixin関数のように扱いやすくする<code>::</code>という構文のProposalがありましたが、しばらくステータスが更新されていません。
 (Proposalの元々のAuthorがTC39メンバーではなくなったのも1つの理由)</p>
@@ -796,7 +796,7 @@ Chrome 63では次のコードを&quot;Module&quot;コンテキストで実行�
 <li><a href="https://github.com/tc39/proposal-bind-operator" title="ECMAScript This-Binding Syntax">ECMAScript This-Binding Syntax</a></li>
 </ul>
 
-<h3 id="memo-this名前解決の仕様">:memo: <code>this</code>名前解決の仕様</h3>
+<h3 id="📝-this名前解決の仕様">📝 <code>this</code>名前解決の仕様</h3>
 
 <p><code>this</code> bindingの設定は、関数を呼ぶときの次の仕様で決定される。</p>
 
