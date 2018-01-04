@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-05T00:28:56+09:00</updated>
+ <updated>2018-01-05T00:32:38+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -484,9 +484,6 @@ strict modeかどうかによって挙動が異なるのは混乱の元である
 <!-- textlint-enable no-js-function-paren -->
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
-    <span class="cm">/**</span>
-<span class="cm">     * `strings`配列の各要素にprefixをつける</span>
-<span class="cm">     */</span>
     <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// コールバック関数は`callback()`のように呼び出される</span>
         <span class="c1">// そのためコールバック関数における`this`は`undefined`となる(strict mode)</span>
@@ -512,9 +509,6 @@ strict modeかどうかによって挙動が異なるのは混乱の元である
 コールバック関数からは<code>this</code>の代わりに<code>that</code>変数を参照することで、コールバック関数からも<code>prefixArray</code>メソッド呼び出しと同じ<code>this</code>を参照できます。</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
-    <span class="cm">/**</span>
-<span class="cm">     * `strings`配列の各要素にprefixをつける</span>
-<span class="cm">     */</span>
     <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// `that`は`prefixArray`メソッド呼び出しにおける`this`となる</span>
         <span class="c1">// つまり`that`は`Prefixer`オブジェクトを参照する</span>
@@ -534,9 +528,6 @@ strict modeかどうかによって挙動が異なるのは混乱の元である
 そのため、つぎのように第二引数に<code>this</code>となる値を渡すことでも解決できます。</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Prefixer</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">prefix</span><span class="o">:</span> <span class="s2">&quot;pre&quot;</span><span class="p">,</span>
-    <span class="cm">/**</span>
-<span class="cm">     * `strings`配列の各要素にprefixをつける</span>
-<span class="cm">     */</span>
     <span class="nx">prefixArray</span><span class="p">(</span><span class="nx">strings</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// `Array#map`メソッドは第二引数に`this`となる値を渡せる</span>
         <span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
