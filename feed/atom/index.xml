@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-05T08:04:40+09:00</updated>
+ <updated>2018-01-05T08:29:14+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -71,8 +71,7 @@
 <p><code>this</code>はさまざまな条件でその評価結果(参照先)は異なります。
 基本的な関数やメソッドについては次のようなパターンが考えられます。</p>
 
-<p>この記事では<code>???</code>となっている<code>this</code>の評価結果を仕組みから理解できることを目標にします。
-また、この記事では<code>this</code>の実用外の知識(仕様やトップレベルの<code>this</code>など)についても書いているので、実用的に使うにはここまで理解する必要はありません。</p>
+<p>この記事では表では<code>???</code>となっている<code>this</code>の評価結果を仕組みから理解できることを目標にします。</p>
 
 <p><img src="http://efcl.info/wp-content/uploads/2018/01/04-1515062180.png" alt="`this`の評価結果の穴埋め"></p>
 
@@ -94,6 +93,18 @@
 </ul>
 
 <p>記事の最後に答え合わせ用の表を置いています。</p>
+
+<h2 id="目標ではないこと">目標ではないこと</h2>
+
+<p>この記事は<code>this</code>を使うために必要な実用的な使い方(プラクティス)を学ぶことが目標の記事ではありません。
+この記事では<code>this</code>の実用外の知識(仕様やトップレベルの<code>this</code>など)についても書いています。
+実用的に使うだけなら、不要な知識も含まれていることにご了承ください。</p>
+
+<p>実用性だけを学ぶならもっと簡略化した内容を元にした方が混乱が減って良いと思います。</p>
+
+<ul>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/this" title="this - JavaScript | MDN">this - JavaScript | MDN</a></li>
+</ul>
 
 <h2 id="実行コンテキストとthis">実行コンテキストと<code>this</code></h2>
 
