@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-04T22:16:06+09:00</updated>
+ <updated>2018-01-04T22:22:27+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -739,14 +739,17 @@ ES2015からはArrow Functionを使うのがもっとも簡潔です。</p>
 
 <!-- textlint-disable -->
 
-<p>実際にブラウザで実行した結果は[What is <code>this</code> value in JavaScript?][]というサイトで確認できます。</p>
+<p>実際にブラウザで実行した結果は<a href="https://azu.github.io/what-is-this/" title="What is `this` value in JavaScript?">What is <code>this</code> value in JavaScript?</a>で確認できます。</p>
 
 <!-- textlint-enable -->
 
-<p>Chrome 63を使ってる人は&quot;Module&quot;コンテキストのトップレベルArrow Functionにおける<code>this</code>の挙動が表と一致しないことに気づいたかもしれません。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// &quot;Module&quot; context @ Chrome 63</span>
+<p>Chrome 63を使ってる人は&quot;Module&quot;コンテキストのトップレベルArrow Functionにおける<code>this</code>の挙動が表と一致しないことに気づいたかもしれません。
+Chrome 63では次のコードを&quot;Module&quot;コンテキストで実行すると<code>this</code>が<code>undefined</code>ではなく、グローバルオブジェクトを参照します。</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;module&quot;</span><span class="nt">&gt;</span>
+<span class="c1">// &quot;Module&quot; context @ Chrome 63</span>
 <span class="kr">const</span> <span class="nx">fn</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">;</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">fn</span><span class="p">());</span> <span class="c1">// =&gt; window</span>
+<span class="nt">&lt;/script&gt;</span>
 </code></pre></div>
 <p>これはChrome(V8)のバグです。すでに報告して最新のCanary(65相当)では修正されています。</p>
 
