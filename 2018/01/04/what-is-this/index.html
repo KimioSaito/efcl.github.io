@@ -612,7 +612,8 @@ strict modeかどうかによって挙動が異なるのは混乱の元である
 次の例では、<code>person.sayName</code>メソッドを変数<code>say</code>に代入してから実行しています。
 このときの<code>say</code>関数(<code>sayName</code>メソッドを参照)のベースオブジェクトはありません。
 そのため、<code>this</code>は<code>undefined</code>となり、<code>undefined.fullName</code>は参照できずに例外をなげます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">fullName</span><span class="o">:</span> <span class="s2">&quot;Brendan Eich&quot;</span><span class="p">,</span>
     <span class="nx">sayName</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="c1">// `this`は呼び出し元によってことなる</span>
@@ -631,7 +632,8 @@ strict modeかどうかによって挙動が異なるのは混乱の元である
 </code></pre></div>
 <p>結果的には、次のようなコードが実行されているのと同じです。
 次のコードでは、<code>undefined.fullName</code>を参照しようとして例外が発生しています。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// const sayName = person.sayName; は次のようなイメージ</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<span class="c1">// const sayName = person.sayName; は次のようなイメージ</span>
 <span class="kr">const</span> <span class="nx">say</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">fullName</span><span class="p">;</span>
 <span class="p">};</span>
@@ -641,7 +643,7 @@ strict modeかどうかによって挙動が異なるのは混乱の元である
 <p>このように、Arrow Function以外の関数において、<code>this</code>は定義した時ではなく実行した時に決定されます。
 そのため、関数に<code>this</code>を含んでいる場合、その関数は意図した呼ばれ方がされないと間違った結果が発生するという問題があります。</p>
 
-<p>この問題の対処法法としては大きく分けて2つあります。</p>
+<p>この問題の対処法としては大きく分けて2つあります。</p>
 
 <p>ひとつはメソッドとして定義されている関数はメソッドとして呼ぶということです。
 メソッドをわざわざただの関数として呼ばなければそもそもこの問題は発生しません。</p>
