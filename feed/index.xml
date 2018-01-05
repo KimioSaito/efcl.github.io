@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-05T08:47:39+09:00</updated>
+ <updated>2018-01-05T12:30:58+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -115,7 +115,7 @@
 
 <h3 id="スクリプトにおけるthis">スクリプトにおける<code>this</code></h3>
 
-<p>実行コンテキストが&quot;Script&quot;である場合、そのコード直下に書かれた<code>this</code>はグローバルオブジェクトを参照します。
+<p>実行コンテキストが&quot;Script&quot;である場合、トップレベルに書かれた<code>this</code>はグローバルオブジェクトを参照します。
 グローバルオブジェクトとは、実行環境において異なるものが定義されています。
 ブラウザなら<code>window</code>オブジェクト、Node.jsなら<code>global</code>オブジェクトとなります。</p>
 
@@ -128,7 +128,8 @@
 </code></pre></div>
 <h3 id="モジュールにおけるthis">モジュールにおける<code>this</code></h3>
 
-<p>実行コンテキストが&quot;Module&quot;である場合、そのコード直下に書かれた<code>this</code>は常に<code>undefined</code>となります。</p>
+<p>実行コンテキストの&quot;Module&quot;はES 2015で導入され、名前の通り<code>import</code>や<code>export</code>などのES modulesが動作する実行コンテキストです。
+実行コンテキストが&quot;Module&quot;である場合、トップレベルに書かれた<code>this</code>は常に<code>undefined</code>となります。</p>
 
 <p>ブラウザでは、<code>script</code>要素の<code>type=&quot;module&quot;</code>属性がついた場合は実行コンテキストが&quot;Module&quot;として実行されます。
 この<code>script</code>要素の直下に書いた<code>this</code>は<code>undefined</code>となります。</p>
