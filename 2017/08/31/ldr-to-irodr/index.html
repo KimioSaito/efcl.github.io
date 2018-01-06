@@ -348,6 +348,10 @@ var blog_categories = [
 
 <p><a href="https://github.com/azu/irodr" title="Irodr">Irodr</a>は<a href="http://www.inoreader.com/developers/">Inoreader</a>や<a href="https://developer.feedly.com/v3/auth/">Feedly</a>(こっちはまだ対応してない)のAPIを使ったRSSリーダです。</p>
 
+<ul>
+<li><a href="http://irodr.netlify.com/">http://irodr.netlify.com/</a>からOAuth認証すると利用できます。</li>
+</ul>
+
 <blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://t.co/xKJF7YUu5D">https://t.co/xKJF7YUu5D</a> の様子 <a href="https://t.co/ERUTFtaP0b">pic.twitter.com/ERUTFtaP0b</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/903085352448962560">August 31, 2017</a></blockquote>
 
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
@@ -452,13 +456,17 @@ var blog_categories = [
 <li><a href="http://disq.us/p/1lpznh0">http://disq.us/p/1lpznh0</a><br></li>
 </ul>
 
-<p>今のところ、CORSを回避するProxyサーバを組み合わせるか、ブラウザ拡張で特定のAPIだけCORSを無視するワークアラウンドが必要です。</p>
+<del>今のところ、CORSを回避するProxyサーバを組み合わせるか、ブラウザ拡張で特定のAPIだけCORSを無視するワークアラウンドが必要です。</del>
 
 <ul>
-<li><a href="https://github.com/azu/irodr/issues/11" title="Docs: Add workaround for CORS · Issue #11 · azu/irodr">Docs: Add workaround for CORS · Issue #11 · azu/irodr</a></li>
+<li><a href="https://www.netlify.com/" title="Netlify">Netlify</a>のCORSプロキシ機能を使いました</li>
+<li><a href="http://irodr.netlify.com/">http://irodr.netlify.com/</a></li>
 </ul>
 
-<p>まだ開発中なので、<code>npm start</code>すると自動でCORSを無視できるProxyサーバが立つ仕組みしか用意していません。ブラウザ拡張でCORSを無視させる方法には<a href="https://github.com/azu/irodr/issues/11">まだ問題があるので興味がある人はIssue</a>に日本語でもいいから書き込んでください。</p>
+<del>[Docs: Add workaround for CORS · Issue #11 · azu/irodr](https://github.com/azu/irodr/issues/11 "Docs: Add workaround for CORS · Issue #11 · azu/irodr")
+
+まだ開発中なので、`npm start`すると自動でCORSを無視できるProxyサーバが立つ仕組みしか用意していません。ブラウザ拡張でCORSを無視させる方法には[まだ問題があるので興味がある人はIssue](https://github.com/azu/irodr/issues/11)に日本語でもいいから書き込んでください。
+</del>
 
 <p><strong>開発用のサーバ</strong>: <code>npm start</code>するとwebpack-dev-serverが立ち上がります。
 <a href="http://localhost:3000">http://localhost:3000</a> は自動的にCORSを無視するProxyも兼ねているので、<a href="http://localhost:3000">http://localhost:3000</a> にアクセスすれば利用できます。</p>
