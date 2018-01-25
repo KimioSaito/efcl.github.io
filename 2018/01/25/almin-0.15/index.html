@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+    <title>
+        
+        Almin 0.15リリース | Web Scratch
+        
+    </title>
+    <meta name="description" content="ステート管理ライブラリのAlmin 0.15をリリースしました。">
+    
+    <meta name="keywords" content="JavaScript,Almin" />
+    
+    <meta name="author" content="azu">
+    <!-- Icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="/public/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="http://efcl.info/public/favicon.ico">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/public/css/main.css">
+    <!-- JavaScript -->
+    <!-- Open graph tags -->
+<meta property="og:title" content="Almin 0.15リリース">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://efcl.info/2018/01/25/almin-0.15/">
+<meta property="og:image" content="http://efcl.info/public/favicon.ico">
+
+<meta property="og:description" content="ステート管理ライブラリのAlmin 0.15をリリースしました。">
+<meta property="og:site_name" content="Web Scratch">
+
+
+
+
+<meta property="article:published_time" content="2018-01-25T10:56:00+09:00">
+<meta property="article:author" content="https://www.facebook.com/">
+
+<meta property="og:see_also" content="http://efcl.info/2018/01/04/what-is-this/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/12/30/oss-in-2017/">
+
+<meta property="og:see_also" content="http://efcl.info/2017/12/29/textlint-rule-no-invalid-control-character/">
+
+
+
+
+
+<meta property="article:section" content="javascript">
+
+
+
+
+
+<meta property="article:tag" content="JavaScript">
+
+<meta property="article:tag" content="Almin">
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-2184335-8', 'auto');
+    ga('send', 'pageview');
+</script>
+    <script>
+var blog_categories = [
+{
+    "title" : "greasemonkey",
+    "count" : 61
+},{
+    "title" : "ニコニコ動画",
+    "count" : 16
+},{
+    "title" : "小説電子化",
+    "count" : 3
+},{
+    "title" : "vista",
+    "count" : 12
+},{
+    "title" : "firefox",
+    "count" : 55
+},{
+    "title" : "その他",
+    "count" : 13
+},{
+    "title" : "webサービス",
+    "count" : 22
+},{
+    "title" : "software",
+    "count" : 59
+},{
+    "title" : "雑記",
+    "count" : 37
+},{
+    "title" : "まとめ",
+    "count" : 11
+},{
+    "title" : "zaurus",
+    "count" : 3
+},{
+    "title" : "ハードウェア",
+    "count" : 8
+},{
+    "title" : "アドオン",
+    "count" : 31
+},{
+    "title" : "wordpress",
+    "count" : 6
+},{
+    "title" : "javascript",
+    "count" : 197
+},{
+    "title" : "インストール設定",
+    "count" : 12
+},{
+    "title" : "iphone",
+    "count" : 10
+},{
+    "title" : "loox u",
+    "count" : 1
+},{
+    "title" : "tombloo",
+    "count" : 3
+},{
+    "title" : "イベント",
+    "count" : 92
+},{
+    "title" : "userchome.js",
+    "count" : 8
+},{
+    "title" : "jetpack",
+    "count" : 7
+},{
+    "title" : "onenote",
+    "count" : 2
+},{
+    "title" : "nilscript",
+    "count" : 4
+},{
+    "title" : "keysnail",
+    "count" : 3
+},{
+    "title" : "ios",
+    "count" : 15
+},{
+    "title" : "shell",
+    "count" : 3
+},{
+    "title" : "r言語",
+    "count" : 2
+},{
+    "title" : "node.js",
+    "count" : 3
+},{
+    "title" : "mac",
+    "count" : 2
+},{
+    "title" : "github",
+    "count" : 11
+},{
+    "title" : "jekyll",
+    "count" : 1
+},{
+    "title" : "golang",
+    "count" : 1
+},{
+    "title" : "web",
+    "count" : 1
+},{
+    "title" : "スライド",
+    "count" : 1
+},{
+    "title" : "ie",
+    "count" : 1
+},{
+    "title" : "書籍",
+    "count" : 2
+},{
+    "title" : "textlint",
+    "count" : 9
+}
+];
+    blog_categories = blog_categories.filter(function(categoryObject){
+        return !/^\d+$/.test(categoryObject.title);
+    });
+</script>
+</head>
+
+
+<body class="layout-reverse theme-base-0d">
+<a href="https://github.com/efcl/efcl.github.io" class="github-ribbon">
+    <img style="position: fixed; z-index:100; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+<header>
+    <div class="site-header">
+    <img src="/public/img/reimu-right.png" class="header-logo">
+
+    <h1 class="site-title">
+        <a href="/">
+            Web Scratch
+        </a>
+    </h1>
+    <p class="lead">ブラウザ/JavaScript等についてのブログ</p>
+
+</div>
+</header>
+<aside>
+    <div class="sidebar">
+    <div class="container">
+        <div class="profile">
+            <a href="/about/" title="About"><img src="/public/img/azu.png" alt="Profile"></a>
+
+            <h2><a href="/about/" title="About">azu</a></h2>
+        </div>
+        <div class="social">
+            <a class="twitter" href="http://twitter.com/azu_re" title="Twitter">
+                <img src="/public/svg/twitter.svg" alt="twitter" width="32" height="32"/>
+            </a>
+            <a class="github" href="https://github.com/azu" title="GitHub">
+                <img src="/public/svg/github.svg" alt="GitHub" width="32" height="32"/>
+            </a>
+            <a class="rss" href="/feed/" title="RSS Feed">
+                <img src="/public/svg/feed.svg" alt="RSS" width="32" height="32"/>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="search">
+                <form class="search-box" method="get" action="https://www.google.co.jp/search">
+                    <label for="search-box-label">検索:</label>
+                    <input type="hidden" name="q" value="site:efcl.info">
+                    <input id="search-box-label" type="search" name="q">
+                    <input type="submit" value="search">
+                </form>
+            </div>
+            <div class="recent">
+    <h3 class="recent-posts-list-title">
+        <a href="/">最近の投稿</a>
+    </h3>
+    <ul class="recent-posts">
+        
+        <li>
+            <a href="/2018/01/25/almin-0.15/">
+                Almin 0.15リリース
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2018/01/04/what-is-this/">
+                ECMAScript 2015以降のJavaScriptの`this`を理解する
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/12/30/oss-in-2017/">
+                今年のOSS活動振り返り @ 2017
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2017/12/29/textlint-rule-no-invalid-control-character/">
+                文中に制御文字が混じっているのを見つけて自動修正するtextlintルール
+            </a>
+        </li>
+        
+    </ul>
+</div>
+            <div class="recent">
+    <h3 class="categories-list-title"><a href="/categories">カテゴリ一覧</a></h3>
+
+    <div class="categories-list" id="js-categories-list">
+
+    </div>
+    <script>
+        (function () {
+            var categoriesList = window.blog_categories;
+            var appendPoint = document.getElementById("js-categories-list");
+            // big ... small
+            var sortedCategories = categoriesList.sort(function (a, b) {
+                return a.count < b.count ? 1 : -1;
+            });
+            var ulTag = document.createElement("ul");
+            var displayCount = sortedCategories.length < 3 ? sortedCategories.length : 3;
+            for (var i = 0; i < displayCount; i++) {
+                var category = sortedCategories[i];
+                var liTag = document.createElement("li");
+                var aTag = document.createElement("a");
+                aTag.href = "/categories#" + category.title;
+                aTag.textContent = category.title;
+                var spanTag = document.createElement("span");
+                spanTag.appendChild(document.createTextNode("[" + category.count + "]"));
+                liTag.appendChild(aTag);
+                liTag.appendChild(spanTag);
+                ulTag.appendChild(liTag);
+            }
+            var lastLiTag = document.createElement("li");
+            var lastATag = document.createElement("a");
+            lastATag.href = "/categories";
+            lastATag.textContent = "その他のタグ…";
+            lastLiTag.appendChild(lastATag);
+            ulTag.appendChild(lastATag);
+            appendPoint.appendChild(ulTag);
+        })();
+    </script>
+</div>
+        </nav>
+    </div>
+</div>
+
+</aside>
+<article>
+    <div class="content container">
+        <div class="post" id="js-post-url" data-post-url="/2018/01/25/almin-0.15/">
+    <h1 class="post-title">Almin 0.15リリース</h1>
+
+    <div class="pre-post-toolbar">
+        <span class="post-date">2018年01月25日</span>
+        <a class="btn edit-on-github" href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2018/2018-01-25-almin-0.15.md"><span class="edito-on-github-label"></span>Edit on GitHub</a>
+
+    </div>
+    <div class="post-content">
+        <p>ステート管理ライブラリの<a href="https://almin.js.org/" title="Almin">Almin</a> 0.15をリリースしました。</p>
+
+<ul>
+<li><a href="https://github.com/almin/almin/releases/tag/almin%400.15.0" title="Release Almin 0.15.0 · almin/almin">Release Almin 0.15.0 · almin/almin</a></li>
+</ul>
+
+<h2 id="🌟-features">🌟 Features</h2>
+
+<h3 id="usecase-shouldexecuteをサポート"><code>UseCase#shouldExecute</code>をサポート</h3>
+
+<p><code>UseCase#shouldExecute</code>はユースケースを実行するかどうかの事前条件を定義できます。</p>
+
+<p>今までの問題として、ユースケースを宣言的に実行するかどうかを決めることができませんでした。
+動作としては<code>UseCase#execute()</code>が実行されたときに条件が合ってなければreturnすれば機能としては同じです。</p>
+
+<p>しかし、<a href="https://github.com/almin/almin/tree/master/packages/almin-logger" title="almin-logger">almin-logger</a>などのイベント的には&quot;実行した&quot;という記録が残ってしまうのでイマイチでした。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">class</span> <span class="nx">MyUseCase</span> <span class="kr">extends</span> <span class="nx">UseCase</span> <span class="p">{</span>
+    <span class="nx">execute</span><span class="p">(</span><span class="nx">args</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">condition</span><span class="p">){</span>
+             <span class="k">return</span><span class="p">;</span> <span class="c1">// Should not execute this UseCase</span>
+        <span class="p">}</span>
+        <span class="c1">// do something</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>UseCase#shouldExecute</code>ではこのケースを宣言的に表現できます。
+<code>UseCase#shouldExecute</code>で<code>false</code>を返せば、そのユースケースを実行しません。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">class</span> <span class="nx">MyUseCase</span> <span class="kr">extends</span> <span class="nx">UseCase</span> <span class="p">{</span>
+    <span class="nx">shouldExecute</span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="o">:</span> <span class="kr">boolean</span> <span class="p">{</span>
+         <span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="c1">// if this usecase should not execute</span>
+    <span class="p">}</span>
+    <span class="nx">execute</span><span class="p">(</span><span class="nx">args</span><span class="p">){</span>
+        <span class="c1">// do something</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>この&quot;実行しなかった&quot;というログは別途<code>onWillNotExecuteEachUseCase</code>イベントで取得できるのできます。
+詳しくは<a href="https://almin.js.org/docs/en/lifecycleeventhub-api.html" title="LifeCycleEventHub · Almin">LifeCycleEventHub · Almin</a>をみてください。</p>
+
+<h2 id="📝-documentation">📝 Documentation</h2>
+
+<p><a href="http://efcl.info/2017/12/26/docusaurus-almin/" title="AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した | Web Scratch">AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した | Web Scratch</a>で書いたようにAlminのドキュメントサイトを作り直しました。</p>
+
+<ul>
+<li><a href="https://almin.js.org/">https://almin.js.org/</a></li>
+</ul>
+
+<p><img src="https://user-images.githubusercontent.com/19714/35078145-318fa092-fc44-11e7-83ff-a4a6e07f0ef8.png" alt="image"></p>
+
+<p><img src="https://user-images.githubusercontent.com/19714/35078141-2a626f2a-fc44-11e7-874e-5cfebdee12f7.png" alt="cqrs patterns for javascript application 2018-01-18 11-38-49"></p>
+
+<p>また、いくつかのドキュメントを追加したり修正しています。</p>
+
+<p>Thanks to <a href="https://github.com/almin/almin/commits?author=koba04" title="koba04">@koba04</a>.</p>
+
+<p>まだチュートリアルの前段階の所がイマイチなので直していきたいです。</p>
+
+<p>Alminは必要なレイヤー分けをするために必要なものを置くために、Reduxなどに比べると登場人物が多いです。これは、特別な記法などを増やしてまで減らすことは目的ではなく、必要なものはちゃんと見える形にすることが目的にあるからです。</p>
+
+<p>そのためこの辺の知識などを補完するためのドキュメントがもっとあるといいなという感じがしています。
+(ライブラリに依存したものというよりは、よくあるレイヤードアーキテクチャなどにもでてくるような知識。<a href="http://hanamirb.org/" title="Hanami">Hanami</a>とか<a href="http://terasolunaorg.github.io/guideline/" title="TERASOLUNA Server Framework">TERASOLUNA Server Framework</a>のようなそのライブラリ利用者以外にも役立つとより良い。)</p>
+
+<h2 id="🔥-breaking-change">🔥 Breaking Change</h2>
+
+<p>破壊的な変更が一部ありますが、<a href="https://github.com/almin/migration-tools" title="almin/migration-tools: Migration scripts for Almin.">almin/migration-tools</a>でマイグレーションできたり、TypeScriptの型の問題になっています。</p>
+
+<p><strong>TypeScript</strong></p>
+
+<ul>
+<li><code>Payload</code>の<code>type</code>プロパティの型定義を改善しました</li>
+<li><code>Payload</code>クラスを継承してる人だけに影響があります。</li>
+</ul>
+
+<p><strong>Before:</strong></p>
+
+<p>今まではよくないものが型エラーになっていませんでした。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// OK</span>
+<span class="kr">class</span> <span class="nx">P1</span> <span class="kr">extends</span> <span class="nx">Payload</span><span class="p">{</span>
+    <span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;P1&quot;</span>
+<span class="p">}</span>
+<span class="c1">// OK</span>
+<span class="kr">class</span> <span class="nx">P2</span> <span class="kr">extends</span> <span class="nx">Payload</span> <span class="p">{</span>
+    <span class="nx">type</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+    <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">({</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;P2&quot;</span> <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// OK</span>
+<span class="kr">class</span> <span class="nx">P3</span> <span class="kr">extends</span> <span class="nx">Payload</span><span class="p">{</span>
+    <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">({</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;P2&quot;</span> <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// OK - It is a bug</span>
+<span class="kr">class</span> <span class="nx">P4</span> <span class="kr">extends</span> <span class="nx">Payload</span><span class="p">{</span>
+    <span class="c1">// no type</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>After:</strong></p>
+
+<p>0.15で型チェックが厳密になりました。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// OK</span>
+<span class="kr">class</span> <span class="nx">P1</span> <span class="kr">extends</span> <span class="nx">Payload</span><span class="p">{</span>
+    <span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;P1&quot;</span>
+<span class="p">}</span>
+<span class="c1">// OK</span>
+<span class="kr">class</span> <span class="nx">P2</span> <span class="kr">extends</span> <span class="nx">Payload</span> <span class="p">{</span>
+    <span class="nx">type</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+    <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">({</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;P2&quot;</span> <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// NG - Need to defined `type: string`</span>
+<span class="kr">class</span> <span class="nx">P3</span> <span class="kr">extends</span> <span class="nx">Payload</span><span class="p">{</span>
+    <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">({</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;P2&quot;</span> <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// NG: Fix a bug #295 </span>
+<span class="kr">class</span> <span class="nx">P4</span> <span class="kr">extends</span> <span class="nx">Payload</span><span class="p">{</span>
+    <span class="c1">// no type</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="♻️-remove-deprecated-api">♻️ Remove deprecated API</h3>
+
+<ul>
+<li><code>Context#on*</code> APIなどを <code>Context#events.on*</code> へ移動
+
+<ul>
+<li> <a href="https://github.com/almin/almin/issues/206">https://github.com/almin/almin/issues/206</a></li>
+</ul></li>
+<li><code>ChangedPayload</code> を削除 <a href="https://github.com/almin/almin/issues/285">https://github.com/almin/almin/issues/285</a></li>
+</ul>
+
+<p>この２つに変更は<a href="https://github.com/almin/migration-tools" title="@almin/migration-tools">@almin/migration-tools</a>で自動的にマイグレーションできます。</p>
+
+<h3 id="how-to-migrate">How to migrate?</h3>
+
+<p><code>@almin/migration-tools</code>をインストールして、対話式で移行したバージョンを指定すれば後はコードを自動的に変換してくれます。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">npm install -g @almin/migration-tools
+almin-migration-tools &quot;src/**/*.js&quot;
+</code></pre></div>
+<p><img src="https://cdn.rawgit.com/almin/migration-tools/dbd1895e/docs/screen-shot.gif" alt="screenshot"></p>
+
+<p>実際には次のようなコード変更が行われます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">UseCase</span><span class="p">,</span> <span class="nx">ChangedPayload</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;almin&quot;</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ExampleUseCase</span> <span class="kr">extends</span> <span class="nx">UseCase</span> <span class="p">{</span>
+    <span class="nx">execute</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">useCase</span><span class="p">(</span><span class="k">new</span> <span class="nx">ChangedPayload</span><span class="p">()).</span><span class="nx">execute</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>to </p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">UseCase</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;almin&quot;</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ExampleUseCase</span> <span class="kr">extends</span> <span class="nx">UseCase</span> <span class="p">{</span>
+    <span class="nx">execute</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">useCase</span><span class="p">({</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;ChangedPayload&quot;</span> <span class="p">}).</span><span class="nx">execute</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>くわしくは<a href="https://github.com/almin/migration-tools" title="@almin/migration-tools">@almin/migration-tools</a>を見てください。</p>
+
+<p>また、このようなマイグレーションツールを作るためのライブラリも作りました。</p>
+
+<ul>
+<li><a href="https://github.com/azu/code-migrator" title="azu/code-migrator: Create code migration tool for your tool/library/framework.">azu/code-migrator: Create code migration tool for your tool/library/framework.</a></li>
+</ul>
+
+<p><code>code-migrator</code>を使えば、<code>1.0.0</code> -&gt; <code>2.0.0</code>への移行というような対話CLIを簡単につくれます。実際にマイグレーションする処理はjscodeshiftなどの任意のcodemodツールを使えるので、<code>code-migrator</code>自体は選択されたバージョンに対するスクリプトを起動するだけです。</p>
+
+<ul>
+<li><a href="https://github.com/facebook/jscodeshift">facebook/jscodeshift: A JavaScript codemod toolkit.</a></li>
+<li><a href="https://github.com/square/babel-codemod">square/babel-codemod: babel-codemod rewrites JavaScript using babel plugins.</a></li>
+<li><a href="https://github.com/KnisterPeter/tscodeshift">KnisterPeter/tscodeshift: tscodeshift is a toolkit for running codemods over multiple TS files</a></li>
+</ul>
+
+<h2 id="その他">その他</h2>
+
+<p><a href="https://github.com/krasimir/kuker" title="kuker">kuker</a>に対応したAlminのDevToolsを作ったりしています。kukerはイベントのログビューア拡張なので、イベントをちゃんと定義してるAlminなどとは相性がいいです。(Redux-DevTools版の<a href="https://github.com/almin/almin-devtools" title="almin-devtools">almin-devtools</a>もある)</p>
+
+<ul>
+<li><a href="https://github.com/almin/almin-kuker-devtools" title="almin/almin-kuker-devtools: Integrate almin with kuker">almin/almin-kuker-devtools: Integrate almin with kuker</a></li>
+</ul>
+
+<p><img src="http://efcl.info/wp-content/uploads/2018/01/25-1516878025.png" alt="kuker"></p>
+
+<p>また、<a href="https://almin.js.org/" title="Almin">Almin</a>はいつでもコントビュートを募集しています。</p>
+
+<p><a href="https://github.com/almin/almin/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"><code>label:&quot;good first issue&quot;</code></a>というラベルがついたIssueなどが手が出しやすいかもしれません。</p>
+
+<ul>
+<li><a href="https://github.com/almin/almin/issues/185" title="Make Dispatcher optional in Context · Issue #185 · almin/almin">Make Dispatcher optional in Context · Issue #185 · almin/almin</a></li>
+</ul>
+
+<p>また、Alminは<a href="https://github.com/almin/almin/tree/master/packages/almin-react-container" title="almin-react-container">almin-react-container</a>というReact連携用のライブラリを公開しています。(自分がReactを使うことが多いので作った)
+最近、Reactが<a href="https://github.com/facebook/react/pull/11818">新しいContext API</a>や<a href="https://reactjs.org/docs/render-props.html" title="Render Props">Render Props</a>のドキュメント追加などパターンに変化が見られます。そのためReactとの連携をする<a href="https://github.com/almin/almin/tree/master/packages/almin-react-container" title="almin-react-container">almin-react-container</a>を新しく作り直そうとしています。(別物を作るイメージ)</p>
+
+<p>この辺に興味がある人は次のIssueを見てみると面白いかもしれません。</p>
+
+<ul>
+<li><a href="https://github.com/almin/almin/issues/318">Render props for Almin + React · Issue #318 · almin/almin</a></li>
+<li><a href="https://github.com/almin/almin/issues/312">Almin: Store#receivePayload design · Issue #312 · almin/almin</a></li>
+</ul>
+
+    </div>
+    <div class="post-post-toolbar">
+        <a class="btn edit-on-github"
+           href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2018/2018-01-25-almin-0.15.md"><span
+                class="edit-on-github-label"></span>修正リクエストをする</a>
+        <nav class="tags"
+             id="js-post-tags"
+             data-post-tags='["JavaScript","Almin"]'>
+            <span>タグ:</span>
+            <ul>
+                
+                <li><a href="/tags/?q=JavaScript">JavaScript</a></li>
+                
+                <li><a href="/tags/?q=Almin">Almin</a></li>
+                
+            </ul>
+        </nav>
+    </div>
+    <div class="announce-area">
+        <h3>お知らせ欄</h3>
+        <div class="announce-text">
+            <!--お知らせ-->
+JavaScriptに関する最新情報は週一で<a href="http://jser.info/" title="JSer.info">JSer.info</a>を更新しています。
+
+        </div>
+        <h3>次に書くかもしれない記事候補</h3>
+        <p>興味がありましたら<a href="https://github.com/efcl/efcl.github.io/labels/%E8%A8%98%E4%BA%8B%E5%80%99%E8%A3%9C" title="Issues · efcl/efcl.github.io">Issues · efcl/efcl.github.io</a>からご意見下さい</p>
+        <div class="announce-text">
+            <iframe src="https://azu.github.io/github-issue-widget/?owner=efcl&repo=efcl.github.io&labels=記事候補&limit=4&random"
+                    allowtransparency="true" frameborder="0" scrolling="0" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+    <div class="related-articles" id="js-related-articles">
+        <h3>関連記事</h3>
+    </div>
+</div>
+<div class="zenback-embed">
+    <!-- X:S ZenBackWidget --><div id="zenback-widget-loader"></div><script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var r=Math.ceil((new Date()*1)*Math.random());var j=d.createElement("script");j.id=i;j.async=true;j.src="//w.zenback.jp/v1/?base_uri=http%3A//efcl.info/&nsid=89229392978401102%3A%3A89229398078677080&rand="+r;d.body.appendChild(j);}}(document,"zenback-widget-js");</script><!-- X:E ZenBackWidget -->
+</div>
+<div class="disqus-embed" id="js-disqus-embed">
+    <button class="comment-button" id="js-comment-button">コメントを表示</button>
+</div>
+
+<script type="text/javascript" src="/public/js/tag-fetcher.js"></script>
+<script type="text/javascript" src="/public/js/show-related-article.js"></script>
+<script type="text/javascript" src="/public/js/show-disqus.js"></script>
+
+    </div>
+</article>
+</body>
+</html>

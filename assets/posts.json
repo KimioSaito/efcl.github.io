@@ -2,6 +2,12 @@
     "posts": [
         
         {
+            "title": "Almin 0.15リリース",
+            "url": "http://efcl.info/2018/01/25/almin-0.15/",
+            "date": "2018-01-25T10:56:00+09:00"
+        },
+        
+        {
             "title": "ECMAScript 2015以降のJavaScriptの`this`を理解する",
             "url": "http://efcl.info/2018/01/04/what-is-this/",
             "date": "2018-01-04T19:02:00+09:00"

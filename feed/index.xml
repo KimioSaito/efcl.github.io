@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-06T18:50:14+09:00</updated>
+ <updated>2018-01-25T21:27:13+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,219 @@
  </author>
  
 
+ 
+ <entry>
+   <title>Almin 0.15リリース</title>
+   <link href="http://efcl.info/2018/01/25/almin-0.15/"/>
+   <updated>2018-01-25T10:56:00+09:00</updated>
+   <id>http://efcl.info/2018/01/25/almin-0.15</id>
+   <content type="html"><![CDATA[ <p>ステート管理ライブラリの<a href="https://almin.js.org/" title="Almin">Almin</a> 0.15をリリースしました。</p>
+
+<ul>
+<li><a href="https://github.com/almin/almin/releases/tag/almin%400.15.0" title="Release Almin 0.15.0 · almin/almin">Release Almin 0.15.0 · almin/almin</a></li>
+</ul>
+
+<h2 id="🌟-features">🌟 Features</h2>
+
+<h3 id="usecase-shouldexecuteをサポート"><code>UseCase#shouldExecute</code>をサポート</h3>
+
+<p><code>UseCase#shouldExecute</code>はユースケースを実行するかどうかの事前条件を定義できます。</p>
+
+<p>今までの問題として、ユースケースを宣言的に実行するかどうかを決めることができませんでした。
+動作としては<code>UseCase#execute()</code>が実行されたときに条件が合ってなければreturnすれば機能としては同じです。</p>
+
+<p>しかし、<a href="https://github.com/almin/almin/tree/master/packages/almin-logger" title="almin-logger">almin-logger</a>などのイベント的には&quot;実行した&quot;という記録が残ってしまうのでイマイチでした。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">class</span> <span class="nx">MyUseCase</span> <span class="kr">extends</span> <span class="nx">UseCase</span> <span class="p">{</span>
+    <span class="nx">execute</span><span class="p">(</span><span class="nx">args</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">condition</span><span class="p">){</span>
+             <span class="k">return</span><span class="p">;</span> <span class="c1">// Should not execute this UseCase</span>
+        <span class="p">}</span>
+        <span class="c1">// do something</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>UseCase#shouldExecute</code>ではこのケースを宣言的に表現できます。
+<code>UseCase#shouldExecute</code>で<code>false</code>を返せば、そのユースケースを実行しません。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">class</span> <span class="nx">MyUseCase</span> <span class="kr">extends</span> <span class="nx">UseCase</span> <span class="p">{</span>
+    <span class="nx">shouldExecute</span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="o">:</span> <span class="kr">boolean</span> <span class="p">{</span>
+         <span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="c1">// if this usecase should not execute</span>
+    <span class="p">}</span>
+    <span class="nx">execute</span><span class="p">(</span><span class="nx">args</span><span class="p">){</span>
+        <span class="c1">// do something</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>この&quot;実行しなかった&quot;というログは別途<code>onWillNotExecuteEachUseCase</code>イベントで取得できるのできます。
+詳しくは<a href="https://almin.js.org/docs/en/lifecycleeventhub-api.html" title="LifeCycleEventHub · Almin">LifeCycleEventHub · Almin</a>をみてください。</p>
+
+<h2 id="📝-documentation">📝 Documentation</h2>
+
+<p><a href="http://efcl.info/2017/12/26/docusaurus-almin/" title="AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した | Web Scratch">AlminのサイトをOSSドキュメントツールのdocusaurusで作り直した | Web Scratch</a>で書いたようにAlminのドキュメントサイトを作り直しました。</p>
+
+<ul>
+<li><a href="https://almin.js.org/">https://almin.js.org/</a></li>
+</ul>
+
+<p><img src="https://user-images.githubusercontent.com/19714/35078145-318fa092-fc44-11e7-83ff-a4a6e07f0ef8.png" alt="image"></p>
+
+<p><img src="https://user-images.githubusercontent.com/19714/35078141-2a626f2a-fc44-11e7-874e-5cfebdee12f7.png" alt="cqrs patterns for javascript application 2018-01-18 11-38-49"></p>
+
+<p>また、いくつかのドキュメントを追加したり修正しています。</p>
+
+<p>Thanks to <a href="https://github.com/almin/almin/commits?author=koba04" title="koba04">@koba04</a>.</p>
+
+<p>まだチュートリアルの前段階の所がイマイチなので直していきたいです。</p>
+
+<p>Alminは必要なレイヤー分けをするために必要なものを置くために、Reduxなどに比べると登場人物が多いです。これは、特別な記法などを増やしてまで減らすことは目的ではなく、必要なものはちゃんと見える形にすることが目的にあるからです。</p>
+
+<p>そのためこの辺の知識などを補完するためのドキュメントがもっとあるといいなという感じがしています。
+(ライブラリに依存したものというよりは、よくあるレイヤードアーキテクチャなどにもでてくるような知識。<a href="http://hanamirb.org/" title="Hanami">Hanami</a>とか<a href="http://terasolunaorg.github.io/guideline/" title="TERASOLUNA Server Framework">TERASOLUNA Server Framework</a>のようなそのライブラリ利用者以外にも役立つとより良い。)</p>
+
+<h2 id="🔥-breaking-change">🔥 Breaking Change</h2>
+
+<p>破壊的な変更が一部ありますが、<a href="https://github.com/almin/migration-tools" title="almin/migration-tools: Migration scripts for Almin.">almin/migration-tools</a>でマイグレーションできたり、TypeScriptの型の問題になっています。</p>
+
+<p><strong>TypeScript</strong></p>
+
+<ul>
+<li><code>Payload</code>の<code>type</code>プロパティの型定義を改善しました</li>
+<li><code>Payload</code>クラスを継承してる人だけに影響があります。</li>
+</ul>
+
+<p><strong>Before:</strong></p>
+
+<p>今まではよくないものが型エラーになっていませんでした。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// OK</span>
+<span class="kr">class</span> <span class="nx">P1</span> <span class="kr">extends</span> <span class="nx">Payload</span><span class="p">{</span>
+    <span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;P1&quot;</span>
+<span class="p">}</span>
+<span class="c1">// OK</span>
+<span class="kr">class</span> <span class="nx">P2</span> <span class="kr">extends</span> <span class="nx">Payload</span> <span class="p">{</span>
+    <span class="nx">type</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+    <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">({</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;P2&quot;</span> <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// OK</span>
+<span class="kr">class</span> <span class="nx">P3</span> <span class="kr">extends</span> <span class="nx">Payload</span><span class="p">{</span>
+    <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">({</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;P2&quot;</span> <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// OK - It is a bug</span>
+<span class="kr">class</span> <span class="nx">P4</span> <span class="kr">extends</span> <span class="nx">Payload</span><span class="p">{</span>
+    <span class="c1">// no type</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>After:</strong></p>
+
+<p>0.15で型チェックが厳密になりました。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// OK</span>
+<span class="kr">class</span> <span class="nx">P1</span> <span class="kr">extends</span> <span class="nx">Payload</span><span class="p">{</span>
+    <span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;P1&quot;</span>
+<span class="p">}</span>
+<span class="c1">// OK</span>
+<span class="kr">class</span> <span class="nx">P2</span> <span class="kr">extends</span> <span class="nx">Payload</span> <span class="p">{</span>
+    <span class="nx">type</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+    <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">({</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;P2&quot;</span> <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// NG - Need to defined `type: string`</span>
+<span class="kr">class</span> <span class="nx">P3</span> <span class="kr">extends</span> <span class="nx">Payload</span><span class="p">{</span>
+    <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">({</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;P2&quot;</span> <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// NG: Fix a bug #295 </span>
+<span class="kr">class</span> <span class="nx">P4</span> <span class="kr">extends</span> <span class="nx">Payload</span><span class="p">{</span>
+    <span class="c1">// no type</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="♻️-remove-deprecated-api">♻️ Remove deprecated API</h3>
+
+<ul>
+<li><code>Context#on*</code> APIなどを <code>Context#events.on*</code> へ移動
+
+<ul>
+<li> <a href="https://github.com/almin/almin/issues/206">https://github.com/almin/almin/issues/206</a></li>
+</ul></li>
+<li><code>ChangedPayload</code> を削除 <a href="https://github.com/almin/almin/issues/285">https://github.com/almin/almin/issues/285</a></li>
+</ul>
+
+<p>この２つに変更は<a href="https://github.com/almin/migration-tools" title="@almin/migration-tools">@almin/migration-tools</a>で自動的にマイグレーションできます。</p>
+
+<h3 id="how-to-migrate">How to migrate?</h3>
+
+<p><code>@almin/migration-tools</code>をインストールして、対話式で移行したバージョンを指定すれば後はコードを自動的に変換してくれます。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">npm install -g @almin/migration-tools
+almin-migration-tools &quot;src/**/*.js&quot;
+</code></pre></div>
+<p><img src="https://cdn.rawgit.com/almin/migration-tools/dbd1895e/docs/screen-shot.gif" alt="screenshot"></p>
+
+<p>実際には次のようなコード変更が行われます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">UseCase</span><span class="p">,</span> <span class="nx">ChangedPayload</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;almin&quot;</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ExampleUseCase</span> <span class="kr">extends</span> <span class="nx">UseCase</span> <span class="p">{</span>
+    <span class="nx">execute</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">useCase</span><span class="p">(</span><span class="k">new</span> <span class="nx">ChangedPayload</span><span class="p">()).</span><span class="nx">execute</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>to </p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">UseCase</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;almin&quot;</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ExampleUseCase</span> <span class="kr">extends</span> <span class="nx">UseCase</span> <span class="p">{</span>
+    <span class="nx">execute</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">useCase</span><span class="p">({</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;ChangedPayload&quot;</span> <span class="p">}).</span><span class="nx">execute</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>くわしくは<a href="https://github.com/almin/migration-tools" title="@almin/migration-tools">@almin/migration-tools</a>を見てください。</p>
+
+<p>また、このようなマイグレーションツールを作るためのライブラリも作りました。</p>
+
+<ul>
+<li><a href="https://github.com/azu/code-migrator" title="azu/code-migrator: Create code migration tool for your tool/library/framework.">azu/code-migrator: Create code migration tool for your tool/library/framework.</a></li>
+</ul>
+
+<p><code>code-migrator</code>を使えば、<code>1.0.0</code> -&gt; <code>2.0.0</code>への移行というような対話CLIを簡単につくれます。実際にマイグレーションする処理はjscodeshiftなどの任意のcodemodツールを使えるので、<code>code-migrator</code>自体は選択されたバージョンに対するスクリプトを起動するだけです。</p>
+
+<ul>
+<li><a href="https://github.com/facebook/jscodeshift">facebook/jscodeshift: A JavaScript codemod toolkit.</a></li>
+<li><a href="https://github.com/square/babel-codemod">square/babel-codemod: babel-codemod rewrites JavaScript using babel plugins.</a></li>
+<li><a href="https://github.com/KnisterPeter/tscodeshift">KnisterPeter/tscodeshift: tscodeshift is a toolkit for running codemods over multiple TS files</a></li>
+</ul>
+
+<h2 id="その他">その他</h2>
+
+<p><a href="https://github.com/krasimir/kuker" title="kuker">kuker</a>に対応したAlminのDevToolsを作ったりしています。kukerはイベントのログビューア拡張なので、イベントをちゃんと定義してるAlminなどとは相性がいいです。(Redux-DevTools版の<a href="https://github.com/almin/almin-devtools" title="almin-devtools">almin-devtools</a>もある)</p>
+
+<ul>
+<li><a href="https://github.com/almin/almin-kuker-devtools" title="almin/almin-kuker-devtools: Integrate almin with kuker">almin/almin-kuker-devtools: Integrate almin with kuker</a></li>
+</ul>
+
+<p><img src="http://efcl.info/wp-content/uploads/2018/01/25-1516878025.png" alt="kuker"></p>
+
+<p>また、<a href="https://almin.js.org/" title="Almin">Almin</a>はいつでもコントビュートを募集しています。</p>
+
+<p><a href="https://github.com/almin/almin/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"><code>label:&quot;good first issue&quot;</code></a>というラベルがついたIssueなどが手が出しやすいかもしれません。</p>
+
+<ul>
+<li><a href="https://github.com/almin/almin/issues/185" title="Make Dispatcher optional in Context · Issue #185 · almin/almin">Make Dispatcher optional in Context · Issue #185 · almin/almin</a></li>
+</ul>
+
+<p>また、Alminは<a href="https://github.com/almin/almin/tree/master/packages/almin-react-container" title="almin-react-container">almin-react-container</a>というReact連携用のライブラリを公開しています。(自分がReactを使うことが多いので作った)
+最近、Reactが<a href="https://github.com/facebook/react/pull/11818">新しいContext API</a>や<a href="https://reactjs.org/docs/render-props.html" title="Render Props">Render Props</a>のドキュメント追加などパターンに変化が見られます。そのためReactとの連携をする<a href="https://github.com/almin/almin/tree/master/packages/almin-react-container" title="almin-react-container">almin-react-container</a>を新しく作り直そうとしています。(別物を作るイメージ)</p>
+
+<p>この辺に興味がある人は次のIssueを見てみると面白いかもしれません。</p>
+
+<ul>
+<li><a href="https://github.com/almin/almin/issues/318">Render props for Almin + React · Issue #318 · almin/almin</a></li>
+<li><a href="https://github.com/almin/almin/issues/312">Almin: Store#receivePayload design · Issue #312 · almin/almin</a></li>
+</ul>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>ECMAScript 2015以降のJavaScriptの`this`を理解する</title>
@@ -2714,342 +2927,6 @@ Reduxでよく見るような形になってると思います。</p>
 
 <p>今までは名前のみであったため処理時間しか取れるデータはありませんでしたが、<a href="https://github.com/azu/performance-mark-metadata" title="performance-mark-metadata">performance-mark-metadata</a>を使うことで任意のメタデータを乗せられるので幅が広がるのかなと思います。
 将来的にUser Timing APIの方にこの仕組みが入ったらそちらに移行していくのがいいかなと思います。</p>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>#html_modules_study アウトラインメモ</title>
-   <link href="http://efcl.info/2017/11/15/html_module_study/"/>
-   <updated>2017-11-15T20:56:00+09:00</updated>
-   <id>http://efcl.info/2017/11/15/html_module_study</id>
-   <content type="html"><![CDATA[ <h1 id="html_modules_study-connpass"><a href="https://web-study.connpass.com/event/70731/" title="html_modules_study - connpass">html_modules_study - connpass</a></h1>
-
-<p><a href="https://web-study.connpass.com/event/70731/" title="html_modules_study - connpass">html_modules_study</a>に参加したのでメモ。</p>
-
-<h2 id="webcomponents-updates-1000ch">WebComponents Updates - @1000ch</h2>
-
-<blockquote>
-<p>スライド: <a href="https://1000ch.github.io/slide/webcomponents-2017/#" title="Web Components Updates">Web Components Updates</a></p>
-</blockquote>
-
-<ul>
-<li>Void or Self-closing Element
-
-<ul>
-<li>今は <code>&lt;x-button&gt;&lt;/x-button&gt;</code> なので省略したい</li>
-<li><code>&lt;x-button&gt;</code></li>
-</ul></li>
-<li><code>assignedElements()</code>
-
-<ul>
-<li><code>assignedNodes()</code>はTextも含まれる</li>
-<li>挿入された要素だけをShadom DOM内部で参照したい</li>
-</ul></li>
-<li>Custom Psuedo-elements
-
-<ul>
-<li>疑似要素を独自に定義出来るようにしたいPropsal</li>
-<li><code>&lt;input paseudo=&quot;start-data&quot; type=&quot;data&quot;&gt;</code></li>
-<li><code>data-range-selector::start-data</code></li>
-</ul></li>
-<li>CSS shadow Parts
-
-<ul>
-<li>Shadow Hostを<code>::part()</code>や<code>::theme()</code>で参照するCSSセレクタ</li>
-</ul></li>
-<li>HTML modules
-
-<ul>
-<li><code>import</code>、<code>export</code>でHTMLをロードしていいか</li>
-<li>ESのシンタックスも拡張する必要がある?</li>
-</ul></li>
-<li>(個人の意見) HTML Importsが宣言的に使えば何でもいい</li>
-<li>HTML Template Instantiation
-
-<ul>
-<li><a href="https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Template-Instantiation.md" title="webcomponents/Template-Instantiation.md at gh-pages · w3c/webcomponents">webcomponents/Template-Instantiation.md at gh-pages · w3c/webcomponents</a></li>
-<li><code>&lt;template&gt;</code>の中でMustace的なテンプレート</li>
-<li>記法とその振る舞いを定義</li>
-</ul></li>
-<li><code>&lt;link rel=&quot;modulepreload&quot;&gt;</code>
-
-<ul>
-<li><a href="https://github.com/whatwg/html/pull/2383">Add <link> rel=&quot;modulepreload&quot; by domenic · Pull Request #2383 · whatwg/html</a></li>
-<li><a href="https://docs.google.com/document/d/1ds9EEkcDGnt-iR8SAN-_7nsOfw7gsMfhZjzZ_QAIyjM/edit">Loading Performance with (Many) Modules: Summary as of Oct 7, 2017 - Google ドキュメント</a></li>
-<li>moduleの先までpreloadをしていくpreload</li>
-</ul></li>
-<li>rel=preloadとかas=moduleではだめ?
-
-<ul>
-<li>script要素のcredentialと一致する必要がある</li>
-<li>パースする前にhtml moduleなのかスクリプトなのかわからないと問題に?</li>
-<li>rel=preloadは専用のpreload cacheに保存してる V8</li>
-<li>なので、module cache</li>
-<li>なぜas=moduleではだめ?</li>
-<li><a href="https://github.com/whatwg/fetch/issues/486" title="preload, destinations, and module scripts · Issue #486 · whatwg/fetch">preload, destinations, and module scripts · Issue #486 · whatwg/fetch</a></li>
-</ul></li>
-</ul>
-
-<h2 id="template-instantiation-md-koba04">Template-Instantiation.md: @koba04</h2>
-
-<blockquote>
-<p>スライド: <a href="https://speakerdeck.com/koba04/template-instantiation" title="Template Instantiation // Speaker Deck">Template Instantiation // Speaker Deck</a></p>
-</blockquote>
-
-<ul>
-<li><a href="https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Template-Instantiation.md" title="HTML Template Instantiation">HTML Template Instantiation</a></li>
-<li>テンプレートであってコンポーネントではない
-
-<ul>
-<li>mustache syntax</li>
-</ul></li>
-<li>バックグラウンド
-
-<ul>
-<li>いろんなフレームワークが独自のテンプレートを定義していた</li>
-<li>それぞれのテンプレートを組み合わせるのは難しい</li>
-</ul></li>
-<li>mustache syntax
-
-<ul>
-<li>シンプル</li>
-<li>値を代入する所だけはmustache syntax</li>
-<li>他はConfigurableにして柔軟性を作る</li>
-</ul></li>
-<li>Use Cases 9コ
-
-<ul>
-<li>テンプレートからDOM Treeを作れる</li>
-<li>テンプレートの変数へ代入できる</li>
-<li>テンプレートの変数は更新できる</li>
-<li>テンプレートの変数処理には関数を挟むことができる</li>
-<li>テンプレート -&gt; JavaScriptへ値を渡せる = 双方向なバンディング
-ィング</li>
-<li>属性を更新できる</li>
-<li>デフォルトの値を指定できる</li>
-<li>DOMの出し分けに対応する</li>
-<li>ループ処理</li>
-</ul></li>
-<li>Template Parts
-
-<ul>
-<li><code>\{\{value\}\}</code> をPartsと呼ぶ</li>
-<li>このpartsを更新することでCapitalizeとかの処理を実装できる</li>
-<li>前後のNodeや親子のNodeの参照などを持つ</li>
-</ul></li>
-<li>Template Partsの中にTemplate Parts
-
-<ul>
-<li><code>InnterTemplatePart</code></li>
-</ul></li>
-<li>Template Process Callback
-
-<ul>
-<li>createとupdate時に呼ばれるcallbackを指定できる</li>
-<li><code>createCallback</code></li>
-<li><code>processCallback</code></li>
-</ul></li>
-<li>Other libraries
-
-<ul>
-<li><a href="https://github.com/PolymerLabs/lit-html" title="PolymerLabs/lit-html: HTML template literals in JavaScript">PolymerLabs/lit-html: HTML template literals in JavaScript</a>
-
-<ul>
-<li>JavaScriptの中にテンプレートを書く</li>
-<li>Tagged Template</li>
-</ul></li>
-<li><a href="https://glimmerjs.com/" title="Glimmer">Glimmer</a>
-
-<ul>
-<li><a href="https://emberjs.com/blog/2017/10/10/glimmer-progress-report.html" title="Ember.js - Glimmer.js Progress Report">Ember.js - Glimmer.js Progress Report</a></li>
-</ul></li>
-</ul></li>
-<li>出典
-
-<ul>
-<li><a href="https://github.com/whatwg/html/issues/2254" title="Standardize &amp;lt;template&amp;gt; variables and event handlers · Issue #2254 · whatwg/html">Standardize template variables and event handlers · Issue #2254 · whatwg/html</a></li>
-</ul></li>
-<li>FAQ
-
-<ul>
-<li><code>\{\{</code>の記号 は変えられない?</li>
-</ul></li>
-</ul>
-
-<h2 id="html-modules-tkochi">HTML Modules -  @tkochi</h2>
-
-<ul>
-<li>Blinkやってる</li>
-<li>Layout Tests</li>
-<li>HTML5
-
-<ul>
-<li>progressとかいろんな要素が増えた</li>
-<li>もっとプリミティブなAPIを定義したほうがいいのではというのがスタート</li>
-</ul></li>
-<li>HTML Imports
-
-<ul>
-<li><a href="https://www.polymer-project.org/blog/2017-08-22-npm-modules" title="Polymer 3.0 preview: npm and ES6 Modules - Polymer Project">Polymer 3.0 preview: npm and ES6 Modules - Polymer Project</a></li>
-<li>PolymerでもHTML ImportsからES moduleに移行することになった</li>
-</ul></li>
-<li>そもそもHTML Importとは
-
-<ul>
-<li>コンポーネントの定義を一つにまとめてロードする仕組み</li>
-<li><code>&lt;link rel=import href=my-button.html&gt;</code></li>
-<li><code>HTMLLinkElement.import</code> (readonly)</li>
-<li>後は使うだけ</li>
-</ul></li>
-<li>共通のImport
-
-<ul>
-<li>common.htmlを2回importした時</li>
-<li>1度目は実行される、2度目は実行されない</li>
-<li>import</li>
-</ul></li>
-<li>HTML Importのメリット
-
-<ul>
-<li><code>&lt;script&gt;</code>が実行できる</li>
-<li>依存関係を解決しながらロードしてくれる
-
-<ul>
-<li>ES moduleはすべての依存をリンクしてから実行するモデル</li>
-<li>HTML Importsならパイプライン処理できる</li>
-</ul></li>
-<li>テンプレート、スタイル、スクリプトを1つのファイルにかける
-
-<ul>
-<li>Vueの<code>.vue</code>とかと同じ</li>
-</ul></li>
-</ul></li>
-<li>問題点
-
-<ul>
-<li>Chrome以外の実装がない</li>
-<li><code>Document</code>のツリーができてしまう
-
-<ul>
-<li>しかし、HTML Importの<code>Document</code>は表示されない</li>
-<li>Fragmentではない</li>
-<li>Documentを持つ問題を引きずる
-
-<ul>
-<li><code>&lt;base&gt;</code>問題</li>
-</ul></li>
-<li>import先でも<code>document</code>を呼ぶとメインのドキュメントが返ってくる</li>
-<li><code>document.currentScript.ownerDocument</code></li>
-</ul></li>
-<li><code>&lt;style&gt;</code>がメインドキュメントに適応される
-
-<ul>
-<li>HTML module待ち</li>
-</ul></li>
-<li>ESModulesと相互運用できない
-
-<ul>
-<li>ロードとか実行の順序を決めるとかをHTML ImportとES Module両方をそれぞれ書かないといけなくなる</li>
-</ul></li>
-</ul></li>
-<li>HTML Modules
-
-<ul>
-<li><a href="https://github.com/w3c/webcomponents/issues/645">https://github.com/w3c/webcomponents/issues/645</a>
-
-<ul>
-<li>長いスレッド</li>
-</ul></li>
-<li>実際にユーザーに出すときにはコンパイルした何かになってる</li>
-<li>そういうときにHTML Modulesみたいなそのまま出すものを作る意味がどれぐらいあるのか</li>
-<li>スレッドのまとめ
-
-<ul>
-<li>HTML in JS、JS in HTML</li>
-<li>importでJavaScript以外も <code>as Foo</code> で読めるようにするとか</li>
-<li><code>Symbol.importer</code>みたいなhookを実装できるようにすればいいのではとか</li>
-<li>論点がまとまってない</li>
-</ul></li>
-</ul></li>
-</ul>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">module</span><span class="nt">&gt;</span>
-<span class="kr">import</span> <span class="nx">temp</span> <span class="nx">from</span> <span class="s2">&quot;my-template.html&quot;</span><span class="p">;</span>
-<span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">&quot;#id&quot;</span><span class="p">).</span><span class="nx">appendChild</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">importNode</span><span class="p">(</span><span class="nx">tmpl</span><span class="p">.</span><span class="nx">content</span><span class="p">));</span>
-<span class="nt">&lt;/script&gt;</span>
-</code></pre></div>
-<p>実現例(イメージ)</p>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">module</span><span class="nt">&gt;</span>
-<span class="kr">import</span> <span class="o">*</span> <span class="nx">from</span> <span class="s2">&quot;lgtm-button.html&quot;</span><span class="p">;</span>
-<span class="c1">// registryはwindowにくっついている</span>
-<span class="nt">&lt;/script&gt;</span>
-<span class="nt">&lt;lgtm-button&gt;&lt;/lgtm-button&gt;</span>
-</code></pre></div>
-<p>実装例(import/export)</p>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;template&gt;</span>
-  <span class="nt">&lt;button&gt;</span>LGTM<span class="nt">&lt;/button&gt;</span>
-<span class="nt">&lt;/template&gt;</span>
-<span class="nt">&lt;script&gt;</span>
-<span class="kr">import</span> <span class="nx">MyButton</span> <span class="nx">from</span> <span class="s2">&quot;./my-button.html&quot;</span>
-<span class="kr">export</span> <span class="kr">class</span> <span class="nx">LGTMButton</span> <span class="kr">extends</span> <span class="nx">MyButton</span><span class="p">{}</span>
-<span class="nt">&lt;/script&gt;</span>
-</code></pre></div>
-<ul>
-<li><p>HTML moduileはHTMLとES両方の仕様を参照する</p>
-
-<ul>
-<li>ES側にhookの仕組み</li>
-<li>HTML側に解釈の仕組み</li>
-</ul></li>
-<li><p>何がうれしいのか</p>
-
-<ul>
-<li><code>&lt;template&gt;</code>を読み込みたい</li>
-<li>文字列からDOM生成じゃないので効率的?</li>
-<li>ネイティブHTMLパーザーを使うと性能が出る?</li>
-</ul></li>
-<li><p>TAPC 2017の議論</p>
-
-<ul>
-<li>ES moduleベースのシステム</li>
-<li>InertなHTMLがロードできる
-
-<ul>
-<li><a href="http://takenspc.hatenablog.com/entry/2013/09/26/232111" title="inertとは何だろう - Unreviewed">inertとは何だろう - Unreviewed</a></li>
-</ul></li>
-<li>ここまでは共通認識</li>
-<li>single file component
-
-<ul>
-<li>html,js,cssを含んだコンポーネント</li>
-</ul></li>
-<li><code>&lt;script&gt;</code>が実行できる</li>
-<li>DOMの一部をexportできる</li>
-<li>他のモジュールをimportできる</li>
-<li>Document or DocumentGragment</li>
-<li>独立した空間
-
-<ul>
-<li>サードパーティなHTMLを独立した空間で実行出来る</li>
-<li>いいねボタンとかを別の空間にする</li>
-<li><a href="https://github.com/tc39/proposal-realms" title="tc39/proposal-realms: ECMAScript Proposal, specs, and reference implementation for Realms">tc39/proposal-realms: ECMAScript Proposal, specs, and reference implementation for Realms</a></li>
-</ul></li>
-<li>何も決まらなかった</li>
-<li>具体的なユースケースで話をしようぜ</li>
-</ul></li>
-<li><p>FAQ</p>
-
-<ul>
-<li>Q. パッケージマネージャについて議論されてる?</li>
-<li>A. 特になかった
-
-<ul>
-<li>Polymerの人もいるので一応考えているのでは</li>
-<li><a href="https://github.com/package-community/discussions/issues/2" title="javascript: npm for web packages · Issue #2 · package-community/discussions">javascript: npm for web packages · Issue #2 · package-community/discussions</a></li>
-</ul></li>
-<li>Q. 文章のフォーマットなのに文章として実行できないもを定義する意味は?</li>
-<li>A. Declarative Custom HTMLとかの議論はあった</li>
-</ul></li>
-</ul>
  ]]></content>
  </entry>
  
