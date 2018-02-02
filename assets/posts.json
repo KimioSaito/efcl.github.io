@@ -2,6 +2,12 @@
     "posts": [
         
         {
+            "title": "Jestなどを使わずにスナップショットテストを書く",
+            "url": "http://efcl.info/2018/02/02/snapshot-test/",
+            "date": "2018-02-02T19:28:00+09:00"
+        },
+        
+        {
             "title": "Almin 0.15リリース",
             "url": "http://efcl.info/2018/01/25/almin-0.15/",
             "date": "2018-01-25T10:56:00+09:00"

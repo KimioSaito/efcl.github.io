@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-01-25T21:27:13+09:00</updated>
+ <updated>2018-02-02T19:56:26+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,110 @@
  </author>
  
 
+ 
+ <entry>
+   <title>Jestなどを使わずにスナップショットテストを書く</title>
+   <link href="http://efcl.info/2018/02/02/snapshot-test/"/>
+   <updated>2018-02-02T19:28:00+09:00</updated>
+   <id>http://efcl.info/2018/02/02/snapshot-test</id>
+   <content type="html"><![CDATA[ <p>スナップショットテストといえば<a href="https://github.com/facebook/jest" title="Jest">Jest</a>や<a href="https://github.com/bahmutov/snap-shot-it" title="snap-shot-it">snap-shot-it</a>などが有名です。
+しかし、どちらもそれ自体がAssertionを含むため、比較したいだけには大掛かりな仕組みです。</p>
+
+<p>自分がスナップショットテストを書くときはいつもその場でパターン化したテストコードを書いています。</p>
+
+<h2 id="スナップショットテスト">スナップショットテスト</h2>
+
+<p>スナップショットテストは、何かの入力を受け取り、その出力とファイルに保存しておいた前回の出力結果を比較してテストする手法だと思います。
+主な目的はコードの変更して既存の機能を壊してしまうようなリグレッションを防ぐことです。</p>
+
+<p>Babelプラグインのようなコード変換、パーサ、ジェネレータなど何かの入力を受け取り出力できるものに利用できます。</p>
+
+<p>入力と出力の組み合わせをどんどん作っていけばテストも増えるので、テストを簡単に増やせるのが特徴的です。</p>
+
+<h2 id="スナップショットテストを書く">スナップショットテストを書く</h2>
+
+<p>次のようなテストコードを書きます。(これはMochaを使っていますが大体どんなテストフレームワークでも同じことが出来ます。)</p>
+
+<p>次のスナップショットでは、<code>transform</code>というJSONを入力に受け取り、JSONを出力する関数をテストしています。</p>
+
+<p><code>snapshot-test.js</code>:</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;fs&quot;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">fixturesDir</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s2">&quot;snapshots&quot;</span><span class="p">);</span>
+<span class="c1">// 変換する関数</span>
+<span class="kr">const</span> <span class="nx">transform</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;../transform&quot;</span><span class="p">);</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;Snapshot testing&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">fs</span><span class="p">.</span><span class="nx">readdirSync</span><span class="p">(</span><span class="nx">fixturesDir</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">caseName</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kr">const</span> <span class="nx">normalizedTestName</span> <span class="o">=</span> <span class="nx">caseName</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/-/g</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">);</span>
+      <span class="nx">it</span><span class="p">(</span><span class="err">`</span><span class="nx">Test</span> <span class="nx">$</span><span class="p">{</span><span class="nx">normalizedTestName</span><span class="p">}</span><span class="err">`</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kr">const</span> <span class="nx">fixtureDir</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">fixturesDir</span><span class="p">,</span> <span class="nx">caseName</span><span class="p">);</span>
+        <span class="kr">const</span> <span class="nx">actualFilePath</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">fixtureDir</span><span class="p">,</span> <span class="s2">&quot;input.json&quot;</span><span class="p">);</span>
+        <span class="kr">const</span> <span class="nx">actualContent</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">actualFilePath</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">);</span>
+        <span class="kr">const</span> <span class="nx">actual</span> <span class="o">=</span> <span class="nx">transform</span><span class="p">(</span><span class="nx">actualContent</span><span class="p">);</span>
+        <span class="kr">const</span> <span class="nx">expectedFilePath</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">fixtureDir</span><span class="p">,</span> <span class="s2">&quot;output.json&quot;</span><span class="p">);</span>
+        <span class="c1">// UPDATE_SNAPSHOT=1 npm test で呼び出したときはスナップショットを更新</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">UPDATE_SNAPSHOT</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="nx">expectedFilePath</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">normalizedActual</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">4</span><span class="p">));</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">skip</span><span class="p">();</span> <span class="c1">// スキップ</span>
+          <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="c1">// inputとoutputを比較する</span>
+        <span class="kr">const</span> <span class="nx">expected</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">expectedFilePath</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">));</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span>
+          <span class="nx">actual</span><span class="p">,</span>
+          <span class="nx">expected</span><span class="p">,</span>
+          <span class="err">`</span>
+<span class="nx">$</span><span class="p">{</span><span class="nx">fixtureDir</span><span class="p">}</span>
+<span class="nx">$</span><span class="p">{</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">actual</span><span class="p">)}</span>
+<span class="err">`</span>
+        <span class="p">);</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
+<h3 id="スナップショットファイルの作成">スナップショットファイルの作成</h3>
+
+<p>先ほどのテストに書いた <code>fixturesDir</code> に対して、テストケース毎のディレクトリを作っていくだけです。
+それぞれのディレクトリには、入力となる<code>input.json</code>、出力となる<code>output.json</code>を作って配置していくだけです。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">├── snapshot-test.js
+└── snapshots
+    ├── テストケース名1
+    │   ├── input.json
+    │   └── output.json
+    └── テストケース名1
+        ├── input.json
+        └── output.json
+</code></pre></div>
+<h3 id="スナップショットのテスト作成">スナップショットのテスト作成</h3>
+
+<p>スナップショットテストの良いところは、前回の結果とずれてないかを目視で確認するのが主な目的であるところです。つまり、テストケースの期待する結果をわざわざ自分で書く必要はありません。</p>
+
+<p>先ほどのテストも<code>UPDATE_SNAPSHOT=1</code>という環境変数を付けて実行すると、<code>input.json</code>から<code>output.json</code>のファイルを自動的に作成してくれます。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">UPDATE_SNAPSHOT=1 npm test
+</code></pre></div>
+<p>この自動的に作られた<code>output.json</code>が期待している形ならコミットして終わりです。
+次からは、環境変数をつけないで実行すれば単に比較されます。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">npm test 
+</code></pre></div>
+<p>また新しいスナップショットテストを追加したい場合は同じように<code>input.json</code>を作って、<code>output.json</code>が期待するものかを確認して追加を繰り返すだけです。</p>
+
+<p>既存の挙動を変えたときも<code>UPDATE_SNAPSHOT=1 npm test</code>で既存のスナップショットがすべて更新できるので、テストの変更に必要な労力は殆どありません(その結果が期待するものかは確認が必要です)</p>
+
+<p>このようにテストケースがコピペのような形で増やせて、かつ今まで追加したスナップショットテストがリグレッションを防いでくれます。</p>
+
+<p>すべてのパターンに使えるテスト方法ではありませんが、変換ツールやCLIといったものをテストする際には費用対効果が良いのでおすすめです。</p>
+
+<p>スナップショットテストを使ってる例:</p>
+
+<ul>
+<li><a href="https://github.com/azu/sentence-splitter/blob/master/test/fixtures-test.ts">sentence-splitter/fixtures-test.ts at master · azu/sentence-splitter</a></li>
+<li><a href="https://github.com/azu/ecmascript-proposals-json/blob/master/test/snapshot-test.js">ecmascript-proposals-json/snapshot-test.js at master · azu/ecmascript-proposals-json</a></li>
+</ul>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>Almin 0.15リリース</title>
@@ -2839,94 +2943,6 @@ Reduxでよく見るような形になってると思います。</p>
 <ul>
 <li><a href="https://github.com/azu/searchive" title="azu/searchive: Search All My Documents{PDF}.">azu/searchive: Search All My Documents{PDF}.</a></li>
 </ul>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>performance.markにメタデータを紐付けできるライブラリを書いた</title>
-   <link href="http://efcl.info/2017/11/15/performance.mark-metadata/"/>
-   <updated>2017-11-15T21:58:00+09:00</updated>
-   <id>http://efcl.info/2017/11/15/performance.mark-metadata</id>
-   <content type="html"><![CDATA[ <p><code>performance.mark</code>というパフォーマンス計測に役立つAPIがあります。
-<code>performance.mark</code> APIを使うと、指定して処理をマーキングでき、その結果を開発者ツールでみれます。とても便利なのですが、そのマーキングとメタデータを紐付ける仕組みがありませんでした。</p>
-
-<p><a href="https://github.com/almin/almin/releases/tag/almin%400.14.0"><img src="http://efcl.info/wp-content/uploads/2017/09/20-1505888631.png" alt="DevTool timeline"></a></p>
-
-<ul>
-<li><a href="http://efcl.info/2016/08/15/performance.mark/" title="performance.markでパフォーマンス計測する | Web Scratch">performance.markでパフォーマンス計測する | Web Scratch</a></li>
-<li><a href="http://efcl.info/2017/09/20/almin-performance-profile-0.14.0/" title="Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch">Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch</a></li>
-</ul>
-
-<p>TPAC 2017の<a href="https://docs.google.com/presentation/d/1d64Y4rtLCxobGgljVySU2CJpMPK5ksaiZuv3ka1dCVA/edit#slide=id.p" title="User Timing L3 - Google スライド">User Timing L3 - Google スライド</a>では、<code>performance.mark</code> APIでメタデータ(<code>details</code>)を紐付けできる仕組みが提案されています。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">performance</span><span class="p">.</span><span class="nx">mark</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">startTime</span><span class="p">,</span> <span class="nx">details</span><span class="p">)</span>
-</code></pre></div>
-<p>これを使うと「Aという処理でデータを取得」を<code>performance.mark</code>でマーキングする際に、実際に取得したデータをとマーキングをメタデータ(<code>details</code>)によって紐付けられます。</p>
-
-<p>これを速く使いたかったので<code>performance.mark</code>にメタデータを紐付けできる<a href="https://github.com/azu/performance-mark-metadata" title="performance-mark-metadata">performance-mark-metadata</a>というライブラリを書きました。</p>
-
-<ul>
-<li><a href="https://github.com/azu/performance-mark-metadata" title="azu/performance-mark-metadata: `performance.mark` with custom meta data.">azu/performance-mark-metadata: <code>performance.mark</code> with custom meta data.</a></li>
-</ul>
-
-<h2 id="サポート環境">サポート環境</h2>
-
-<ul>
-<li>モダンブラウザ と Node.js &gt;= 8.5.0をサポートしています。</li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/mark" title="Performance.mark()">Performance.mark()</a> APIが使える環境ならOKです</li>
-<li>Node.jsも8.5.0で<code>perf_hooks</code>が追加されています。</li>
-<li><a href="https://nodejs.org/api/perf_hooks.html" title="Performance Timing API | Node.js v9.2.0 Documentation">Performance Timing API | Node.js v9.2.0 Documentation</a></li>
-</ul>
-
-<p>それ以外の環境では<code>Performance.mark()</code>のpolyfillが必要です。</p>
-
-<ul>
-<li><a href="https://github.com/nicjansma/usertiming.js" title="nicjansma/usertiming.js: UserTiming polyfill">nicjansma/usertiming.js: UserTiming polyfill</a></li>
-</ul>
-
-<h2 id="インストール">インストール</h2>
-<div class="highlight"><pre><code class="language-text" data-lang="text">npm install performance-mark-metadata
-</code></pre></div>
-<h2 id="使い方">使い方</h2>
-
-<p>使い方は単純で<code>performance.mark</code>のProposalとよく似た形です。
-<code>marker.mark(name, metadata)</code> を渡すようにしています。(全く同じにしなかったのは仕様変更の可能性もあるため)</p>
-
-<p>メタデータを取り出すときは<code>marker.getEntryMetadata(entry)</code>で<code>entry</code>に紐づく<code>metadata</code>を取り出せます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">PerformanceMetadataMarker</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;performance-mark-metadata&quot;</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">marker</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PerformanceMetadataMarker</span><span class="p">();</span>
-<span class="kr">const</span> <span class="nx">metadata</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">details</span><span class="o">:</span> <span class="p">{</span> <span class="nx">key</span><span class="o">:</span> <span class="s2">&quot;value&quot;</span> <span class="p">}</span>
-<span class="p">};</span>
-<span class="kr">const</span> <span class="nx">markerName</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">;</span>
-<span class="c1">// mark with metadata</span>
-<span class="nx">marker</span><span class="p">.</span><span class="nx">mark</span><span class="p">(</span><span class="nx">markerName</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">);</span>
-<span class="nx">performance</span><span class="p">.</span><span class="nx">getEntriesByName</span><span class="p">(</span><span class="nx">markerName</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">entry</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="kr">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">marker</span><span class="p">.</span><span class="nx">getEntryMetadata</span><span class="p">(</span><span class="nx">entry</span><span class="p">);</span>
-    <span class="cm">/*</span>
-<span class="cm">    {</span>
-<span class="cm">        details: { key: &quot;value&quot; }</span>
-<span class="cm">    };</span>
-<span class="cm">    */</span>
-    <span class="nx">assert</span><span class="p">.</span><span class="nx">strictEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">,</span> <span class="s2">&quot;should get same metadata&quot;</span><span class="p">);</span>
-<span class="p">});</span>
-</code></pre></div>
-<p><code>entry</code>オブジェクトは<code>performance.get*</code> APIで取得できます。</p>
-
-<ul>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/getEntries">Performance.getEntries() - Web APIs | MDN</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/getEntriesByName">Performance.getEntriesByName() - Web APIs | MDN</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/getEntriesByType">Performance.getEntriesByType() - Web APIs | MDN</a></li>
-</ul>
-
-<h2 id="おわりに">おわりに</h2>
-
-<p><code>performance.mark</code>はシンプルながら結構便利なAPIです。
-<code>performance.now</code>を使うため負荷的に優しく、とりあえず必要なマーキングをしておき、後から取り出して細かく計測(<code>measure</code>)できます。</p>
-
-<p>単純なパフォーマンスのロギングと違ってブラウザやNode.jsで使える共通の仕様であるため、<a href="http://efcl.info/2017/09/20/almin-performance-profile-0.14.0/" title="Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch">Almin + React/Vue.jsのパフォーマンスプロファイルをタイムライン表示できるように | Web Scratch</a>のように他のライブラリと組み合わせ計測もできます。</p>
-
-<p>今までは名前のみであったため処理時間しか取れるデータはありませんでしたが、<a href="https://github.com/azu/performance-mark-metadata" title="performance-mark-metadata">performance-mark-metadata</a>を使うことで任意のメタデータを乗せられるので幅が広がるのかなと思います。
-将来的にUser Timing APIの方にこの仕組みが入ったらそちらに移行していくのがいいかなと思います。</p>
  ]]></content>
  </entry>
  
