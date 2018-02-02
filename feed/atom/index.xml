@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-02-02T20:04:12+09:00</updated>
+ <updated>2018-02-02T20:08:38+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -111,7 +111,10 @@
 
 <p>このようにテストケースがコピペのような形で増やせて、かつ今まで追加したスナップショットテストがリグレッションを防いでくれます。</p>
 
-<p>すべてのパターンに使えるテスト方法ではありませんが、変換ツールやCLIといったものをテストする際には費用対効果が良いのでおすすめです。</p>
+<h2 id="おわりに">おわりに</h2>
+
+<p>すべてのパターンに使えるテスト方法ではありませんが、変換ツールやCLIといったものをテストする際には費用対効果が良いのでおすすめです。
+Jestなどを使わずにスナップショットテストを書くメリットとしてはAssertionを自由にカスタマイズできる点です。<code>assert.deepEqual(actual, expected);</code>はテスト内容によって異なるAssertionを使えます。</p>
 
 <p>スナップショットテストを使ってる例:</p>
 
