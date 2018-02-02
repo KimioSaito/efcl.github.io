@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-02-02T19:56:26+09:00</updated>
+ <updated>2018-02-02T19:57:17+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -21,6 +21,10 @@
    <id>http://efcl.info/2018/02/02/snapshot-test</id>
    <content type="html"><![CDATA[ <p>スナップショットテストといえば<a href="https://github.com/facebook/jest" title="Jest">Jest</a>や<a href="https://github.com/bahmutov/snap-shot-it" title="snap-shot-it">snap-shot-it</a>などが有名です。
 しかし、どちらもそれ自体がAssertionを含むため、比較したいだけには大掛かりな仕組みです。</p>
+
+<ul>
+<li><a href="https://facebook.github.io/jest/docs/ja/snapshot-testing.html" title="スナップショットテスト · Jest">スナップショットテスト · Jest</a></li>
+</ul>
 
 <p>自分がスナップショットテストを書くときはいつもその場でパターン化したテストコードを書いています。</p>
 
