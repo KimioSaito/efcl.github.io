@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-02-02T20:08:38+09:00</updated>
+ <updated>2018-02-03T13:11:36+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -119,8 +119,16 @@ Jestなどを使わずにスナップショットテストを書くメリット�
 <p>スナップショットテストを使ってる例:</p>
 
 <ul>
-<li><a href="https://github.com/azu/sentence-splitter/blob/master/test/fixtures-test.ts">sentence-splitter/fixtures-test.ts at master · azu/sentence-splitter</a></li>
-<li><a href="https://github.com/azu/ecmascript-proposals-json/blob/master/test/snapshot-test.js">ecmascript-proposals-json/snapshot-test.js at master · azu/ecmascript-proposals-json</a></li>
+<li><a href="https://github.com/azu/sentence-splitter/blob/master/test/fixtures-test.ts">sentence-splitter/fixtures-test.ts at master · azu/sentence-splitter</a>
+
+<ul>
+<li>パースした結果のJSONをスナップショットとして保存しています</li>
+</ul></li>
+<li><a href="https://github.com/azu/ecmascript-proposals-json/blob/master/test/snapshot-test.js">ecmascript-proposals-json/snapshot-test.js at master · azu/ecmascript-proposals-json</a>
+
+<ul>
+<li>HTMLをスクレイピングして抽出した結果をスナップショットとして保存しています</li>
+</ul></li>
 </ul>
  ]]></content>
  </entry>
