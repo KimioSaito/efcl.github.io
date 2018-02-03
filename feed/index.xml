@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-02-03T13:11:36+09:00</updated>
+ <updated>2018-02-03T13:13:29+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -128,6 +128,11 @@ Jestなどを使わずにスナップショットテストを書くメリット�
 
 <ul>
 <li>HTMLをスクレイピングして抽出した結果をスナップショットとして保存しています</li>
+</ul></li>
+<li><a href="https://github.com/textlint/textlint/blob/master/packages/%40textlint/markdown-to-ast/test/parsing-test.js" title="textlint/parsing-test.js at master · textlint/textlint">textlint/parsing-test.js at master · textlint/textlint</a>
+
+<ul>
+<li>大量のvalidなMarkdownをパースできるかを検証しつつ、そのパース結果のASTをJSONとして保存しています</li>
 </ul></li>
 </ul>
  ]]></content>
