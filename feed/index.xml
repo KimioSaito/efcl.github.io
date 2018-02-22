@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-02-22T21:50:22+09:00</updated>
+ <updated>2018-02-22T23:38:17+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -15,7 +15,7 @@
 
  
  <entry>
-   <title>Node学園 29時限目でECMAScriptについて発表してきた</title>
+   <title>Node学園 29時限目でECMAScriptの調べ方について発表してきた</title>
    <link href="http://efcl.info/2018/02/22/node29/"/>
    <updated>2018-02-22T21:46:00+09:00</updated>
    <id>http://efcl.info/2018/02/22/node29</id>
@@ -36,15 +36,6 @@
 <hr>
 
 <p>以下メモ。</p>
-
-<p>| Nodeにコントリビュートし始めて一ヶ月でコラボレーターになった by Lekoさん |
-| ------------------------------------------------------------ |
-| headless chromeでクローリング(仮) by yuji isobeさん          |
-| ECMAScriptの使い方 by Azuさん                                |
-| Dynamic import あれこれ  by 小田島さん                       |
-| npm prepublish の現状と今後どう変わっていくかを調べてみた by しとりーさん |
-| rxjs v6 について by berlysiaさん                             |
-| introduction to JAMStack by sotayamashitaさん                |</p>
 
 <h2 id="nodeにコントリビュートし始めて一ヶ月でコラボレーターになった-by-leko">Nodeにコントリビュートし始めて一ヶ月でコラボレーターになった by Leko</h2>
 
