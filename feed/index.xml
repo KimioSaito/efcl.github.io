@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-02-04T17:54:51+09:00</updated>
+ <updated>2018-02-22T21:50:22+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,251 @@
  </author>
  
 
+ 
+ <entry>
+   <title>Node学園 29時限目でECMAScriptについて発表してきた</title>
+   <link href="http://efcl.info/2018/02/22/node29/"/>
+   <updated>2018-02-22T21:46:00+09:00</updated>
+   <id>http://efcl.info/2018/02/22/node29</id>
+   <content type="html"><![CDATA[ <p><a href="https://nodejs.connpass.com/event/78902/" title="Node学園 29時限目 - connpass">Node学園 29時限目 - connpass</a>に参加して<a href="http://azu.github.io/slide/2018/node/ecmascript39.html" title="ECMAScriptの使い方">ECMAScriptの使い方</a>について発表してきた。</p>
+
+<p>ECMAScriptの仕様や仕様を使ってなぜその仕様が入ったのかを調べる方法についてなどを話しました。</p>
+
+<p>スライド: <a href="http://azu.github.io/slide/2018/node/ecmascript39.html" title="ECMAScriptの使い方">ECMAScriptの使い方</a></p>
+
+<ul>
+<li>ECMAScriptとは何か</li>
+<li>ECMAScriptの使い方について</li>
+<li>ECMAScript仕様書の読み方の動画: <a href="https://www.youtube.com/watch?v=xT8GupiJIio" title="ECMAScriptの`class`のメソッド定義を調べる - YouTube">ECMAScriptの<code>class</code>のメソッド定義を調べる - YouTube</a></li>
+</ul>
+
+<p><a href="https://github.com/asciidwango/js-primer" title="js-primer">js-primer</a>に書いているので<a href="https://asciidwango.github.io/js-primer/basic/ecmascript/" title="ECMAScript · JavaScriptの入門書 #jsprimer">ECMAScript · JavaScriptの入門書 #jsprimer</a>を参照してみてください。</p>
+
+<hr>
+
+<p>以下メモ。</p>
+
+<p>| Nodeにコントリビュートし始めて一ヶ月でコラボレーターになった by Lekoさん |
+| ------------------------------------------------------------ |
+| headless chromeでクローリング(仮) by yuji isobeさん          |
+| ECMAScriptの使い方 by Azuさん                                |
+| Dynamic import あれこれ  by 小田島さん                       |
+| npm prepublish の現状と今後どう変わっていくかを調べてみた by しとりーさん |
+| rxjs v6 について by berlysiaさん                             |
+| introduction to JAMStack by sotayamashitaさん                |</p>
+
+<h2 id="nodeにコントリビュートし始めて一ヶ月でコラボレーターになった-by-leko">Nodeにコントリビュートし始めて一ヶ月でコラボレーターになった by Leko</h2>
+
+<ul>
+<li>Node.jsのコラボレータになった医龍</li>
+<li>JavaScript OSS Contribution Guideというスライドがきっかけ</li>
+<li><a href="https://kt3k.github.io/njs-talk/">https://kt3k.github.io/njs-talk/</a></li>
+<li>Code + Learn
+
+<ul>
+<li>初めてのPRをコラボレータがサポートしてくれる</li>
+</ul></li>
+<li>Node学園祭 他の人の発表を見てもっとNode.jsに詳しくなってコラボレータを目指そうと思った</li>
+<li>CTC、STC etc...
+
+<ul>
+<li><a href="http://abouthiroppy.hatenablog.jp/entry/2017/07/05/090952" title="Node.js FoundationとNode.jsについて - 技術探し">Node.js FoundationとNode.jsについて - 技術探し</a></li>
+<li>Node.jsは広いのでどこにコントビュートしたいかを決める</li>
+</ul></li>
+<li>Code + Leranで 2 PRを出した</li>
+<li>他のCode + Learnは簡単なものが多い</li>
+<li>他の修正に手を出してみた
+
+<ul>
+<li>色々細かい問題がでてきた</li>
+</ul></li>
+<li>Node.jsのカバレッジを上げるコントビュート
+
+<ul>
+<li><a href="https://coverage.nodejs.org/" title="Node.js Code Coverage">Node.js Code Coverage</a></li>
+</ul></li>
+<li>Cryptoのテストのカバレッジが少し低かった
+
+<ul>
+<li>カバレッジを上げるIssueに取り組んでいる</li>
+</ul></li>
+<li>Streamのテストカバレッジを上げる</li>
+<li>Node.js コラボレータのノミネートされた</li>
+<li>OnBoarding Sessionに参加
+
+<ul>
+<li>TSCのメンバーとリアルタイムにやりとり</li>
+<li>2FAを有効にするとか</li>
+<li>自身をコラボレータ一覧に入れるPRする</li>
+</ul></li>
+<li>コラボレータになってレビューする
+
+<ul>
+<li>コンテキストがよくわからない問題がよくある</li>
+</ul></li>
+</ul>
+
+<hr>
+
+<h2 id="headless-chromeでクローリング-by-yuji-isobe">headless chromeでクローリング by yuji isobe</h2>
+
+<p>スライド: <a href="https://speakerdeck.com/yujiosaka/an-gazui-chu-nihetudoresuchromedekurorazuo-tuta-shi-ninannekana" title="俺が最初にヘッドレスChromeでクローラ作った 事になんねーかな // Speaker Deck">俺が最初にヘッドレスChromeでクローラ作った 事になんねーかな // Speaker Deck</a></p>
+
+<ul>
+<li>EC専門家デビュー</li>
+<li><a href="https://developers.google.com/web/updates/2017/04/headless-chrome?hl=ja" title="ヘッドレス Chrome ことはじめ  |  Web  |  Google Developers">ヘッドレス Chrome ことはじめ  |  Web  |  Google Developers</a></li>
+<li>headless chromeのいいところ
+
+<ul>
+<li>Chromeに起動オプションを使える</li>
+<li>標準への追従が早い</li>
+</ul></li>
+<li>クローラー
+
+<ul>
+<li>静的クローラー</li>
+<li>HTMLとかの静的なサイトにリクエスト -&gt; パース</li>
+<li>動的クローラー</li>
+<li>JSで動く動的なサイトにリクエスト -&gt; パース</li>
+<li>headless chromeはこちら</li>
+</ul></li>
+<li>動的クローラー
+
+<ul>
+<li><a href="https://chromedevtools.github.io/devtools-protocol/" title="Chrome DevTools Protocol Viewer">Chrome DevTools Protocol Viewer</a></li>
+</ul></li>
+<li>PhantomJSはメンテ終了</li>
+<li>Headless Chromeを使うようになる</li>
+<li>問題
+
+<ul>
+<li>APIが低レベル過ぎて使いにくい</li>
+<li>仕様が不安定(experimental)</li>
+<li>セキュリティのブロックに引っかかる</li>
+<li>CSPなどかかったりする</li>
+<li>結構バグが多い</li>
+</ul></li>
+<li><a href="https://github.com/GoogleChrome/puppeteer" title="GoogleChrome/puppeteer: Headless Chrome Node API">GoogleChrome/puppeteer: Headless Chrome Node API</a>
+
+<ul>
+<li>例レベルなHeadless Chromeより高レベルなAPI</li>
+</ul></li>
+<li><a href="https://github.com/GoogleChrome/puppeteer/tree/master/examples" title="puppeteer/examples">puppeteer/examples</a>
+
+<ul>
+<li>実用的なクローラーのサンプルがなかった</li>
+<li>Node.jsでモダンなクローラーがまだなかった</li>
+<li>Promise</li>
+</ul></li>
+<li><a href="https://github.com/yujiosaka/headless-chrome-crawler" title="yujiosaka/headless-chrome-crawler: Distributed crawler powered by Headless Chrome">yujiosaka/headless-chrome-crawler: Distributed crawler powered by Headless Chrome</a>
+
+<ul>
+<li>作った</li>
+<li>Headless Chromeを使ったクローラーライブラリ</li>
+</ul></li>
+</ul>
+
+<hr>
+
+<h2 id="dynamic-import-あれこれ-by-小田島">Dynamic import あれこれ  by 小田島</h2>
+
+<p>スライド: <a href="https://speakerdeck.com/shimataro/dynamic-import-overview-and-pitfalls" title="dynamic import あれこれ / dynamic import - overview and pitfalls // Speaker Deck">dynamic import あれこれ / dynamic import - overview and pitfalls // Speaker Deck</a></p>
+
+<ul>
+<li>ES2015は静的なimport</li>
+<li>Dynamic Import</li>
+<li>Dynamic importを使ったリロード</li>
+<li>動的に読むことで様々な問題/考えることがでてくる
+
+<ul>
+<li>モジュールが古い場合</li>
+<li>モジュールを削除した場合</li>
+</ul></li>
+<li>Dynamic importの用途
+
+<ul>
+<li>起動時の動的ロード</li>
+</ul></li>
+</ul>
+
+<hr>
+
+<h2 id="npm-prepublish-の現状と今後どう変わっていくかを調べてみた-by-しとりーさん">npm prepublish の現状と今後どう変わっていくかを調べてみた by しとりーさん</h2>
+
+<ul>
+<li>ローカルにあるモジュールを <code>npm install</code> すると 
+なぜかインストール先の <code>prepublish</code> が呼ばれる問題</li>
+<li><a href="https://github.com/npm/npm/issues/10074" title="resolving prepublish-on-install · Issue #10074 · npm/npm">resolving prepublish-on-install · Issue #10074 · npm/npm</a></li>
+<li>npm 4で prepublishOnlyとprepareというの新しく生えた</li>
+<li>prepublishを
+
+<ul>
+<li>publishする前にprepublishOnly</li>
+<li>インストールするときだけにprepare</li>
+</ul></li>
+<li>将来的にprepublishOnlyは廃止される</li>
+</ul>
+
+<hr>
+
+<h2 id="rxjs-v6-について-by-berlysia">rxjs v6 について by berlysia</h2>
+
+<ul>
+<li>rxjs v6の変更点について</li>
+<li>ゴールにbundle sizeを小さくしたいというのが増えた</li>
+<li>pipeable operator
+
+<ul>
+<li>ただの関数としてimportできるのでtree shakeできる</li>
+<li>不要なoperatorを消せす</li>
+</ul></li>
+<li>RxJs 5.xはbind operatorでの使いやすさを検討してた
+
+<ul>
+<li><a href="https://github.com/tc39/proposal-bind-operator" title="tc39/proposal-bind-operator: This-Binding Syntax for ECMAScript">tc39/proposal-bind-operator: This-Binding Syntax for ECMAScript</a></li>
+</ul></li>
+<li>RxJs 6.xはpipeline operatowでの使いやすさを検討してた
+
+<ul>
+<li><a href="https://github.com/tc39/proposal-pipeline-operator" title="tc39/proposal-pipeline-operator: A proposal for adding the simple-but-useful pipeline operator to JavaScript.">tc39/proposal-pipeline-operator: A proposal for adding the simple-but-useful pipeline operator to JavaScript.</a></li>
+</ul></li>
+<li>現状はまだファイルサイズは小さくなってない</li>
+</ul>
+
+<hr>
+
+<h2 id="introduction-to-jamstack-by-sotayamashita">introduction to JAMStack by sotayamashita</h2>
+
+<ul>
+<li><a href="https://jamstack.org/" title="JAMstack | JavaScript, APIs, and Markup">JAMstack | JavaScript, APIs, and Markup</a>
+
+<ul>
+<li>クライアント側のJavaScript、再利用可能なAPI、備前にビルドされたマークアップ</li>
+</ul></li>
+<li>JavaScript + API + Markup = JAM</li>
+<li>JAMを使ったスタック
+
+<ul>
+<li>速い: CDNから静的コンテンツ</li>
+<li>セキュリティ: SaaSなどを使う(自前じゃなくて)</li>
+<li>スケール: スケールしやすい</li>
+<li>低コスト: 静的コンテンツが中心なので</li>
+</ul></li>
+<li>JAMスタックではない
+
+<ul>
+<li>Workpress</li>
+</ul></li>
+<li>JAMスタック
+
+<ul>
+<li><a href="https://forestry.io/" title="Static CMS for Hugo &amp;amp; Jekyll | Forestry.io">Static CMS for Hugo &amp; Jekyll | Forestry.io</a></li>
+<li><a href="https://www.wework.com/" title="WeWork Coworking and Office Space">WeWork Coworking and Office Space</a></li>
+</ul></li>
+<li><a href="https://jamstack.org/community/" title="JAMstack | JavaScript, APIs, and Markup">JAMstack | JavaScript, APIs, and Markup</a></li>
+</ul>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>Jestなどを使わずにスナップショットテストを書く</title>
@@ -2776,192 +3021,6 @@ App.tsx:33 Updated components: ⚛ A.shouldComponentUpdate, ⚛ B.shouldComponen
 <ul>
 <li><a href="https://github.com/azu/shallow-equal-object" title="shallow-equal-object">shallow-equal-object</a></li>
 <li><a href="https://github.com/azu/shallow-equal-props" title="shallow-equal-props">shallow-equal-props</a></li>
-</ul>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>ローカルのPDFを全文検索するクライアント/サーバ/Electronアプリを書いた</title>
-   <link href="http://efcl.info/2017/11/17/searchive/"/>
-   <updated>2017-11-17T20:03:00+09:00</updated>
-   <id>http://efcl.info/2017/11/17/searchive</id>
-   <content type="html"><![CDATA[ <p>ローカルにあるPDFを全部検索して、その結果を一覧したいことがあります。
-例えば、今、<a href="https://github.com/asciidwango/js-primer" title="js-primer">js-primer</a>という書籍を書いていて、ある用語が他の書籍ではどんな扱い/用語になっているのかを調べたいことがよくありました。</p>
-
-<p>この手のアプリとしては論文管理の<a href="https://www.readcube.com/papers/mac/" title="Papers for Mac">Papers for Mac</a>などがありますが、検索したいだけなのに色々な機能がついていてまた、とりあえず作ってみることにしました。</p>
-
-<p><a href="https://github.com/azu/searchive" title="searchive">searchive</a>というプロジェクト名にしてPDFからテキストを取り出す所やフロントエンドのElectronアプリ、PDFからテキストを取り出すのはブラウザでやるには遅いので、そこをサーバ側でやってくれる仕組みを作りました。</p>
-
-<p>大体100冊ぐらいをインデックスに入れて検索していますが、数百ms以内に検索結果が出てるので意外と動くようです。</p>
-
-<p><a href="http://www.giphy.com/gifs/3o6fIYo3aDtasisB2M"><img src="https://media.giphy.com/media/3o6fIYo3aDtasisB2M/giphy.gif" alt="App"></a></p>
-
-<h2 id="インストール">インストール</h2>
-
-<p><a href="https://github.com/azu/searchive/releases">Release page</a>からElectronアプリをダウンロードしてインストール出来ます。Electronアプリにはサーバの実装も入ってるので、アプリを入れるだけで動きます。</p>
-
-<ul>
-<li><a href="https://github.com/azu/searchive/releases/latest">Latest Release</a>からダウンロードしてインストール
-
-<ul>
-<li>署名してないので、右クリックの&quot;開く&quot;からじゃないと怒られる</li>
-</ul></li>
-</ul>
-
-<p><a href="https://www.appveyor.com/" title="AppVeyor">AppVeyor</a>などのCIの設定が面倒だったので、Mac版のバイナリしか置いていませんが、<a href="https://github.com/azu/searchive/tree/master/packages/searchive-app" title="searchive-app">searchive-app</a>をビルドすればどのOSでも動くと思います。またはPR歓迎です。</p>
-
-<h3 id="使い方">使い方</h3>
-
-<p>起動したら最初にPDFのインデックスを作る必要があります。</p>
-
-<p><img src="http://efcl.info/wp-content/uploads/2017/11/17-1510917382.png" alt="image"></p>
-
-<p>メニューから設定を開くと、インデックスしたいファイルの場所を<a href="https://github.com/isaacs/node-glob" title="node-glob">glob</a>で指定できます。
-保存するとPDFからテキストを取り出した<code>index.json</code>を作り出してくれます。(とても重いので放置しておくといいです)</p>
-
-<p>ローディングバーが消えて終わったら後は検索するだけです。
-検索結果をフィルターすることができるので、大雑把な検索をしてからフィルターする使い方を想定しています。(検索の単位はPDFのページ)</p>
-
-<p><a href="http://www.giphy.com/gifs/3o6fIYo3aDtasisB2M"><img src="https://media.giphy.com/media/3o6fIYo3aDtasisB2M/giphy.gif" alt="App"></a></p>
-
-<p>検索演算子はGitHubみたいなものが使えます。
-ライブラリとしては<a href="https://github.com/azu/search-query-tester" title="search-query-tester">search-query-tester</a>を使っています。</p>
-
-<p><img src="http://efcl.info/wp-content/uploads/2017/11/17-1510924048.png" alt="keyword operator"></p>
-
-<h2 id="作り方">作り方</h2>
-
-<p><a href="https://github.com/azu/searchive" title="searchive">searchive</a>はmonorepoのプロジェクトになっていて、細かい部品を独立したライブラリとして作っています。
-それらを組み合わせて<a href="https://github.com/azu/searchive/tree/master/packages/searchive-app" title="searchive-app">searchive-app</a>というアプリが動いています。</p>
-
-<p>それぞれの部品を順番に紹介していきます。</p>
-
-<h3 id="pdf-to-json"><a href="https://github.com/azu/searchive/tree/master/packages/pdf-to-json"><code>pdf-to-json</code></a> <a href="https://www.npmjs.com/package/pdf-to-json"><img src="https://img.shields.io/npm/v/pdf-to-json.svg?style=flat-square" alt="npm"></a></h3>
-
-<p><a href="https://github.com/mozilla/pdf.js" title="pdf.js">pdf.js</a>を使ってPDFからテキストを取り出してJSONにしてくれるライブラリです。ページごとのテキストをJSONにまとめてくれます。
-実際にはpdf.jsのnpm版である<a href="https://github.com/mozilla/pdfjs-dist" title="pdfjs-dist">pdfjs-dist</a>を使います。</p>
-
-<p>pdf.jsは使いにくいライブラリ(というアプリに近い)なので、日本語などもちゃんと扱えるようにするのは工夫が必要です。</p>
-
-<ul>
-<li><a href="http://efcl.info/2014/10/07/pdf-presentation/">pdf.jsを使いブラウザで見られるPDFスライド表示ツールを作った | Web Scratch</a></li>
-<li><a href="http://efcl.info/2015/12/07/pdf.js-controller/" title="[pdf.js] テキスト選択出来るスライド表示ライブラリを書いた | Web Scratch">[pdf.js] テキスト選択出来るスライド表示ライブラリを書いた | Web Scratch</a></li>
-</ul>
-
-<p>cmapsというファイルをちゃんと読めないと日本語などが扱えません。
-Node.jsで扱う公式のオプションはないので、テストコードを読んでURLをfsで代替するモック実装を使って読み込むことができました。</p>
-
-<ul>
-<li><a href="https://github.com/azu/searchive/blob/7ed276adfec3ec86ba421a9a2227e8333502e248/packages/pdf-to-json/src/pdf-to-json.ts#L15-L43">https://github.com/azu/searchive/blob/7ed276adfec3ec86ba421a9a2227e8333502e248/packages/pdf-to-json/src/pdf-to-json.ts#L15-L43</a></li>
-</ul>
-
-<h3 id="searchive-client"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-client"><code>searchive-client</code></a>  <a href="https://www.npmjs.com/package/searchive-client"><img src="https://img.shields.io/npm/v/searchive-client.svg?style=flat-square" alt="npm"></a></h3>
-
-<p><a href="https://github.com/azu/searchive" title="searchive">searchive</a>の検索やインデックへの書き込みを扱う抽象レイヤーです。fsやブラウザAPIにも依存してないクリーンなJavaScriptとして動作する層です。</p>
-
-<h3 id="searchive-create-index"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-create-index"><code>searchive-create-index</code></a>  <a href="https://www.npmjs.com/package/searchive-create-index"><img src="https://img.shields.io/npm/v/searchive-create-index.svg?style=flat-square" alt="npm"></a></h3>
-
-<p><a href="https://github.com/azu/searchive/tree/master/packages/searchive-client"><code>searchive-client</code></a>と<a href="https://github.com/azu/searchive/tree/master/packages/pdf-to-json"><code>pdf-to-json</code></a>を使って、実際にインデックファイルを作るライブラリでうｓ。
-ファイルを読み込んだり、書き込んだりするのでNode.jsに依存しています。</p>
-
-<h3 id="searchive-cli"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-cli"><code>searchive-cli</code></a> <a href="https://www.npmjs.com/package/searchive-cli"><img src="https://img.shields.io/npm/v/searchive-cli.svg?style=flat-square" alt="npm"></a></h3>
-
-<p>インデックを作ったり、実際に検索できるCLIです。
-<a href="https://github.com/azu/searchive/tree/master/packages/searchive-client"><code>searchive-client</code></a>や<a href="https://github.com/azu/searchive/tree/master/packages/searchive-create-index"><code>searchive-create-index</code></a>が実装の殆どを持っているため数行ぐらいしかないCLIです。monorepoだとこういう切り離しがし易いのもメリットです。</p>
-
-<p>テスト用に使ったりできます。</p>
-
-<h3 id="searchive-server"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-server"><code>searchive-server</code></a> <a href="https://www.npmjs.com/package/searchive-server"><img src="https://img.shields.io/npm/v/searchive-server.svg?style=flat-square" alt="npm"></a></h3>
-
-<p>Electronアプリはmain(Node.js)とrenderer(ブラウザ)のプロセスを両方持っていますが、こちらはNode.js側の実装です。
-<a href="https://github.com/azu/searchive/tree/master/packages/searchive-create-index"><code>searchive-create-index</code></a>を使ってインデックス作るWeb APIや、インデックを検索して結果を返すWeb APIを実装しています。</p>
-
-<p>REST APIの実装するサーバには<a href="https://github.com/restify/node-restify" title="restify">restify</a>を使っています。
-また、インデックスを作る処理は時間がかかるためREST APIでは不向きでした。
-そこでWeb Socketを使ったAPIを実装して、クライアント側とはWebSocketで進捗をやり取りしています。
-サーバ側のWebSocketsは<a href="https://github.com/websockets/ws" title="ws">ws</a>を使い、クライアント側はブラウザネイティブの<code>WebSocket</code>を使っています。</p>
-
-<h3 id="searchive-web-api-interface"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-web-api-interface"><code>searchive-web-api-interface</code></a> | <a href="https://www.npmjs.com/package/searchive-web-api-interface"><img src="https://img.shields.io/npm/v/searchive-web-api-interface.svg?style=flat-square" alt="npm"></a></h3>
-
-<p>主にWebSocketが原因でできたパッケージです。
-WebSocketはReduxとかのActionみたいなコマンドをやり取りする必要があります。
-それらの定義はサーバとクライアントどちらも共有したいので、インターフェイスだけを定義したパッケージを定義してサーバとクライアントではこれを使っています。</p>
-
-<p>サーバ側に定義してしまうと、クライアントがサーバに依存するという問題が起きてしまうための回避策です。</p>
-
-<h3 id="searchive-app"><a href="https://github.com/azu/searchive/tree/master/packages/searchive-app" title="searchive-app"><code>searchive-app</code></a></h3>
-
-<p>最後にElectronで書かれたアプリです。
-Electronはmain(Node.js)とrenderer(ブラウザ)の両方を持っているので、mainで<a href="https://github.com/azu/searchive/tree/master/packages/searchive-server"><code>searchive-server</code></a>のサーバを動かして、rendererからAPIを叩いて使っています。</p>
-
-<p>Electronのセットアップは毎回苦戦するので、今回はElectron版<code>create-react-app</code>のような<a href="https://github.com/electron-userland/electron-webpack/" title="electron-webpack">electron-webpack</a>を使っています。
-これで<code>yarn run dev</code>するだけで開発が始めらます。mainのソースが変わった場合はアプリが起動し直され、rendererの場合はHot Reloadingができる構成なので、面倒なwebpackを触れなくてよくて便利です。</p>
-
-<p><a href="http://typescriptlang.org/">TypeScript</a>の対応も<a href="https://webpack.electron.build/add-ons" title="Add-ons · electron-webpack">Add-ons · electron-webpack</a>を入れるだけで解決するので楽でした。</p>
-
-<p>一方問題もあって、webpack-dev-serverを開発中は使って、buildした場合はhtmlになるので、<code>file:///</code>だと特権で動く処理がdevelopment中は動かないことがあります。(webviewの中でfileなコンテンツを表示するなどがhttpのページ上ではできない)</p>
-
-<p>次の記事でも同様の構成について触れています。</p>
-
-<ul>
-<li><a href="https://qiita.com/azu/items/a149501ca1b5864000a3" title="React + TypeScript (+ Electron)でアプリを書き始めるときにやってること - Qiita">React + TypeScript (+ Electron)でアプリを書き始めるときにやってること - Qiita</a></li>
-</ul>
-
-<p>Viewには<a href="https://reactjs.org/">React</a>を使っていて、UIコンポーネントとしてMSの<a href="https://developer.microsoft.com/en-us/fabric" title="Office UI Fabric">Office UI Fabric</a>を使っています。<a href="https://developer.microsoft.com/en-us/fabric" title="Office UI Fabric">Office UI Fabric</a>はこういうアプリを作るときに便利なメニューやコンテキストメニュー、パネルなどがあるのでよく使ってます。</p>
-
-<p>State管理には、<a href="https://github.com/almin/almin" title="almin">Almin</a>を使っています。
-基本的にやりたいことは次のようなことだけでした。</p>
-
-<ul>
-<li>(APIを叩いて)検索</li>
-<li>(WebSocketを繋いで)インデックスを更新</li>
-<li>フィルターを更新</li>
-<li>設定パネルを開く/閉じる</li>
-</ul>
-
-<p>Alminでは、やりたいこと(ユースケース)を1ファイル1ユースケースで書いていきます。</p>
-
-<ul>
-<li><a href="http://azu.github.io/slide/2017/almin/concept-of-almin.html" title="The Concept of Almin">The Concept of Almin</a></li>
-</ul>
-
-<p>なので、このアプリでは次のようなユースケースを書きました。</p>
-
-<p><img src="http://efcl.info/wp-content/uploads/2017/11/17-1510927384.png" alt="usecase図"></p>
-
-<blockquote>
-<p><a href="https://github.com/almin/almin-usecase-map-generator">https://github.com/almin/almin-usecase-map-generator</a>でユースケース図を生成</p>
-</blockquote>
-
-<p>このアプリではドメインとかそこまでちゃんとやっても旨味がない気がしたので、UseCaseでイベントをdispatchして、Storeでイベントを受け取ってStateを更新する感じにしました。
-Reduxでよく見るような形になってると思います。</p>
-
-<p><a href="https://github.com/azu/searchive/blob/master/packages/searchive-app/src/renderer/store/SearchIndexStore/SearchIndexStore.ts"><img src="http://efcl.info/wp-content/uploads/2017/11/17-1510923816.png" alt="Store"></a></p>
-
-<p>後は、<a href="https://github.com/almin/almin/tree/master/packages/almin-react-container" title="almin-react-container">almin-react-container</a>を使えば、AlminのStoreとReactのViewが自動で繋がるので、Stateが更新されたViewを更新するだけです。</p>
-
-<h4 id="todo">TODO</h4>
-
-<ul>
-<li>Electronのmainプロセスで重たい処理をすると、UIも固まるのでどうにかしたい
-
-<ul>
-<li>インデックスを作る処理が重たい</li>
-</ul></li>
-<li><a href="https://github.com/electron-userland/electron-webpack/" title="electron-webpack">electron-webpack</a>がdev serverを立てる制限で検索結果に実際にpdfを表示するプレビューがでてきてないのでどうにかしたい</li>
-<li>PDF以外も原理的に対応できるのでテキストファイルも合わせて検索したい</li>
-</ul>
-
-<h2 id="おわり">おわり</h2>
-
-<p>ローカルのPDFを全文検索する<a href="https://github.com/azu/searchive/tree/master/packages/searchive-app" title="searchive-app">searchive-app</a>の紹介とそのプロジェクト構造の解説をしました。</p>
-
-<p>最初は<a href="https://github.com/weixsong/elasticlunr.js" title="elasticlunr.js">elasticlunr.js</a>とかを使った全文検索を実装していたのですが、単純にJSONを保存してその中身を単純にマッチしたほうが早かったので変更した経緯とかがあります。</p>
-
-<p>勢いで自分用に書いたところが多いので、PRやIssueとかあったらよろしくお願いします。</p>
-
-<ul>
-<li><a href="https://github.com/azu/searchive" title="azu/searchive: Search All My Documents{PDF}.">azu/searchive: Search All My Documents{PDF}.</a></li>
 </ul>
  ]]></content>
  </entry>
