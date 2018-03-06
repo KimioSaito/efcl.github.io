@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-02-23T01:57:51+09:00</updated>
+ <updated>2018-03-07T11:39:20+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,721 @@
  </author>
  
 
+ 
+ <entry>
+   <title>ECMAScriptの仕様/プロポーザルの調べ方/使い方を知る</title>
+   <link href="http://efcl.info/2018/03/07/ecmascript-usage/"/>
+   <updated>2018-03-07T11:54:00+09:00</updated>
+   <id>http://efcl.info/2018/03/07/ecmascript-usage</id>
+   <content type="html"><![CDATA[ <h2 id="はじめに">はじめに</h2>
+
+<p>この文章は<a href="https://github.com/asciidwango/js-primer" title="asciidwango/js-primer: JavaScriptの入門書">asciidwango/js-primer: JavaScriptの入門書</a>で書いた<a href="https://asciidwango.github.io/js-primer/basic/ecmascript/" title="ECMAScript · JavaScriptの入門書 #jsprimer">ECMAScript · JavaScriptの入門書 #jsprimer</a>の章が元となっています。</p>
+
+<p>また、<a href="http://azu.github.io/slide/2018/node/ecmascript39.html" title="ECMAScriptの使い方">ECMAScriptの使い方</a>というスライドでどのようの話をしているのであわせて参照してみてください。</p>
+
+<blockquote>
+<p>スライド: <a href="http://azu.github.io/slide/2018/node/ecmascript39.html" title="ECMAScriptの使い方">ECMAScriptの使い方</a></p>
+</blockquote>
+
+<h2 id="ecmascript">ECMAScript</h2>
+
+<p>ECMAScriptは<a href="http://www.ecma-international.org/" title="Ecma International">Ecma International</a>という団体によって標準化されている仕様です。
+Ecma InternationalはECMAScript以外にもC#やDartなどの標準化作業を行っています。
+Ecma International中のTechnical Committee 39（TC39）という技術委員会が中心となって、ECMAScript仕様についてを議論しています。
+この技術委員会はMicroSoft、Mozilla、Google、AppleといったブラウザベンダーやECMAScriptに関心のある企業などによって構成されます。</p>
+
+<h2 id="ecmascriptのバージョンの歴史">ECMAScriptのバージョンの歴史</h2>
+
+<p>ここで、簡単にECMAScriptのバージョンの歴史を振り返ってみましょう。</p>
+
+<table>
+<thead>
+<tr>
+<th>バージョン</th>
+<th>リリース時期</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1997年6月</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1998年6月</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1999年12月</td>
+</tr>
+<tr>
+<td>4</td>
+<td>破棄</td>
+</tr>
+<tr>
+<td>5</td>
+<td>2009年12月</td>
+</tr>
+<tr>
+<td>5.1</td>
+<td>2011年6月</td>
+</tr>
+<tr>
+<td>2015</td>
+<td>2015年6月</td>
+</tr>
+<tr>
+<td>2016</td>
+<td>2016年6月</td>
+</tr>
+<tr>
+<td>2017</td>
+<td>2017年6月</td>
+</tr>
+</tbody>
+</table>
+
+<!-- textlint-disable -->
+
+<p>ES5.1からES2015がでるまで4年もの歳月がかかっているの対して、ES2015以降は毎年リリースされています。
+毎年安定したリリースを行えるようになったのは、ES2015以降は仕様策定プロセスの変更が行われたためです。</p>
+
+<!-- textlint-enable -->
+
+<h2 id="living-standardとなるecmascript">Living StandardとなるECMAScript</h2>
+
+<p>現在、ECMAScriptの仕様書のドラフトはGitHub上の<a href="https://github.com/tc39/ecma262" title="tc39/ecma262: Status, process, and documents for ECMA262">tc39/ecma262</a>で管理されており日々更新されています。
+そのため、本当の意味での最新のECMAScript仕様は<a href="https://tc39.github.io/ecma262/">https://tc39.github.io/ecma262/</a>となります。
+このように更新ごとにバージョン番号を付けずに、常に最新版を公開する仕様のことを<strong>Living Standard</strong>と呼びます。</p>
+
+<p>ECMAScriptはLiving Stadardですが、これに加えてECMAScript 2017のようにバージョン番号をつけたものも公開されています。
+このバージョン付きECMAScriptは、毎年決まった時期のドラフトを元にしたスナップショットのようなものです。</p>
+
+<p>ブラウザなどに実際にJavaScriptとして実装される際には、Living StandardのECMAScriptを参照しています。
+これは、ブラウザ自体も日々更新されるものであり、決まった時期にしかリリースされないバージョン付きよりもLiving Standardの方が適当であるためです。</p>
+
+<h2 id="仕様策定のプロセス">仕様策定のプロセス</h2>
+
+<p>ES2015以前はすべての仕様の合意が取れるまで延々と議論を続けすべてが決まってからリリースされていました。
+そのため、ES2015がリリースされるまでには6年もの歳月がかかり言語の進化が停滞していました。
+この問題を解消するために、TC39は毎年リリースするためにECMAScriptの策定プロセスを変更しました。</p>
+
+<p>この策定プロセスはES2015がリリース後に適応され、このプロセスで初めてリリースされたのがES2016となります。
+ES2016以降では、次のような仕様策定のプロセスで議論を進めて仕様が決定されています。<a href="%E3%81%93%E3%81%AE%E7%AD%96%E5%AE%9A%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9%E3%81%AF%3Chttps://tc39.github.io/process-document/%3E%E3%81%AB%E8%A9%B3%E7%B4%B0%E3%81%8C%E6%9B%B8%E3%81%8B%E3%82%8C%E3%81%A6%E3%81%84%E3%81%BE%E3%81%99%E3%80%82">^process</a></p>
+
+<p>仕様に追加する機能（API、構文など）をそれぞれ個別の<strong>プロポーザル</strong>（提案書）として進めていきます。
+現在策定中のプロポーザルはGitHub上の<a href="https://github.com/tc39/proposals" title="tc39/proposals: Tracking ECMAScript Proposals">tc39/proposals</a>に一覧が公開されています。
+それぞれのプロポーザルは責任者である<strong>チャンピオン</strong>と<strong>ステージ</strong>（Stage）と呼ばれる<code>0</code>から<code>4</code>の5段階の状態を持ちます。</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:center">ステージ</th>
+<th>ステージの概要</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td>アイデアの段階</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td>機能提案の段階</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td>機能の仕様書ドラフトを作成した段階</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td>仕様としては完成しており、ブラウザの実装やフィードバックを求める段階</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td>仕様策定が完了し、2つ以上の実装が存在している。<br />正式にECMAScriptにマージできる段階</td>
+</tr>
+</tbody>
+</table>
+
+<p>このステージの詳細については<a href="https://tc39.github.io/process-document/" title="The TC39 Process">The TC39 Process</a>を参照してください。</p>
+
+<p>2ヶ月に1度行われるTC39のミーティングにおいて、プロポーザルごとにステージを進めるかどうかを議論します。
+このミーティングの議事録もGitHub上の<a href="https://github.com/tc39/tc39-notes" title="tc39/tc39-notes: TC39 Meeting Notes">tc39/tc39-notes</a>にて公開されています。
+ステージ4となったプロポーザルはドラフト版である<a href="https://github.com/tc39/ecma262" title="tc39/ecma262: Status, process, and documents for ECMA262">tc39/ecma262</a>へマージされます。
+そして毎年の決まった時期にドラフト版を元にして<code>ECMAScript 20XX</code>としてリリースします。</p>
+
+<p>この仕様策定プロセスの変更は、ECMAScriptに含まれる機能の形にも影響しています。</p>
+
+<p>たとえば、<code>class</code>構文の策定は<strong>最大限に最小のクラス</strong>（maximally minimal classes）と呼ばれる形で提案されています。
+これによりES2015で<code>class</code>構文が導入されましたが、クラスとして合意が取れる最低限の機能だけの状態で入りました。
+その他のクラスの機能は別のプロポーザルとして提案され、ES2015以降に持ち越された形で議論が進められています。</p>
+
+<p>このような合意が取れる最低限の形でプロポーザルを進めていくのには、ES4の苦い失敗が背景にあります。
+ES4ではECMAScriptに多くの変更を入れることを試みましたが、TC39内でも意見が分かれ最終的に合意できませんでした。
+これによりES4の策定に割いた数年分のリソースが無駄となってしまったという経緯があります。[^1]</p>
+
+<p>ES2016以降の策定プロセスでも、すべてのプロポーザルが仕様に入るわけではありません。[^2]
+別の代替プロポーザルが出た場合や後方互換性と保てない場合などにプロポーザルの策定を中断する場合があります。
+しかし、この場合でもプロポーザルという単位であるため策定作業の無駄は最小限で済みます。
+このようにモジュール化されたプロポーザルは入れ替えがし易いという性質もあります。</p>
+
+<h2 id="プロポーザルの機能を試す">プロポーザルの機能を試す</h2>
+
+<p>ECMAScriptの策定プロセスのステージ4に「2つ以上の実装が存在している」という項目があります。
+そのためブラウザのJavaScriptエンジンには、策定中のプロポーザルが実装されている場合があります。
+多くの場合は試験的なフラグ付きで実装されておりフラグを有効化することで、試すことができるようになっています。</p>
+
+<p>またTranspilerやPolyfillといった手段で、プロポーザルの機能をエミュレートできる場合があります。</p>
+
+<p>Transpilerとは、新しい構文を既存の機能で再現できるようにソースコードを変換するツールのことです。
+たとえば、ES2015で<code>class</code>構文が導入されましたが、ES5では<code>class</code>は予約語であるため構文エラーとなり実行することはできません。
+Transpilerでは、<code>class</code>構文を含むソースコードを<code>function</code>キーワードを使い擬似的に再現するコードへ変換します。
+Transpilerとしては<a href="https://babeljs.io/" title="Babel · The compiler for writing next generation JavaScript">Babel</a>や<a href="https://www.typescriptlang.org/" title="TypeScript - JavaScript that scales.">TypeScript</a>などが有名です。</p>
+
+<p>Polyfillとは、新しい関数やメソッドなどの仕様を満たすような実装を提供するライブラリのことです。
+たとえば、ES2016では<code>Array#inclues</code>というメソッドが追加されました。
+構文とは異なり<code>Array#inclues</code>のようなメソッドはビルトインオブジェクトを書き換えることで実装できます。
+Polyfillを提供するものとしては<a href="https://github.com/zloirock/core-js" title="zloirock/core-js: Standard Library">core-js</a>や<a href="https://polyfill.io/v2/docs/" title="Polyfill service">polyfill.io</a>などが有名です。</p>
+
+<p>注意点としてはTranspilerやPolyfillはあくまで既存の機能で新しい機能を再現を試みているだけに過ぎません。
+そのため、既存の機能で再現ができないプロポーザル（機能）はTranspilerやPolyfillでは再現できません。
+また、完全な再現はできていないことがあるためTranspilerやPolyfillを新しい機能を学ぶために使うべきではありません。</p>
+
+<!-- Notes: バージョンが西暦となった理由
+
+実際に各ブラウザなどはECMAScriptを実装していますが、このときに参照するのは基本的にLiving StandardであるECMAScriptです。
+また、PolyfillやTranspilerといった手段で、タグ付けされたECMAScript 20XXがリリースされる前にその機能が利用できることも多いです。
+ECMAScriptのバージョンとしてES6ではなくES2015のように西暦をバージョンとして使うようになったのも、Living Standardを意識しての試みです。
+
+-->
+
+<h2 id="仕様や策定プロセスを知る意味">仕様や策定プロセスを知る意味</h2>
+
+<p>こうしたECMAScriptという仕様や策定プロセスを知る意味は何があるのでしょうか？
+主に次のような理由で知る意味があると考えています。</p>
+
+<ul>
+<li>言語を学ぶため</li>
+<li>言語が進化しているため</li>
+<li>情報の正しい状態を調べるため</li>
+</ul>
+
+<h3 id="言語を学ぶため">言語を学ぶため</h3>
+
+<p>もっとも単純な理由はJavaScriptという言語そのものを学ぶためです。
+言語の詳細を知りたい場合にはECMAScriptという仕様を参照できます。</p>
+
+<p>しかしながら、JavaScriptにおいては言語機能に関しては<a href="https://developer.mozilla.org/ja/" title="MDN Web Docs">MDN Web Docs</a>という優れたリファレンスサイトなどがあります。
+そのため、使い方を覚えたいなどの範囲ではECMAScriptの仕様そのものを参照する機会は少ないでしょう。</p>
+
+<h3 id="言語が進化しているため">言語が進化しているため</h3>
+
+<p>ECMAScriptはLiving Standardであり、日々更新されています。
+これは、言語仕様に新しい機能や修正などが常に行われていることを表しています。</p>
+
+<p>ECMAScriptは後方互換性を尊重するため、今学んでいることが無駄になるわけではありません。
+しかしながら言語自体も進化していることは意識しておくとよいでしょう。</p>
+
+<p>ECMAScriptのプロポーザル（機能）は問題を解決するために提案されます。
+そのプロポーザルがECMAScriptにマージされ利用できる場合、その機能が何を解決するために導入されたのか知ることは大切です。
+その際には、ECMAScriptの策定プロセスを知っておくことが調べることに役立ちます。</p>
+
+<p>この仕様はなぜこうなったのかということを知りたいと思ったときに、その機能がどのような経緯で入ったのかを調べる手段をもつことは大切です。
+特にES2015以降は策定プロセスもGitHubを利用したオープンなものとなり、過去の記録なども探しやすくなっています。</p>
+
+<h3 id="情報の正しい状態を調べるため">情報の正しい状態を調べるため</h3>
+
+<p>JavaScriptは幅広く使われている言語であるため、世の中には膨大な情報があります。
+そして、検索して見つかる情報には正しいものや間違ったものが混在しています。</p>
+
+<p>その中においてECMAScriptの仕様やその策定中のプロポーザルに関する情報は状態が明確です。
+基本的にECMAScriptの仕様に入ったものは、後方互換性を維持するために破壊的変更は殆ど行なえません。
+プロポーザルはステージという明示された状態があり、ステージ4未満の場合はまだ安定していないことが分かります。</p>
+
+<p>そのため、問題を見つけた際に該当する仕様やプロポーザルを確認してみることは重要です。</p>
+
+<p>これはECMAScriptにかぎらず、ウェブやブラウザに関する情報に関しては同じことがいえます。
+ブラウザ関してはHTML、DOM API、CSSなどもオープンな仕様とそれぞれ策定プロセスが存在しています。</p>
+
+<h3 id="ここまでのまとめ">ここまでのまとめ</h3>
+
+<p>JavaScriptと一言にいってもECMAScript、ブラウザ、Node.js、WebAssembly、WebGL、WebRTCなど幅広い分野があります。
+そのためすべてのことを知っている必要はありませんし、知っている人もおそらくいないでしょう。
+このような状況下においては知識そのものよりも、それについて知りたいと思ったときに調べる方法を持っていることが大切です。</p>
+
+<p>なにごとも突然全く新しい概念が増えるわけではなく、ものごとには過程が存在します。
+ECMAScriptにおいては策定プロセスという形でどのような段階であるかが公開されています。
+つまり、仕様にいきなり新しい機能が増えるのではなくプロポーザルという段階を踏んでいます。</p>
+
+<p>日々変化しているソフトウェアにおいては、自身に適切な調べ方をもつことが大切です。</p>
+
+<h2 id="具体例">具体例</h2>
+
+<p>話しだけ見てもよくわからないと思うので、ここからは具体的な使い方の話です。</p>
+
+<p>どのような場合に仕様やプロポーザルを調べたりするのか、またどのように調べるかについてです。</p>
+
+<h2 id="実装が仕様に準拠しているかを調べたい">実装が仕様に準拠しているかを調べたい</h2>
+
+<p>あるブラウザ/JavaScriptエンジンの挙動が仕様なのかを調べたいときがあります。</p>
+
+<p>それぞれのメジャーブラウザはJavaScriptエンジンを各自実装しています。
+そのため、どれかのブラウザが間違った実装だった場合に結果を比較することでわかる可能性があります。</p>
+
+<p><a href="https://github.com/bterlson/eshost-cli">eshost-cli</a>というツールを使うことで、ローカルにインストール済みのJavaScriptエンジンでの実行結果をまとめて出力してくれます。
+それぞれのJavaScriptエンジンをインストールするには<a href="https://github.com/GoogleChromeLabs/jsvu">jsvu</a>を使うのが簡単です。</p>
+
+<ul>
+<li><a href="https://github.com/GoogleChromeLabs/jsvu">GoogleChromeLabs/jsvu: JavaScript (engine) Version Updater</a>
+
+<ul>
+<li>主要なJavaScriptエンジンをまとめてインストール</li>
+<li>macOSならChakraを含めてほぼ対応できる</li>
+</ul></li>
+<li><a href="https://github.com/bterlson/eshost-cli">bterlson/eshost-cli: Run ECMAScript code uniformly across any ECMAScript host</a>
+
+<ul>
+<li>指定したJavaScriptエンジンでコードを実行できる</li>
+</ul></li>
+</ul>
+
+<p>次のように各種JavaScriptエンジンをインストールできます。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># jsvuとeshostをインストール
+npm install jsvu eshost-cli -g
+# インストール先
+export PATH=&quot;${HOME}/.jsvu:${PATH}&quot;
+# JavaScriptエンジンをまとめてインストールしてくれる
+jsvu
+# インストールしたJavaScriptエンジンをeshotに登録
+eshost --add &#39;Chakra&#39; ch ~/.jsvu/chakra
+eshost --add &#39;JavaScriptCore&#39; jsc ~/.jsvu/javascriptcore
+eshost --add &#39;SpiderMonkey&#39; jsshell ~/.jsvu/spidermonkey
+eshost --add &#39;V8&#39; d8 ~/.jsvu/v8
+</code></pre></div>
+<p>後は、eshostでコードを実行するだけです。
+次のコードではV8だけ結果が異なることが分かります。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># eshotでコードを実行
+eshost -e &#39;new RegExp(&quot;\n&quot;).toString()&#39;
+#### Chakra
+/\n/
+
+#### SpiderMonkey
+/\n/
+
+#### JavaScriptCore
+/\n/
+
+#### V8
+/
+/
+</code></pre></div>
+<p>このようにECMAScriptレベルのコードでJavaScriptエンジンの結果に差異がある場合は、大抵は実装依存の問題か実装の間違いといったケースになります。</p>
+
+<h2 id="ecmascriptの仕様を読む">ECMAScriptの仕様を読む</h2>
+
+<p>あるコードの実行結果が正しいのかを検証するためにECMAScriptの仕様書を読むことが参考になる場合があります。ECMAScriptの仕様書は2箇所にありますが基本的にはLiving Standard版を参照するのがよいでしょう(特定のバージョンに関するときはスナップショット版を参照します)</p>
+
+<ul>
+<li>スナップショット版: <a href="https://www.ecma-international.org/ecma-262/">https://www.ecma-international.org/ecma-262/</a></li>
+<li>Living Standard版: <a href="https://tc39.github.io/ecma262/">https://tc39.github.io/ecma262/</a></li>
+</ul>
+
+<p>ECMAScriptの仕様を読む機会はそこまで多くないと思いますが、Transpilerのような変換したコードの結果が異なる場合は仕様そのものを見てみるとどこにバグを報告すれば良いのかが明確になります。例えば、次の例はクラスのメソッド定義の挙動がBabelとTypeScriptで異なるケースです。</p>
+
+<h3 id="例-babelとtypescriptのクラス">例: BabelとTypeScriptのクラス</h3>
+
+<p>次のコードはBabelとTypeScriptでES5相当への変換と実行結果が異なります。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">class</span> <span class="nx">MyClass</span> <span class="p">{</span>
+    <span class="nx">method</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+<span class="p">}</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">));</span>
+</code></pre></div>
+<h4 id="babel-preset-envのデフォルト">Babel(preset-envのデフォルト)</h4>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">_createClass</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="kd">function</span> <span class="nx">defineProperties</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">props</span><span class="p">)</span> <span class="p">{</span> <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">props</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span> <span class="kd">var</span> <span class="nx">descriptor</span> <span class="o">=</span> <span class="nx">props</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span> <span class="nx">descriptor</span><span class="p">.</span><span class="nx">enumerable</span> <span class="o">=</span> <span class="nx">descriptor</span><span class="p">.</span><span class="nx">enumerable</span> <span class="o">||</span> <span class="kc">false</span><span class="p">;</span> <span class="nx">descriptor</span><span class="p">.</span><span class="nx">configurable</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span> <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;value&quot;</span> <span class="k">in</span> <span class="nx">descriptor</span><span class="p">)</span> <span class="nx">descriptor</span><span class="p">.</span><span class="nx">writable</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">descriptor</span><span class="p">.</span><span class="nx">key</span><span class="p">,</span> <span class="nx">descriptor</span><span class="p">);</span> <span class="p">}</span> <span class="p">}</span> <span class="k">return</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">Constructor</span><span class="p">,</span> <span class="nx">protoProps</span><span class="p">,</span> <span class="nx">staticProps</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">protoProps</span><span class="p">)</span> <span class="nx">defineProperties</span><span class="p">(</span><span class="nx">Constructor</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="nx">protoProps</span><span class="p">);</span> <span class="k">if</span> <span class="p">(</span><span class="nx">staticProps</span><span class="p">)</span> <span class="nx">defineProperties</span><span class="p">(</span><span class="nx">Constructor</span><span class="p">,</span> <span class="nx">staticProps</span><span class="p">);</span> <span class="k">return</span> <span class="nx">Constructor</span><span class="p">;</span> <span class="p">};</span> <span class="p">}();</span>
+
+<span class="kd">function</span> <span class="nx">_classCallCheck</span><span class="p">(</span><span class="nx">instance</span><span class="p">,</span> <span class="nx">Constructor</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">instance</span> <span class="k">instanceof</span> <span class="nx">Constructor</span><span class="p">))</span> <span class="p">{</span> <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot call a class as a function&quot;</span><span class="p">);</span> <span class="p">}</span> <span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">MyClass</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">MyClass</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">_classCallCheck</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">MyClass</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nx">_createClass</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">,</span> <span class="p">[{</span>
+        <span class="nx">key</span><span class="o">:</span> <span class="s2">&quot;method&quot;</span><span class="p">,</span>
+        <span class="nx">value</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">method</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="p">}]);</span>
+
+    <span class="k">return</span> <span class="nx">MyClass</span><span class="p">;</span>
+<span class="p">}();</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">));</span> <span class="c1">// =&gt; []</span>
+</code></pre></div>
+<h4 id="typescript-target-es5">TypeScript(target:es5)</h4>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">MyClass</span> <span class="o">=</span> <span class="cm">/** @class */</span> <span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">MyClass</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="nx">MyClass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">method</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="p">};</span>
+    <span class="k">return</span> <span class="nx">MyClass</span><span class="p">;</span>
+<span class="p">}());</span>
+<span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyClass</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">));</span> <span class="c1">// =&gt; [&quot;method&quot;]</span>
+</code></pre></div>
+<p>変換結果も異なりますが、実行結果（コンソールへの出力)も異なります。</p>
+
+<ul>
+<li>Babelはメソッド（プロパティ）は列挙されないので <code>[]</code> </li>
+<li>TypeSdriptはメソッド（プロパティ）が列挙されるので <code>[&quot;method&quot;]</code></li>
+</ul>
+
+<p>このようなときにどちらが仕様準拠の挙動なのかはを仕様を調べてみましょう。</p>
+
+<h3 id="仕様書の調べ方">仕様書の調べ方</h3>
+
+<p>先ほども書きましたが、ECMAScriptにはLiving Standardの<a href="https://tc39.github.io/ecma262/">https://tc39.github.io/ecma262/</a>とスナップショット版の<a href="https://www.ecma-international.org/publications/standards/Ecma-262.htm">https://www.ecma-international.org/publications/standards/Ecma-262.htm</a>があります。
+このケースではどちらでも良いですが、<a href="https://tc39.github.io/ecma262/">https://tc39.github.io/ecma262/</a>の方が使いやすいこともあるので、こちらで見ていきます。</p>
+
+<p>今回の目的は「<code>class</code>構文のメソッド定義の仕方を調べたい」です。
+このような構文自体の挙動を調べたい場合は、次のような流れで探していきます。</p>
+
+<p>大きな流れ</p>
+
+<ol>
+<li><code>class</code> というSyntaxの定義を探す</li>
+<li><code>class</code>のRuntime Semantics(Syntaxにはそれぞれ実行時に何をするかという定義がある)</li>
+<li>Runtime Semanticsでそれぞれの <code>method(){}</code> がどのように定義されているかを見ていく</li>
+<li>今回は列挙されているかなので <code>enumerable</code> を調べる</li>
+</ol>
+
+<p>仕様書を上記の流れで調べている動画を撮ったので参考にしてみてください。</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xT8GupiJIio" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<p>仕様書を見た結果、クラスのメソッドは必ず<code>enumerable</code>を<code>false</code>で定義されています。
+そのため、Babelは仕様に準拠するためにdefinePropertyで列挙しないように(<code>enumerable</code>を<code>false</code>)定義していますが、
+TypeScriptは単純にプロトタイプオブジェクトのメソッドを追加してるだけなので列挙されています。</p>
+
+<p>このIssueは既にありますが、パフォーマンスの問題などあるので一概にどちらが良いとも言えません。
+(Babelもlooseで似たような変換にできます)</p>
+
+<ul>
+<li><a href="https://github.com/Microsoft/TypeScript/issues/15038" title="Method class enumerable · Issue #15038 · Microsoft/TypeScript">Method class enumerable · Issue #15038 · Microsoft/TypeScript</a></li>
+</ul>
+
+<h3 id="ecmascriptの読み方の補助資料">ECMAScriptの読み方の補助資料</h3>
+
+<p>ECMAScriptの仕様書は巨大(800ページ以上)なので、基本的に上から下に読んでいくのは難しいです。
+そのため、仕様書には目次検索、Pin（ブックマーク）、各リンクの逆引きなど便利な機能があるのでそれを活用して気になったものを読むのが良さそうです。</p>
+
+<p>また、仕様書内で使われている記号や短縮記法などが<a href="https://tc39.github.io/ecma262/#sec-notational-conventions" title="Notational Conventions">Notational Conventions</a>にかかれています。また、次のサイトも仕様書を読むのに役立ちます。</p>
+
+<ul>
+<li><a href="https://timothygu.me/es-howto/" title="How to Read the ECMAScript Specification">How to Read the ECMAScript Specification</a>
+
+<ul>
+<li>ECMAScriptの読み方について解説してる</li>
+<li><code>[[内部プロパティ]]</code>やAbstract Operator、Runtime semanticsなど仕様書に出てくる記号や読み方を解説してる</li>
+</ul></li>
+<li><a href="https://github.com/anba/es6draft" title="anba/es6draft: ECMAScript 2015 (ECMA-262 6th Edition) compiler and runtime">anba/es6draft: ECMAScript 2015 (ECMA-262 6th Edition) compiler and runtime</a>
+
+<ul>
+<li>ECMAScriptのJava実装</li>
+<li>リファレンス実装的に仕様書と対応したアルゴリズムステップで実装されているので読みやすい</li>
+<li><a href="https://github.com/anba/es6draft/blob/7e196e8a1482384ca83946998f5fbd22068b47c6/src/main/java/com/github/anba/es6draft/compiler/DefaultCodeGenerator.java#L1609-L1825" title="ClassDefinitionEvaluation">ClassDefinitionEvaluation</a>の実装もそのままある</li>
+</ul></li>
+</ul>
+
+<p>今回は構文を見ていましたが、メソッドなど実際にJavaScriptのAPIに存在するものはもっと読みやすいです。
+<a href="https://tc39.github.io/ecma262/#sec-string.prototype.includes" title="String.prototype.includes ( searchString [ , position ] )">String.prototype.includes ( searchString [ , position ] )</a>のように仕様がほぼそのまま実行ステップになっているので比較的単純です。</p>
+
+<h2 id="例-js-primerの場合">例: <a href="https://github.com/asciidwango/js-primer" title="js-primer">js-primer</a>の場合</h2>
+
+<ul>
+<li>サイト: <a href="https://asciidwango.github.io/js-primer/" title="この書籍について · JavaScriptの入門書 #jsprimer">この書籍について · JavaScriptの入門書 #jsprimer</a></li>
+<li>リポジトリ: <a href="https://github.com/asciidwango/js-primer">github.com/asciidwango/js-primer</a></li>
+</ul>
+
+<p>最近、<a href="https://github.com/asciidwango/js-primer" title="js-primer">js-primer</a>というES21015以降を基本としたJavaScriptの入門書を書いています。
+この書籍はLiving StandardであるECMAScriptに追従するように書いています。</p>
+
+<hr>
+
+<p><a href="https://github.com/asciidwango/js-primer"><img src="http://azu.github.io/slide/2018/node/img/repo-actions-watch.png" alt="inline, repo-actions-watch.png"></a></p>
+
+<p>興味ある人はStarやWatchしてください。</p>
+
+<hr>
+
+<p>この書籍では、どのように説明するべきか迷った場合はECMAScriptを参照しています。
+例えば用語の問題や、説明するためにどのような表現を使うべきか、実際の仕様的な動作を元にしています。</p>
+
+<p>単純に今存在するブラウザなどの挙動を元にすれば、ほとんどのケースでは問題はありません。
+ブラウザはできる限り仕様に準拠した実装にするためです。</p>
+
+<p>しかし、その機能の仕組みを理解するとなるともう少し深掘りしてから解説を書く必要がでてきます。
+なぜなら同じ結果になるような方法が考えられるためです。</p>
+
+<p>そのような際には仕様書ではどのように定義しているのかを参考にしています。</p>
+
+<h3 id="例1-関数とthisの表現-–-arrow-function">例1: <a href="https://asciidwango.github.io/js-primer/basic/function-this/" title="関数とthis · JavaScriptの入門書 #jsprimer">関数とthis</a>の表現 – Arrow Function</h3>
+
+<blockquote>
+<p><code>function</code>キーワードで定義した関数は呼び出し時に、ベースオブジェクトが暗黙的な引数のように<code>this</code>の値として渡されます。<br>
+一方、Arrow Functionの関数は呼び出し時に<code>this</code>を受け取らないため、定義時のArrow Functionにおける<code>this</code>の参照先が静的に決定されます。<br>
+-- <a href="https://asciidwango.github.io/js-primer/basic/function-this/" title="関数とthis · JavaScriptの入門書 #jsprimer">関数とthis · JavaScriptの入門書 #jsprimer</a></p>
+</blockquote>
+
+<p>この部分だけ切り出してもちょっと分かりにくいですが、よくあるような「Arrow Functionは<code>this</code>をbindする」という説明にはしていません。
+仕様ではArrowFunctionは<code>[[ThisValue]]</code>を持たないLexicalEnvironmentという定義になっていて、Arrow Functionが<code>this</code>を持つ(bind)わけではないからです。
+そのため、「Arrow Functionは<code>this</code>をbindする」というよりは、「Arrow Functionは<code>this</code>を持たないので移譲する」と言ったほうが仕様に近いかもしれません。</p>
+
+<p>この辺の説明はホントややこしいので、詳細は<a href="http://efcl.info/2018/01/04/what-is-this/" title="ECMAScript 2015以降のJavaScriptの`this`を理解する | Web Scratch">ECMAScript 2015以降のJavaScriptの<code>this</code>を理解する | Web Scratch</a>に譲ります。</p>
+
+<p>実際に書いているときには以下のIssueのようにメモしながら、どのような表現が良いのかを考えながら書いています。</p>
+
+<ul>
+<li><a href="https://github.com/asciidwango/js-primer/issues/316" title="関数とthis · Issue #316 · asciidwango/js-primer">関数とthis · Issue #316 · asciidwango/js-primer</a></li>
+</ul>
+
+<h2 id="例2-関数とthisの表現-–-thisの値">例2: <a href="https://asciidwango.github.io/js-primer/basic/function-this/" title="関数とthis · JavaScriptの入門書 #jsprimer">関数とthis</a>の表現 – <code>this</code>の値</h2>
+
+<p>また<code>this</code>の話ですが、<code>this</code>の解説をするためにあらゆる場所の<code>this</code>の挙動を調べていました。
+<code>this</code>は普通はクラスぐらいにしか使いませんが、JavaScriptでは<code>this</code>はどこにでも書けます。
+また、その時の<code>this</code>の値はコンテキスト変わります。</p>
+
+<p>最初はブラウザやNode.jsで実行しながら調べていましたが、次の&quot;Module&quot;の挙動がブラウザによって違いました。
+Chromeは<code>Window</code>、 その他のブラウザは<code>undefined</code>となりました。</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;module&quot;</span><span class="nt">&gt;</span>
+<span class="kr">const</span> <span class="nx">fn</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">fn</span><span class="p">());</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+<p>最初はChromeだけで試していたので、なぜ<code>Window</code>を返すのかが分かりませんでした。</p>
+
+<p>Arrow Functionにおける<code>this</code>は外側のスコープの<code>this</code>を参照します。
+そのため、次のようにトップレベルの<code>this</code>とトップレベルのArrow Functionにおける<code>this</code>は同じになるはずです。</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;module&quot;</span><span class="nt">&gt;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">);</span><span class="c1">// =&gt; undefined</span>
+    <span class="kr">const</span> <span class="nx">fn</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">fn</span><span class="p">()</span> <span class="o">===</span> <span class="k">this</span><span class="p">);</span> <span class="c1">// =&gt; true</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+<p>&quot;Module&quot;コンテキストのトップレベル<code>this</code>は常に<code>undefined</code>ということは調べて知っていました。</p>
+
+<ul>
+<li><a href="http://efcl.info/2015/05/06/this-is-es6-module/" title="ES6 moduleのtop levelにある`this`の値は何になるのか? | Web Scratch">ES6 moduleのtop levelにある<code>this</code>の値は何になるのか?</a></li>
+</ul>
+
+<p>なので、最初のコードは<code>undefined</code>になるはずで、何か自分の仕様の解釈が間違っているのかなと思いました。</p>
+
+<p>他のブラウザでの挙動も調べてみようと思い、<code>this</code>の値の一覧を出すサイトを作りました。</p>
+
+<ul>
+<li><a href="https://azu.github.io/what-is-this/" title="What is `this` value in JavaScript?">What is <code>this</code> value in JavaScript?</a></li>
+</ul>
+
+<p>ここでChromeが何かおかしいのではないかと思いバグ報告をしました。</p>
+
+<ul>
+<li><a href="https://bugs.chromium.org/p/chromium/issues/detail?id=791334" title="791334 - `this` in top level Arrow Function in Module Context should be `undefined` - chromium - Monorail">791334 - <code>this</code> in top level Arrow Function in Module Context should be <code>undefined</code> - chromium - Monorail</a></li>
+</ul>
+
+<p>結果的にはChromeの問題だったため、Chrome 65で修正されています。</p>
+
+<h2 id="プロポーザルのステータスを知りたい">プロポーザルのステータスを知りたい</h2>
+
+<p>プロポーザルの今のステータスを知りたい場合があります。
+例えばあるライブラリがプロポーザル段階の書き方をREADMEに書いていたり、記事で「これが最新版」のような記述があった場合に、実際のステータスを知ることで異なる見かたができるようになります。</p>
+
+<p>最初に紹介していたようにプロポーザルのステータスは0から4まであり、4以外は変更や廃止の可能性があるステータスとなります。</p>
+
+<p>これはES2015以前ではなかった事例の１つです。なぜならES2015以前は策定プロセスが現在と異なるため、個別のプロポーザルのステータスを知る意味は殆どなかったためです。</p>
+
+<p>これは<a href="http://azu.github.io/slide/2016/jser5years/javascript-information.html" title="JavaScript情報ってなんだっけ?">JavaScript情報ってなんだっけ?</a>でも触れています、比較的新しい悩みの一種となります。</p>
+
+<p>プロポーザルの置き場所は決まっているため、ステータスの数値やTranspilerの実装は次のページを見ると確認できます。</p>
+
+<ul>
+<li><a href="https://github.com/tc39/proposals" title="tc39/proposals: Tracking ECMAScript Proposals">tc39/proposals: Tracking ECMAScript Proposals</a>
+
+<ul>
+<li>ECMAScriptのプロポーザル一覧</li>
+</ul></li>
+<li><a href="https://github.com/babel/proposals" title="babel/proposals: ✍️ Tracking the status of Babel&amp;#39;s implementation of TC39 proposals">babel/proposals: ✍️ Tracking the status of Babel&#39;s implementation of TC39 proposals</a>
+
+<ul>
+<li>Babelの実装との対応表</li>
+</ul></li>
+</ul>
+
+<h2 id="このプロポーザルって進んでるの">このプロポーザルって進んでるの?</h2>
+
+<p>ステータスは現時点での値にすぎないため、どちらかというとそのステータスが変化しているかを知りたい場合があると思います。</p>
+
+<p>プロポーザルのステータスの変化を知りたい場合は次のサイトなどを購読するのが簡単でしょう。
+また、<a href="https://github.com/tc39/proposals" title="tc39/proposals: Tracking ECMAScript Proposals">tc39/proposals</a>もただのGitHubリポジトリなのでそちらをWatchするのもいいでしょう。</p>
+
+<ul>
+<li><a href="https://ecmascript-daily.github.io/" title="ECMAScript Daily">ECMAScript Daily</a>
+
+<ul>
+<li>ECMAScript関係のニュースブログ(@azu)</li>
+</ul></li>
+<li><a href="http://ecmascript.in/" title="EcmaScript.in | Stay updated about EcmaScript proposal changes">EcmaScript.in | Stay updated about EcmaScript proposal changes</a>
+
+<ul>
+<li>プロポーザルのStage変化の通知メール</li>
+</ul></li>
+<li><a href="http://2ality.com/index.html" title="2ality – JavaScript and more">2ality – JavaScript and more</a>
+
+<ul>
+<li>プロポーザルの解説</li>
+</ul></li>
+</ul>
+
+<h2 id="このプロポーザルはなぜ止まっているの">このプロポーザルはなぜ止まっているの?</h2>
+
+<p>興味があるプロポーザルがある場合になぜそのプロポーザルのステータスが進まないかということに興味を持つひともいるでしょう。</p>
+
+<p>プロポーザルにはそれぞれチャンピオンとなる責任者いて、そのチャンピオンが策定作業を進めることで初めてステージが進みます。
+<a href="https://github.com/tc39/proposals" title="tc39/proposals: Tracking ECMAScript Proposals">tc39/proposals</a> にかかれている :rocket: はプロポーザルのステージをチャンピオンが進める意志がある状態かを表しています。(頻繁に更新されるためあくまで参考情報に過ぎません)</p>
+
+<p><img src="http://azu.github.io/slide/2018/node/img/rockets.png" alt="inline, rockets.png"></p>
+
+<p>:rocket: マークがついていない場合やしばらくステージが更新されていないプロポーザルは何かしらの課題や問題を抱えています。
+ここではそれのプロポーザルがどのような課題を持っていて、ステージが更新されないのかを見ていきます。</p>
+
+<h3 id="例-tc39-proposal-global">例: <a href="https://github.com/tc39/proposal-global" title="tc39/proposal-global">tc39/proposal-global</a></h3>
+
+<p><code>global</code>はグローバルオブジェクトを取得するプロポーザルです。
+現在(2018年2月の段階)はStage 3で止まっています。</p>
+
+<p>なぜ止まっているかの理由はREADMEに書いています。</p>
+
+<blockquote>
+<p>however, due to <a href="https://github.com/tc39/proposal-global/issues/20">web compatibility concerns</a>, it is on hold pending a new global identifier name.</p>
+</blockquote>
+
+<p><a href="https://github.com/tc39/proposal-global/issues/20" title="global breaks flickr.com · Issue #20 · tc39/proposal-global">global breaks flickr.com · Issue #20 · tc39/proposal-global</a>のIssueで具体的に話し合われています。
+このIssueやREADMEをみることで、<code>global</code>という名前によって壊れるサイトがいる問題がありこれが理由で止まっていることが割ります。</p>
+
+<hr>
+
+<h4 id="tips">Tips</h4>
+
+<ul>
+<li>プロポーザルはそれぞれGitHubリポジトリを持っている</li>
+<li>プロポーザルのIssueには課題が書かれている</li>
+<li>ウェブ互換性の問題については基本的にメトリクスデータを元に話を進める
+
+<ul>
+<li>壊れるウェブサイトはn%あるか</li>
+<li><a href="https://www.chromestatus.com/metrics/feature/popularity" title="Chrome Platform Status">Chrome Platform Status</a>、<a href="https://developer.microsoft.com/en-us/microsoft-edge/platform/data/" title="Microsoft Edge Platform Data - Microsoft Edge Development">Microsoft Edge Platform Data</a>、<a href="https://blog.mozilla.org/data/" title="Firefox Data">Firefox Data</a></li>
+</ul></li>
+</ul>
+
+<hr>
+
+<h3 id="例-tc39-proposal-decorators">例: <a href="https://github.com/tc39/proposal-decorators" title="tc39/proposal-decorators">tc39/proposal-decorators</a></h3>
+
+<p><code>proposal-decorators</code>はデコレーターを導入するプロポーザルです。
+現時点(2018年3月)ではStage 2となっています。</p>
+
+<p><a href="https://ecmascript-daily.github.io/2016/07/30/last-minutes-proposals-changes" title="ECMAScript proposal updates @ 2016-07 | ECMAScript Daily">ECMAScript proposal updates @ 2016-07 | ECMAScript Daily</a>というプロポーザルのステージ更新の記事を見ると、2016年7月からずっとステージ2となっていることが分かります。</p>
+
+<p>ここではデコレーターにはどのような問題がありステージが更新されていないのかを調べてみましょう。
+プロポーザルは2ヶ月に1度行われるTC39のミーティングでステージを更新をするかを判断します。</p>
+
+<p>つまり、<a href="https://github.com/tc39/tc39-notes" title="tc39/tc39-notes: TC39 Meeting Notes">tc39/tc39-notes</a>に公開されているミーティングのログを見ることでわかりそうです。
+それぞれのミーティングはアジェンダが事前に用意されており、事前に何を話し合うかが決められています(時間は有限であるため)</p>
+
+<p>このアジェンダは<a href="https://github.com/tc39/agendas" title="tc39/agendas">tc39/agendas</a>で公開されているので、まずはアジェンダからデコレーターについて議論した月のミーティングを探してみます。</p>
+
+<ul>
+<li>何が原因で進んでないのかを調べる</li>
+<li>=&gt; TC39のミーティングでどのような議論が行われてるのかを調べる</li>
+<li>=&gt; 何が課題となっているかが話し合われているはず</li>
+</ul>
+
+<p><a href="https://github.com/tc39/agendas" title="tc39/agendas">tc39/agendas</a>（議事録のアジェンダ）を&quot;<a href="https://github.com/tc39/agendas/search?o=desc&amp;q=Decorators&amp;s=indexed&amp;type=&amp;utf8=%E2%9C%93" title="Search · Decorators">Decorators</a>&quot;で検索すると、<a href="https://github.com/tc39/agendas/blob/385085dead6e4f08a2100eccc7b8738dec97f236/2018/01.md" title="agendas/2018/01.md">agendas/2018/01.md</a>にも議題となったことが分かります。</p>
+
+<p><img src="http://azu.github.io/slide/2018/node/img/decorators-agenda.png" alt="right, decorators-agenda.png"></p>
+
+<p>このアジェンダと同じ月のミーティングノートを<a href="https://github.com/tc39/tc39-notes" title="tc39/tc39-notes: TC39 Meeting Notes">tc39/tc39-notes</a>で探すと<a href="https://github.com/rwaldron/tc39-notes/blob/master/es8/2018-01/summary.md" title="2018-01/summary.md">2018-01/summary.md</a>が見つかります。
+ミーティングの議事録事態は長いですが、<code>summary.md</code>にはその内容がまとまっているのでまずはそちらを見てみます。</p>
+
+<p><img src="http://azu.github.io/slide/2018/node/img/summary-decorator.png" alt="inline, summary-decorator.png"></p>
+
+<p>デコレーターでの議事録や関連するスライドを見てみると、幾つかの課題がその課題を解決するまでステージ3にはできないという話が書かれています。</p>
+
+<ul>
+<li><a href="https://github.com/rwaldron/tc39-notes/blob/master/es8/2018-01/jan-25.md#13vc-decorators-towards-stage-3" title="13.v.c Decorators: towards Stage 3">13.v.c Decorators: towards Stage 3</a>という議論が2018年1月に行われている</li>
+<li><a href="https://docs.google.com/presentation/d/1g6hrJp_nk_OeapuPXlkE4D_31OZbz4wQbXuIagsyoUI/edit#slide=id.p" title="Decorators: Towards Stage 3 - Google スライド">Decorators: Towards Stage 3 - Google スライド</a>
+
+<ul>
+<li>Stage 3に向けて何をサポートし、何をサポートしないかをはっきりさせる</li>
+<li>他のクラスのプロポーザル(hard private)との協調性についての課題があり調整している</li>
+<li>実装者、テスト作成者、ライブラリ作者に対しても意見を求めてる</li>
+<li>次のミーティング(3月)までにステークホルダーにアプローチする</li>
+</ul></li>
+</ul>
+
+<p>このような課題があるためデコレーターはまだステージ2となっています。
+このようなことがミーティングログを見ることでわかります。</p>
+
+<hr>
+
+<h2 id="tips">Tips</h2>
+
+<ul>
+<li>Stage 1はまでアイデアや実験なのでプロポーザル間でも重複する</li>
+<li>Stage 2+あたりからプロポーザル間での協調的な仕様を検討する
+
+<ul>
+<li><a href="https://github.com/rwaldron/tc39-notes/blob/master/es8/2018-01/jan-24.md#revisiting-mixins-vs-protocols-proposal" title="Revisiting mixins-vs-protocols proposal">Revisiting mixins-vs-protocols proposal</a></li>
+</ul></li>
+<li>Decoratorはclass field、privateなど色々関係する</li>
+<li>最近のDecoratorの変更は他のプロポーザルとの協調性やDecoratorが目指す範囲を確定する作業
+
+<ul>
+<li>今まで雰囲気で動いてた部分を明示的に例外を投げるようにするなど</li>
+</ul></li>
+</ul>
+
+<hr>
+
+<h2 id="おわりに">おわりに</h2>
+
+<p>最初に述べたようにここに書いてある事をすべて知る必要性はありません。
+具体的に気になることを見つけたときにそれを調べる手段にたどり着ければ問題ありません。</p>
+
+<p>また、ECMAScriptがLiving Standardであるという話をしましたが、Living Standardである以上その策定プロセスなども細かく修正されていきます。
+以前、<a href="http://efcl.info/2015/10/18/ecmascript-paper/" title="ECMAScriptの仕様策定に関するカンニングペーパー | Web Scratch">ECMAScriptの仕様策定に関するカンニングペーパー | Web Scratch</a>で書いたものはES2015時点のものでしたが、現在も細かくプロセスが変わったりより分かりやすくなっています。(ミーティングログにサマリが増えたり、<a href="https://github.com/tc39/ecma262/blob/master/CONTRIBUTING.md" title="Contributing to ECMAScript">Contributing to ECMAScript</a>などのドキュメントが増えたりなど)</p>
+
+<p>ECMAScriptはこのようなオープンな仕組みであり、同じくブラウザに乗る機能も現在はオープンな仕様や議論を元にしていることが多いです(例外はあります)。
+そのため、仕様やその仕様がどのような経緯で実装されたかといった事実を調べることは特別に難しいことではありません。
+このような状況においては、推測だけで行動したり推測だけの意見に影響を受けるよりも、事実を確認して見るほうが簡単な場合もあります。</p>
+
+<p>知識そのものよりも調べ方を知ることが重要なのかもしれません。</p>
+
+<h2 id="リンクまとめ">リンクまとめ</h2>
+
+<p>この記事で紹介した簡単なリンクのまとめです。</p>
+
+<ul>
+<li><a href="https://github.com/asciidwango/js-primer">js-primer</a>版: <a href="https://asciidwango.github.io/js-primer/basic/ecmascript/" title="ECMAScript · JavaScriptの入門書 #jsprimer">ECMAScript · JavaScriptの入門書 #jsprimer</a></li>
+<li>ECMAScript関係の情報: <a href="https://twitter.com/ecmascriptdaily" title="@EcmascriptDaily">@EcmascriptDaily</a>をフォローしておけばとりあえず流れてくる</li>
+<li>ECMAScriptのプロポーザル: <a href="https://github.com/tc39/tc39-notes" title="tc39/tc39-notes: TC39 Meeting Notes">tc39/tc39-notes</a>、<a href="https://github.com/tc39/proposals" title="tc39/proposals: Tracking ECMAScript Proposals">tc39/proposals</a>に殆どの情報がある</li>
+<li>ECMAScriptの策定プロセス: <a href="https://tc39.github.io/process-document/" title="The TC39 Process">The TC39 Process</a>に書かれてる</li>
+<li>ECMAScriptの仕様: <a href="https://github.com/tc39/ecma262" title="tc39/ecma262">tc39/ecma262</a>にLiving Standard</li>
+</ul>
+
+<p>[^1]: ES2015の仕様編集者であるAllen Wirfs-Brock氏の書いた<a href="http://wirfs-brock.com/allen/files/papers/standpats-asianplop2016.pdf">Programming Language Standardization</a>に詳細が書かれています。
+[^2]: <a href="https://github.com/tc39/proposals/blob/master/inactive-proposals.md">Inactive Proposals</a>に策定を中止したプロポーザルの一覧が公開されています。</p>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>Node学園 29時限目でECMAScriptの調べ方について発表してきた</title>
@@ -2653,367 +3368,6 @@ ESLintのXOやstandardに近いかな?</p>
 
 <ul>
 <li><a href="https://havelog.ayumusato.com/develop/javascript/e725-timer_vs_raf.html" title="requestAnimationFrame とタイマーの今更な比較とデモ ::ハブろぐ">requestAnimationFrame とタイマーの今更な比較とデモ ::ハブろぐ</a></li>
-</ul>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>shallow-equal for Object/React props</title>
-   <link href="http://efcl.info/2017/11/30/shallow-equal/"/>
-   <updated>2017-11-30T10:12:00+09:00</updated>
-   <id>http://efcl.info/2017/11/30/shallow-equal</id>
-   <content type="html"><![CDATA[ <p>オブジェクトとReactのProps向けのShallow(浅い) equalライブラリを書きました。
-Shallow Equalは対象のオブジェクトのプロパティをそれぞれ1段だけ比較することを言います。
-ものすごく単純に書くならば次のようなことをするライブラリです。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="p">{},</span> <span class="nx">targetObject</span> <span class="o">=</span> <span class="p">{};</span>
-<span class="kr">const</span> <span class="nx">isEqualed</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">object</span><span class="p">).</span><span class="nx">some</span><span class="p">(</span><span class="nx">key</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">object</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">!==</span> <span class="nx">targetObject</span><span class="p">[</span><span class="nx">key</span><span class="p">];</span>
-<span class="p">});</span>
-</code></pre></div>
-<ul>
-<li><a href="https://github.com/azu/shallow-equal-object" title="shallow-equal-object">shallow-equal-object</a></li>
-<li><a href="https://github.com/azu/shallow-equal-props" title="shallow-equal-props">shallow-equal-props</a></li>
-</ul>
-
-<p>どちらもTypeScriptに対応していて、シンプルにオブジェクト同士を比較してbooleanを返すだけのライブラリです。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="p">{</span> <span class="nx">shallowEqual</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;shallow-equal-object&quot;</span><span class="p">);</span>
-<span class="nx">shallowEqual</span><span class="p">({</span> <span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">2</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">2</span> <span class="p">});</span> <span class="c1">// =&gt; true</span>
-<span class="nx">shallowEqual</span><span class="p">({</span> <span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">2</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">42</span> <span class="p">});</span> <span class="c1">// =&gt; false</span>
-<span class="nx">shallowEqual</span><span class="p">({</span> <span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">2</span> <span class="p">},</span> <span class="p">{</span> <span class="p">});</span> <span class="c1">// =&gt; false</span>
-</code></pre></div>
-<p><a href="https://github.com/azu/shallow-equal-object" title="shallow-equal-object">shallow-equal-object</a>は、値の比較関数をカスタマイズできます。
-デフォルトの比較関数は<code>Object.is</code>メソッド相当の実装がつかわれています。
-これは、Reactの<code>PureComponent</code>やECMAScriptのProposalとして提出されていた(現在は取り下げ)<a href="https://github.com/sebmarkbage/ecmascript-shallow-equal" title="ecmascript-shallow-equal">ecmascript-shallow-equal</a>と同じ比較となります。</p>
-
-<p><a href="https://github.com/azu/shallow-equal-props" title="shallow-equal-props">shallow-equal-props</a>は、この値の比較関数をReactのProps向けにしただけのバージョンです。
-具体的には、<code>React.Element</code>同士の比較を考慮したバージョンなので、<code>props</code>(<code>children</code>も含む)に<code>React.Element</code>を使っていないなら大した違いはありません。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">shallowEqual</span><span class="p">({</span> <span class="nx">a</span><span class="o">:</span> <span class="s2">&quot;string&quot;</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">a</span><span class="o">:</span> <span class="s2">&quot;string&quot;</span> <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">customEqual</span><span class="o">:</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">typeof</span> <span class="nx">a</span> <span class="o">===</span> <span class="s2">&quot;number&quot;</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span> <span class="nx">b</span> <span class="o">===</span> <span class="s2">&quot;number&quot;</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">});</span> <span class="c1">// =&gt; false</span>
-</code></pre></div>
-<p>どちらもデバッグモードに対応しています。
-実際にshallowEqualしたことがある人はわかると思いますが、なぜそれが<code>false</code>になるのかは結構分かりにくいことが多いです。どのプロパティが異なるから<code>false</code>になったということをデバッグ時に知りたいがことが多々あります。</p>
-
-<p>どちらのライブラリも <code>{ debug: true }</code> をオプションに渡すことでコンソールに、比較結果が<code>false</code>となった理由とオブジェクトを表示してくれます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">shallowEqual</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span>
-    <span class="nx">debug</span><span class="o">:</span> <span class="kc">true</span>
-<span class="p">});</span>
-<span class="c1">// &quot;objectA is not object.&quot;</span>
-
-<span class="nx">shallowEqual</span><span class="p">({},</span> <span class="kc">null</span><span class="p">,</span> <span class="p">{</span>
-    <span class="nx">debug</span><span class="o">:</span> <span class="kc">true</span>
-<span class="p">});</span>
-<span class="c1">// &quot;objectB is not object.&quot;</span>
-
-<span class="nx">shallowEqual</span><span class="p">({},</span> <span class="p">{</span> <span class="nx">a</span><span class="o">:</span> <span class="mi">1</span> <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">debug</span><span class="o">:</span> <span class="kc">true</span>
-<span class="p">});</span>
-<span class="c1">// &quot;object key length is not same&quot;</span>
-
-<span class="nx">shallowEqual</span><span class="p">({</span> <span class="nx">a</span><span class="o">:</span> <span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">a</span><span class="o">:</span> <span class="mi">2</span> <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">debug</span><span class="o">:</span> <span class="kc">true</span>
-<span class="p">});</span>
-<span class="c1">// &quot;key:a is not equals between A and B.&quot;</span>
-</code></pre></div>
-<p>このShallow Equalがどのようなときに役立つかというと大きなオブジェクトの塊を比較するときに、オブジェクトの作り方次第では比較コストが大きく変わります。</p>
-
-<p>ReactやReduxなどでよく言われる状態のオブジェクトのをImmutableにするのはこれに関連しています。</p>
-
-<ul>
-<li><a href="http://nekogata.hatenablog.com/entry/2013/06/15/013752" title="「オブジェクトをイミュータブルにしろ」って言うけど、それってたとえば状態が変わったらオブジェクト作り直すってことでしょ、ちょう非効率じゃん。って思ってたんだけど、 - 猫型の蓄音機は 1 分間に 45 回にゃあと鳴く">「オブジェクトをイミュータブルにしろ」って言うけど、それってたとえば状態が変わったらオブジェクト作り直すってことでしょ、ちょう非効率じゃん。って思ってたんだけど、 - 猫型の蓄音機は 1 分間に 45 回にゃあと鳴く</a></li>
-</ul>
-
-<p>実際にReactの例を見てみます。
-次のサンプルは、恣意的な<code>JSON.stringify</code>でのDeepな比較の問題点を見るために作ったものです。
-そのためDeepEqualが悪いという話ではありません。</p>
-
-<h2 id="deep-equal-json-stringify-とshallow-equal">Deep Equal(<code>JSON.stringify</code>)とShallow Equal</h2>
-
-<p>サンプルコードは次のリポジトリにあります。</p>
-
-<ul>
-<li><a href="https://github.com/azu/avoid-json-stringify-on-react" title="azu/avoid-json-stringify-on-react: Deep equal vs. Shallow equal on React&amp;#39;s shouldComponentUpdate">azu/avoid-json-stringify-on-react: Deep equal vs. Shallow equal on React&#39;s shouldComponentUpdate</a></li>
-</ul>
-
-<p>このサンプルではDeep Equalの実装例として<code>JSON.stringify</code>した結果同士を比較するものを利用しています。最近、Reactのドキュメントにおいて<code>shouldComponentUpdate</code>の実装で<code>JSON.stringify</code>を使うべきではないということが追加されています。
-これを検証する目的で作ったサンプルコードです。</p>
-
-<blockquote>
-<p>We do not recommend doing deep equality checks or using JSON.stringify() in shouldComponentUpdate(). It is very inefficient and will harm performance.
-<a href="https://reactjs.org/docs/react-component.html#shouldcomponentupdate">https://reactjs.org/docs/react-component.html#shouldcomponentupdate</a></p>
-</blockquote>
-
-<p><strong>関連するIssue</strong></p>
-
-<ul>
-<li><a href="https://github.com/erikras/redux-form/issues/3461">Performance issue (crash) in large apps when using Field with children in React v16 · Issue #3461 · erikras/redux-form</a></li>
-<li><a href="https://github.com/reactjs/reactjs.org/issues/7">Document that deep equality checks and JSON.stringify() in shouldComponentUpdate() are a bad idea · Issue #7 · reactjs/reactjs.org</a></li>
-</ul>
-
-<p>このサンプルでは、すべてのコンポーネントは<code>BaseComponent</code>を継承しています。
-<code>BaseComponent</code>はDeep Equal(<code>JSON.stringify</code>)とShallow Equalが切り替えできるようになっています。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="kr">import</span> <span class="p">{</span> <span class="nx">shallowEqual</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;shallow-equal-object&quot;</span><span class="p">;</span>
-
-<span class="kr">export</span> <span class="kr">const</span> <span class="nx">isDeepEqual</span> <span class="o">=</span> <span class="p">(</span><span class="nx">prevState</span><span class="o">:</span> <span class="nx">any</span><span class="p">,</span> <span class="nx">nextState</span><span class="o">:</span> <span class="nx">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">prevState</span><span class="p">)</span> <span class="o">===</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">nextState</span><span class="p">);</span>
-<span class="p">};</span>
-<span class="kr">export</span> <span class="kr">const</span> <span class="nx">isShallowEqual</span> <span class="o">=</span> <span class="p">(</span><span class="nx">prevState</span><span class="o">:</span> <span class="nx">any</span><span class="p">,</span> <span class="nx">nextState</span><span class="o">:</span> <span class="nx">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">shallowEqual</span><span class="p">(</span><span class="nx">prevState</span><span class="p">,</span> <span class="nx">nextState</span><span class="p">);</span>
-<span class="p">};</span>
-
-<span class="kr">export</span> <span class="kr">abstract</span> <span class="kr">class</span> <span class="nx">BaseComponent</span><span class="o">&lt;</span><span class="nx">P</span><span class="p">,</span> <span class="nx">S</span><span class="o">&gt;</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">P</span><span class="p">,</span> <span class="nx">S</span><span class="o">&gt;</span> <span class="p">{</span>
-    <span class="nx">shouldComponentUpdate</span><span class="p">(</span><span class="nx">nextProps</span><span class="o">:</span> <span class="nx">P</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kr">const</span> <span class="nx">shouldUpdate</span> <span class="o">=</span> <span class="o">!</span><span class="nx">isShallowEqual</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">,</span> <span class="nx">nextProps</span><span class="p">);</span>
-        <span class="k">return</span> <span class="nx">shouldUpdate</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>アプリの構造はシンプルで<code>&lt;A/&gt;</code>というネストが深い用途、でっかいリストを描画する<code>&lt;List /&gt;</code>があります。<code>&lt;button /&gt;</code>を押すたびに、<code>state.a</code>の中にある<code>count</code>が+1ずつ更新されるだけです。</p>
-
-<p><img src="http://efcl.info/wp-content/uploads/2017/11/30-1512048718.png" alt="image"></p>
-
-<p>ここで<code>&lt;List /&gt;</code>に渡す<code>state.largeList</code>は初回時に固定の10000コの値をもつ配列となります。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">frozenLargeList</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">10000</span><span class="p">).</span><span class="nx">fill</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">);</span>
-</code></pre></div>
-<p>ボタン押しても<code>List</code>のpropsである<code>state.largeList</code>は変更されないので、<code>&lt;List/&gt;</code>は一度描画されたら更新する必要がありません。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;App&quot;</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="nx">A</span> <span class="p">{...</span><span class="nx">state</span><span class="p">.</span><span class="nx">a</span><span class="p">}</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="nx">button</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">onClick</span><span class="p">}</span><span class="o">&gt;+</span><span class="mi">1</span><span class="o">&lt;</span><span class="err">/button&gt;</span>
-    <span class="o">&lt;</span><span class="nx">hr</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="nx">List</span> <span class="nx">items</span><span class="o">=</span><span class="p">{</span><span class="nx">state</span><span class="p">.</span><span class="nx">largeList</span><span class="p">}</span><span class="o">/&gt;</span>
-<span class="o">&lt;</span><span class="err">/div&gt;</span>
-</code></pre></div>
-<p>この渡されたpropsが同じ値であるなら、更新しないというのをReactでは<code>BaseComponent</code>ででてきた<code>shouldComponentUpdate</code>メソッドの実装で解決できます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">abstract</span> <span class="kr">class</span> <span class="nx">BaseComponent</span><span class="o">&lt;</span><span class="nx">P</span><span class="p">,</span> <span class="nx">S</span><span class="o">&gt;</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">P</span><span class="p">,</span> <span class="nx">S</span><span class="o">&gt;</span> <span class="p">{</span>
-    <span class="nx">shouldComponentUpdate</span><span class="p">(</span><span class="nx">nextProps</span><span class="o">:</span> <span class="nx">P</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>デフォルトの<code>shouldComponentUpdate</code>は常に<code>true</code>を返すので、常に新しい値が来たら更新することになります。
-これを防止する方法として<code>this.props</code>(今のprops)と次にくる<code>nextProps</code>を比較して、同じなら<code>false</code>を返せば更新されないという寸法です。</p>
-
-<p>今回はこの実装をDeep Equal(<code>JSON.stringify</code>)とShallow Equal(<a href="https://github.com/azu/shallow-equal-object" title="shallow-equal-object">shallow-equal-object</a>)で比較しています。(<code>React.PureComponent</code>はShallow Equalと同じ実装になります)</p>
-
-<p><code>&lt;A /&gt;</code>は毎回新しいPropsを受け取るので更新されますが、<code>&lt;List items={state.largeList}/&gt;</code>は同じpropsを毎回受け取るので更新する必要がありません。</p>
-
-<p>どちらもDeepもShallow(<code>state.largeList</code>の参照先は毎回同じ)も比較結果は<code>true</code>となり、つまりそれを反転して返せば更新されません。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">abstract</span> <span class="kr">class</span> <span class="nx">BaseComponent</span><span class="o">&lt;</span><span class="nx">P</span><span class="p">,</span> <span class="nx">S</span><span class="o">&gt;</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">P</span><span class="p">,</span> <span class="nx">S</span><span class="o">&gt;</span> <span class="p">{</span>
-    <span class="nx">shouldComponentUpdate</span><span class="p">(</span><span class="nx">nextProps</span><span class="o">:</span> <span class="nx">P</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kr">const</span> <span class="nx">shouldUpdate</span> <span class="o">=</span> <span class="o">!</span><span class="nx">isShallowEqual</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">,</span> <span class="nx">nextProps</span><span class="p">);</span>
-        <span class="k">return</span> <span class="nx">shouldUpdate</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<hr>
-
-<p>この例ではわざわざ<a href="https://github.com/azu/shallow-equal-object" title="shallow-equal-object">shallow-equal-object</a>を使ってますが、Reactには<code>React.PureComponent</code>があるので、そちらを使えば実装は特にいらないです。
-(<a href="https://github.com/azu/shallow-equal-props" title="shallow-equal-props">shallow-equal-props</a>は<a href="https://github.com/facebook/react/issues/8669">React.PureComponentとはChildrenとかのReact.Elementの扱い</a>が違いますが、大抵は<code>React.PureComponent</code>で十分です。この例ではこの違いは特に関係ないので省きます。)</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">abstract</span> <span class="kr">class</span> <span class="nx">BaseComponent</span><span class="o">&lt;</span><span class="nx">P</span><span class="p">,</span> <span class="nx">S</span><span class="o">&gt;</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">PureComponent</span><span class="o">&lt;</span><span class="nx">P</span><span class="p">,</span> <span class="nx">S</span><span class="o">&gt;</span> <span class="p">{</span>
-<span class="p">}</span>
-</code></pre></div>
-<hr>
-
-<p>ここで本題のDeep Equal(<code>JSON.stringify</code>)とShallow Equalの比較のコストの差の話がでてきます。このコストの差は<code>shouldComponentUpdate</code>の処理自体にどれぐらいかかっているかを調べれば比較できます。</p>
-
-<p>React 15まではreact-addon-perfsで比較できましたが、React 16では<code>?react_perf</code>の<code>performance.mark</code>の結果を使うのが簡単です。</p>
-
-<p>実行前に<code>PerformanceObserver</code>でReactが<code>performance.measure</code>した結果をコンソールログに出すように仕込んでおきます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">observer</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="nb">window</span> <span class="nx">as</span> <span class="nx">any</span><span class="p">).</span><span class="nx">PerformanceObserver</span><span class="p">((</span><span class="nx">list</span><span class="o">:</span> <span class="nx">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="kd">let</span> <span class="nx">components</span><span class="o">:</span> <span class="nx">string</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="kd">let</span> <span class="nx">totalDuration</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="nx">list</span><span class="p">.</span><span class="nx">getEntries</span><span class="p">().</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">entry</span><span class="o">:</span> <span class="nx">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="c1">// Display each reported measurement on console</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">entry</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s2">&quot;shouldComponentUpdate&quot;</span><span class="p">))</span> <span class="p">{</span>
-            <span class="nx">components</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">entry</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
-            <span class="nx">totalDuration</span> <span class="o">+=</span> <span class="nx">entry</span><span class="p">.</span><span class="nx">duration</span><span class="p">;</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Name: &quot;</span> <span class="o">+</span> <span class="nx">entry</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span>
-                <span class="s2">&quot;, Duration: &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">entry</span><span class="p">.</span><span class="nx">duration</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;\n&quot;</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">components</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="err">`</span><span class="nx">Total</span> <span class="nx">shouldComponentUpdate</span><span class="o">:</span> <span class="nx">$</span><span class="p">{</span><span class="nx">totalDuration</span><span class="p">}</span><span class="err">`</span><span class="p">);</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="err">`</span><span class="nx">Updated</span> <span class="nx">components</span><span class="o">:</span><span class="err">`</span><span class="p">,</span> <span class="nx">components</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">));</span>
-    <span class="p">}</span>
-
-<span class="p">});</span>
-<span class="nx">observer</span><span class="p">.</span><span class="nx">observe</span><span class="p">({</span> <span class="nx">entryTypes</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;measure&#39;</span><span class="p">]</span> <span class="p">});</span>
-</code></pre></div>
-<p>このログには、それぞれのコンポーネントの<code>shouldComponentUpdate</code>の時間が出力されます。</p>
-
-<p>次の環境で3回更新を更新を起こした時の<code>shouldComponentUpdate</code>の時間を計測しました。</p>
-
-<ul>
-<li>MacBookPro14,1</li>
-<li>CPU: Intel Core i7, 2.5 GHz</li>
-<li>Browser: Chrome – 6x CPU throttling</li>
-</ul>
-
-<h3 id="deep-equal-json-stringify-の結果">Deep Equal(<code>JSON.stringify</code>)の結果</h3>
-
-<p>Deep Equal (<code>JSON.stringify(prevProps) === JSON.stringify(nextProps)</code>):</p>
-
-<p><img src="https://user-images.githubusercontent.com/19714/33408570-7e4ff248-d5ba-11e7-8470-684413a8fb25.png" alt="image"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Name: ⚛ A.shouldComponentUpdate, Duration: 0.9350000000004002
-
-App.tsx:27 Name: ⚛ B.shouldComponentUpdate, Duration: 0.010000000000218279
-
-App.tsx:27 Name: ⚛ C.shouldComponentUpdate, Duration: 1.1300000000001091
-
-App.tsx:27 Name: ⚛ D.shouldComponentUpdate, Duration: 0.015000000000327418
-
-App.tsx:27 Name: ⚛ E.shouldComponentUpdate, Duration: 0.009999999999308784
-
-App.tsx:27 Name: ⚛ List.shouldComponentUpdate, Duration: 5.364999999999782
-
-App.tsx:32 Total shouldComponentUpdate: 7.4650000000001455
-App.tsx:33 Update components: ⚛ A.shouldComponentUpdate, ⚛ B.shouldComponentUpdate, ⚛ C.shouldComponentUpdate, ⚛ D.shouldComponentUpdate, ⚛ E.shouldComponentUpdate, ⚛ List.shouldComponentUpdate
-
-App.tsx:27 Name: ⚛ A.shouldComponentUpdate, Duration: 0.014999999999417923
-
-App.tsx:27 Name: ⚛ B.shouldComponentUpdate, Duration: 0.004999999999199645
-
-App.tsx:27 Name: ⚛ C.shouldComponentUpdate, Duration: 0.019999999999527063
-
-App.tsx:27 Name: ⚛ D.shouldComponentUpdate, Duration: 0.005000000000109139
-
-App.tsx:27 Name: ⚛ E.shouldComponentUpdate, Duration: 0
-
-App.tsx:27 Name: ⚛ List.shouldComponentUpdate, Duration: 5.770000000000437
-
-App.tsx:32 Total shouldComponentUpdate: 5.81499999999869
-App.tsx:33 Update components: ⚛ A.shouldComponentUpdate, ⚛ B.shouldComponentUpdate, ⚛ C.shouldComponentUpdate, ⚛ D.shouldComponentUpdate, ⚛ E.shouldComponentUpdate, ⚛ List.shouldComponentUpdate
-
-
-App.tsx:27 Name: ⚛ A.shouldComponentUpdate, Duration: 0.015000000000327418
-
-App.tsx:27 Name: ⚛ B.shouldComponentUpdate, Duration: 0.005000000000109139
-
-App.tsx:27 Name: ⚛ C.shouldComponentUpdate, Duration: 0.005000000000109139
-
-App.tsx:27 Name: ⚛ D.shouldComponentUpdate, Duration: 0.005000000000109139
-
-App.tsx:27 Name: ⚛ E.shouldComponentUpdate, Duration: 0.005000000001018634
-
-App.tsx:27 Name: ⚛ List.shouldComponentUpdate, Duration: 5.154999999999745
-
-App.tsx:32 Total shouldComponentUpdate: 5.190000000001419
-App.tsx:33 Update components: ⚛ A.shouldComponentUpdate, ⚛ B.shouldComponentUpdate, ⚛ C.shouldComponentUpdate, ⚛ D.shouldComponentUpdate, ⚛ E.shouldComponentUpdate, ⚛ List.shouldComponentUpdate
-</code></pre></div>
-<h3 id="shallow-equal">Shallow Equal</h3>
-
-<p>Shallow Equal(Use <a href="https://github.com/azu/shallow-equal-object" title="shallow-equal-object">shallow-equal-object</a>)</p>
-
-<p><img src="https://user-images.githubusercontent.com/19714/33408628-d3677756-d5ba-11e7-83a3-5113a2e09739.png" alt="image"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Name: ⚛ A.shouldComponentUpdate, Duration: 0.13999999999941792
-
-App.tsx:27 Name: ⚛ B.shouldComponentUpdate, Duration: 0.010000000001127773
-
-App.tsx:27 Name: ⚛ C.shouldComponentUpdate, Duration: 0.004999999999199645
-
-App.tsx:27 Name: ⚛ D.shouldComponentUpdate, Duration: 0.010000000000218279
-
-App.tsx:27 Name: ⚛ E.shouldComponentUpdate, Duration: 0.015000000000327418
-
-App.tsx:27 Name: ⚛ List.shouldComponentUpdate, Duration: 1.125
-
-App.tsx:32 Total shouldComponentUpdate: 1.305000000000291
-App.tsx:33 Updated components: ⚛ A.shouldComponentUpdate, ⚛ B.shouldComponentUpdate, ⚛ C.shouldComponentUpdate, ⚛ D.shouldComponentUpdate, ⚛ E.shouldComponentUpdate, ⚛ List.shouldComponentUpdate
-
-App.tsx:27 Name: ⚛ A.shouldComponentUpdate, Duration: 0.009999999999308784
-
-App.tsx:27 Name: ⚛ B.shouldComponentUpdate, Duration: 0.005000000000109139
-
-App.tsx:27 Name: ⚛ C.shouldComponentUpdate, Duration: 0.005000000000109139
-
-App.tsx:27 Name: ⚛ D.shouldComponentUpdate, Duration: 0.004999999999199645
-
-App.tsx:27 Name: ⚛ E.shouldComponentUpdate, Duration: 0.005000000000109139
-
-App.tsx:27 Name: ⚛ List.shouldComponentUpdate, Duration: 0.009999999999308784
-
-App.tsx:32 Total shouldComponentUpdate: 0.03999999999814463
-App.tsx:33 Updated components: ⚛ A.shouldComponentUpdate, ⚛ B.shouldComponentUpdate, ⚛ C.shouldComponentUpdate, ⚛ D.shouldComponentUpdate, ⚛ E.shouldComponentUpdate, ⚛ List.shouldComponentUpdate
-
-App.tsx:27 Name: ⚛ A.shouldComponentUpdate, Duration: 0.010000000000218279
-
-App.tsx:27 Name: ⚛ B.shouldComponentUpdate, Duration: 0.004999999999199645
-
-App.tsx:27 Name: ⚛ C.shouldComponentUpdate, Duration: 0
-
-App.tsx:27 Name: ⚛ D.shouldComponentUpdate, Duration: 0.004999999999199645
-
-App.tsx:27 Name: ⚛ E.shouldComponentUpdate, Duration: 0.005000000000109139
-
-App.tsx:27 Name: ⚛ List.shouldComponentUpdate, Duration: 0.005000000000109139
-
-App.tsx:32 Total shouldComponentUpdate: 0.029999999998835847
-App.tsx:33 Updated components: ⚛ A.shouldComponentUpdate, ⚛ B.shouldComponentUpdate, ⚛ C.shouldComponentUpdate, ⚛ D.shouldComponentUpdate, ⚛ E.shouldComponentUpdate, ⚛ List.shouldComponentUpdate
-</code></pre></div>
-<h2 id="結果">結果</h2>
-
-<p>Deep Equalは合計で5ms程度かかるのに対して、Shallow Equalは0.02ms程度で済んでいます。
-200倍程度の違いがでていますが、これは複雑で巨大なpropsになるほどDeep Equalは不利になります。
-(<code>JSON.stringify</code>の結果をキャッシュすれば時間は半分程度になります)</p>
-
-<p>この例は恣意的な比較なので、十分に早いデバイスでそこまで大きくないオブジェクトなら目に見えるコストにはなりにくいです。</p>
-
-<p><code>shouldComponentUpdate</code>はかなり高頻度で呼ばれる処理であるため、この比較処理自体が重いとコンポーネントを更新しなかったとしても重たいことになります。</p>
-
-<p>また、<code>JSON.stringify</code>はReact.Elementなど正しくstringifyできないものが来た場合にも問題がでてくるため実際にはその判定も必要です。(propsにはReactElementが渡されることがある。Childrenとか普通に属性として)
-<a href="https://github.com/azu/shallow-equal-props" title="shallow-equal-props">shallow-equal-props</a>はReact Elementの比較も考慮したshallow equalの実装です。</p>
-
-<p>BaseComponentなどでDeep Equalなどを使った<code>shouldComponentUpdate</code>は簡単でpropsが小さい間は効果的です。しかし、propsに巨大な配列などや循環参照しているもの、複雑なオブジェクトが入ってくると破綻しやすくなります。</p>
-
-<p>Shallow Equalの場合はそのようなことはありませんが、参照する値の比較になるため状態をImmutableに作ったり、そのImmutableなツリーとして意識する必要がでてきます。</p>
-
-<ul>
-<li><a href="http://nekogata.hatenablog.com/entry/2013/06/15/013752" title="「オブジェクトをイミュータブルにしろ」って言うけど、それってたとえば状態が変わったらオブジェクト作り直すってことでしょ、ちょう非効率じゃん。って思ってたんだけど、 - 猫型の蓄音機は 1 分間に 45 回にゃあと鳴く">「オブジェクトをイミュータブルにしろ」って言うけど、それってたとえば状態が変わったらオブジェクト作り直すってことでしょ、ちょう非効率じゃん。って思ってたんだけど、 - 猫型の蓄音機は 1 分間に 45 回にゃあと鳴く</a></li>
-</ul>
-
-<p>Mutableな方法でStateの更新処理を行う場合は、Shallow Equalでは更新したつもりが更新されていないと判定されてしまう場合があります。
-よくあるのは配列の値を追加するときに<code>Array#push</code>で行った場合などです。</p>
-
-<ul>
-<li><a href="https://asciidwango.github.io/js-primer/basic/array/#mutable-immutable" title="配列 · JavaScriptの入門書 #jsprimer">配列 · JavaScriptの入門書 #jsprimer</a></li>
-</ul>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">array</span><span class="o">:</span> <span class="p">[]</span>
-<span class="p">};</span>
-<span class="c1">// arrayの中身は更新されているけど、`state.array`の参照する配列オブジェクトは同じ</span>
-<span class="c1">// Deep Equalでは異なるものとして判定できるけど、Shallow Equalでは同じオブジェクトとなる</span>
-<span class="nx">state</span><span class="p">.</span><span class="nx">array</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</code></pre></div>
-<p>これをImmutableな形で更新するには、<code>state.array</code>の参照する配列オブジェクトそのものを更新する必要があります。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">array</span><span class="o">:</span> <span class="p">[]</span>
-<span class="p">};</span>
-<span class="c1">// arrayの中身は更新し、かつ`state.array`の参照する配列オブジェクトも更新</span>
-<span class="nx">state</span><span class="p">.</span><span class="nx">array</span> <span class="o">=</span> <span class="nx">state</span><span class="p">.</span><span class="nx">array</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</code></pre></div>
-<p>このように、Shallow Equalが効果的に動くようにするためには、状態の管理の仕方も大事になってきます。</p>
-
-<p>例えば、ステート管理ライブラリと言われてるものを見てみると、色々なパターンでこのShallow EqualができるようなStateを作りやすくなっています。</p>
-
-<p><a href="https://redux.js.org/">Redux</a>のReducerで<code>state</code>を受け取り、その<code>state</code>が更新する必要ないなら、そのまま<code>state</code>を返すというパターンはImmutableな状態の実装パターンの一つです。</p>
-
-<p><a href="https://github.com/mobxjs/mobx">MobX</a>の<a href="https://github.com/mobxjs/mobx-state-tree" title="mobx-state-tree">mobx-state-tree</a>は、mutableなmodelを持っておき、immutableなオブジェクトをスナップショットとして取得できます。</p>
-
-<p><a href="https://almin.js.org/">Almin</a>のStoreでは、ReduxのようなパターンでImmutableなStateを更新したり、Repositoryに保存したドメインモデルから必要になったタイミングで新しいStateに変換して返すなどのパターンで実装します。</p>
-
-<p>UIを持つ多くのアプリでは、状態を更新する回数よりも、状態を読み取りUIを作る回数の方が多くなりやすいです。そのため、更新のコストをちょっと払って(Immutableな更新)、状態からUIを更新するコストを小さくする(Shallow Equalにより判定処理自体を簡潔にする)ことがパフォーマンスにも効果がでます。また、更新範囲を抑えることが重要になるので、状態を作るときにある程度コントールしないと影響範囲を抑えるのは難しくなります。</p>
-
-<h2 id="おわり">おわり</h2>
-
-<p>世の中には既にいろんなShallow Equalのライブラリがあります。(大体実装は同じです)
-今回はTypeScript対応がなかったのと、デバッグの仕組みを持っているものが見つからなかったのでライブラリを作りました。</p>
-
-<ul>
-<li><a href="https://github.com/azu/shallow-equal-object" title="shallow-equal-object">shallow-equal-object</a></li>
-<li><a href="https://github.com/azu/shallow-equal-props" title="shallow-equal-props">shallow-equal-props</a></li>
 </ul>
  ]]></content>
  </entry>
