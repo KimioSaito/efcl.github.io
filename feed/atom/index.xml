@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-03-07T11:39:20+09:00</updated>
+ <updated>2018-03-07T11:56:35+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -109,7 +109,7 @@ Ecma International中のTechnical Committee 39（TC39）という技術委員会
 <h2 id="仕様策定のプロセス">仕様策定のプロセス</h2>
 
 <p>ES2015以前はすべての仕様の合意が取れるまで延々と議論を続けすべてが決まってからリリースされていました。
-そのため、ES2015がリリースされるまでには6年もの歳月がかかり言語の進化が停滞していました。
+そのため、ES2015がリリースされるまでには4年もの歳月がかかり言語の進化が停滞していました。
 この問題を解消するために、TC39は毎年リリースするためにECMAScriptの策定プロセスを変更しました。</p>
 
 <p>この策定プロセスはES2015がリリース後に適応され、このプロセスで初めてリリースされたのがES2016となります。
