@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-03-07T12:39:48+09:00</updated>
+ <updated>2018-03-07T14:55:25+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -21,7 +21,7 @@
    <id>http://efcl.info/2018/03/07/ecmascript-usage</id>
    <content type="html"><![CDATA[ <h2 id="はじめに">はじめに</h2>
 
-<p>この文章は<a href="https://github.com/asciidwango/js-primer" title="asciidwango/js-primer: JavaScriptの入門書">asciidwango/js-primer: JavaScriptの入門書</a>で書いた<a href="https://asciidwango.github.io/js-primer/basic/ecmascript/" title="ECMAScript · JavaScriptの入門書 #jsprimer">ECMAScript · JavaScriptの入門書 #jsprimer</a>の章が元となっています。</p>
+<p>この文章は<a href="https://github.com/asciidwango/js-primer" title="asciidwango/js-primer: JavaScriptの入門書">asciidwango/js-primer: JavaScriptの入門書</a>で書いた<a href="https://asciidwango.github.io/js-primer/basic/ecmascript/" title="ECMAScript · JavaScriptの入門書 #jsprimer">ECMAScript</a>の章が元となっています。</p>
 
 <p>また、<a href="http://azu.github.io/slide/2018/node/ecmascript39.html" title="ECMAScriptの使い方">ECMAScriptの使い方</a>というスライドでどのようの話をしているのであわせて参照してみてください。</p>
 
