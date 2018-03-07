@@ -9,7 +9,7 @@
         ECMAScriptの仕様/プロポーザルの調べ方/使い方を知る | Web Scratch
         
     </title>
-    <meta name="description" content="はじめに[^1]: ES2015の仕様編集者であるAllen Wirfs-Brock氏の書いたProgramming Language Standardizationに詳細が書かれています。[^2]: Inactive Proposalsに策定を中止したプロポーザルの一覧が公開されています。">
+    <meta name="description" content="はじめに">
     
     <meta name="keywords" content="ECMAScript,JavaScript,Proposal" />
     
@@ -30,7 +30,7 @@
 <meta property="og:url" content="http://efcl.info/2018/03/07/ecmascript-usage/">
 <meta property="og:image" content="http://efcl.info/public/favicon.ico">
 
-<meta property="og:description" content="はじめに[^1]: ES2015の仕様編集者であるAllen Wirfs-Brock氏の書いたProgramming Language Standardizationに詳細が書かれています。[^2]: Inactive Proposalsに策定を中止したプロポーザルの一覧が公開されています。">
+<meta property="og:description" content="はじめに">
 <meta property="og:site_name" content="Web Scratch">
 
 
@@ -424,7 +424,7 @@ Ecma International中のTechnical Committee 39（TC39）という技術委員会
 この問題を解消するために、TC39は毎年リリースするためにECMAScriptの策定プロセスを変更しました。</p>
 
 <p>この策定プロセスはES2015がリリース後に適応され、このプロセスで初めてリリースされたのがES2016となります。
-ES2016以降では、次のような仕様策定のプロセスで議論を進めて仕様が決定されています。<a href="%E3%81%93%E3%81%AE%E7%AD%96%E5%AE%9A%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9%E3%81%AF%3Chttps://tc39.github.io/process-document/%3E%E3%81%AB%E8%A9%B3%E7%B4%B0%E3%81%8C%E6%9B%B8%E3%81%8B%E3%82%8C%E3%81%A6%E3%81%84%E3%81%BE%E3%81%99%E3%80%82">^process</a></p>
+ES2016以降では、次のような仕様策定のプロセスで議論を進めて仕様が決定されています。</p>
 
 <p>仕様に追加する機能（API、構文など）をそれぞれ個別の<strong>プロポーザル</strong>（提案書）として進めていきます。
 現在策定中のプロポーザルはGitHub上の<a href="https://github.com/tc39/proposals" title="tc39/proposals: Tracking ECMAScript Proposals">tc39/proposals</a>に一覧が公開されています。
@@ -476,9 +476,11 @@ ES2016以降では、次のような仕様策定のプロセスで議論を進�
 
 <p>このような合意が取れる最低限の形でプロポーザルを進めていくのには、ES4の苦い失敗が背景にあります。
 ES4ではECMAScriptに多くの変更を入れることを試みましたが、TC39内でも意見が分かれ最終的に合意できませんでした。
-これによりES4の策定に割いた数年分のリソースが無駄となってしまったという経緯があります。[^1]</p>
+これによりES4の策定に割いた数年分のリソースが無駄となってしまったという経緯があります。</p>
 
-<p>ES2016以降の策定プロセスでも、すべてのプロポーザルが仕様に入るわけではありません。[^2]
+<p>詳しくはES2015のエディタであるAllenさんによる<a href="http://wirfs-brock.com/allen/files/papers/standpats-asianplop2016.pdf">プログラミング言語標準化</a>というPaperにかかれています。</p>
+
+<p>またES2016以降の策定プロセスでも、すべてのプロポーザルが仕様に入るわけではありません。
 別の代替プロポーザルが出た場合や後方互換性と保てない場合などにプロポーザルの策定を中断する場合があります。
 しかし、この場合でもプロポーザルという単位であるため策定作業の無駄は最小限で済みます。
 このようにモジュール化されたプロポーザルは入れ替えがし易いという性質もあります。</p>
@@ -584,7 +586,7 @@ ECMAScriptにおいては策定プロセスという形でどのような段階�
 <p>あるブラウザ/JavaScriptエンジンの挙動が仕様なのかを調べたいときがあります。</p>
 
 <p>それぞれのメジャーブラウザはJavaScriptエンジンを各自実装しています。
-そのため、どれかのブラウザが間違った実装だった場合に結果を比較することでわかる可能性があります。</p>
+そのため、どれかのブラウザが間違った実装だった場合に結果を比較することで分かる可能性があります。</p>
 
 <p><a href="https://github.com/bterlson/eshost-cli">eshost-cli</a>というツールを使うことで、ローカルにインストール済みのJavaScriptエンジンでの実行結果をまとめて出力してくれます。
 それぞれのJavaScriptエンジンをインストールするには<a href="https://github.com/GoogleChromeLabs/jsvu">jsvu</a>を使うのが簡単です。</p>
@@ -689,7 +691,7 @@ eshost -e &#39;new RegExp(&quot;\n&quot;).toString()&#39;
 <p>変換結果も異なりますが、実行結果（コンソールへの出力)も異なります。</p>
 
 <ul>
-<li>Babelはメソッド（プロパティ）は列挙されないので <code>[]</code> </li>
+<li>Babelはメソッド（プロパティ）は列挙されないので <code>[]</code></li>
 <li>TypeSdriptはメソッド（プロパティ）が列挙されるので <code>[&quot;method&quot;]</code></li>
 </ul>
 
@@ -785,8 +787,8 @@ TypeScriptは単純にプロトタイプオブジェクトのメソッドを追�
 <h3 id="例1-関数とthisの表現-–-arrow-function">例1: <a href="https://asciidwango.github.io/js-primer/basic/function-this/" title="関数とthis · JavaScriptの入門書 #jsprimer">関数とthis</a>の表現 – Arrow Function</h3>
 
 <blockquote>
-<p><code>function</code>キーワードで定義した関数は呼び出し時に、ベースオブジェクトが暗黙的な引数のように<code>this</code>の値として渡されます。<br>
-一方、Arrow Functionの関数は呼び出し時に<code>this</code>を受け取らないため、定義時のArrow Functionにおける<code>this</code>の参照先が静的に決定されます。<br>
+<p><code>function</code>キーワードで定義した関数は呼び出し時に、ベースオブジェクトが暗黙的な引数のように<code>this</code>の値として渡されます。
+一方、Arrow Functionの関数は呼び出し時に<code>this</code>を受け取らないため、定義時のArrow Functionにおける<code>this</code>の参照先が静的に決定されます。
 -- <a href="https://asciidwango.github.io/js-primer/basic/function-this/" title="関数とthis · JavaScriptの入門書 #jsprimer">関数とthis · JavaScriptの入門書 #jsprimer</a></p>
 </blockquote>
 
@@ -993,7 +995,7 @@ Chromeは<code>Window</code>、 その他のブラウザは<code>undefined</code
 <h2 id="tips">Tips</h2>
 
 <ul>
-<li>Stage 1はまでアイデアや実験なのでプロポーザル間でも重複する</li>
+<li>Stage 1までアイデアや実験なのでプロポーザル間でも重複する</li>
 <li>Stage 2+あたりからプロポーザル間での協調的な仕様を検討する
 
 <ul>
@@ -1011,7 +1013,7 @@ Chromeは<code>Window</code>、 その他のブラウザは<code>undefined</code
 
 <h2 id="おわりに">おわりに</h2>
 
-<p>最初に述べたようにここに書いてある事をすべて知る必要性はありません。
+<p>最初に述べたようにここに書いてあることをすべて知る必要性はありません。
 具体的に気になることを見つけたときにそれを調べる手段にたどり着ければ問題ありません。</p>
 
 <p>また、ECMAScriptがLiving Standardであるという話をしましたが、Living Standardである以上その策定プロセスなども細かく修正されていきます。
@@ -1034,9 +1036,6 @@ Chromeは<code>Window</code>、 その他のブラウザは<code>undefined</code
 <li>ECMAScriptの策定プロセス: <a href="https://tc39.github.io/process-document/" title="The TC39 Process">The TC39 Process</a>に書かれてる</li>
 <li>ECMAScriptの仕様: <a href="https://github.com/tc39/ecma262" title="tc39/ecma262">tc39/ecma262</a>にLiving Standard</li>
 </ul>
-
-<p>[^1]: ES2015の仕様編集者であるAllen Wirfs-Brock氏の書いた<a href="http://wirfs-brock.com/allen/files/papers/standpats-asianplop2016.pdf">Programming Language Standardization</a>に詳細が書かれています。
-[^2]: <a href="https://github.com/tc39/proposals/blob/master/inactive-proposals.md">Inactive Proposals</a>に策定を中止したプロポーザルの一覧が公開されています。</p>
 
     </div>
     <div class="post-post-toolbar">
