@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-03-20T00:31:16+09:00</updated>
+ <updated>2018-03-20T00:45:00+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -2937,8 +2937,8 @@ Chrome 63では次のコードを&quot;Module&quot;コンテキストで実行�
 <p>その他の<a href="https://en.wikipedia.org/wiki/Control_character" title="Control character">Control character</a>であるもの</p>
 
 <ul>
-<li><code></code>(<code>\u0010</code> DATA LINK ESCAPE)</li>
-<li><code></code>(<code>\u0019</code> ND OF MEDIUM)</li>
+<li><code>\u0010</code> DATA LINK ESCAPE</li>
+<li><code>\u0019</code> ND OF MEDIUM</li>
 <li>etc...</li>
 </ul>
 
