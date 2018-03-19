@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-03-19T20:18:37+09:00</updated>
+ <updated>2018-03-19T20:22:36+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -33,6 +33,12 @@
 </code></pre></div>
 <p>のようなレスポンスHTTPヘッダを設定することで、ユーザーがページにアクセスした時に、<code>https://example.com/csp-report</code> へPOSTでその情報を投げてくれます。
 (ブラウザが勝手にやってくれます)</p>
+
+<p>ここでは<code>report-to</code>と書いていますが、古いブラウザは<code>report-uri</code>だったりするので注意します。</p>
+
+<ul>
+<li><a href="https://www.chromestatus.com/feature/5826576096690176" title="CSP: `report-to` directive. - Chrome Platform Status">CSP: <code>report-to</code> directive. - Chrome Platform Status</a></li>
+</ul>
 
 <p>このCSPについては次の記事が詳しいです。</p>
 
@@ -63,7 +69,7 @@ CSPレポートは PV * CSP違反のリソース数 となるため適当にや�
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/SecurityPolicyViolationEvent" title="SecurityPolicyViolationEvent - Web APIs | MDN">SecurityPolicyViolationEvent - Web APIs | MDN</a></li>
 </ul>
 
-<p>このイベントを使えば、<code>report-to</code>の指定以外の方法でも任意の場所にCSPレポートを送ることができそうです。</p>
+<p>このイベントを使えば、<code>report-to</code>(<code>report-uri</code>)の指定以外の方法でも任意の場所にCSPレポートを送ることができそうです。</p>
 
 <p>こういったPVに関連するデータの集積といったら<a href="https://www.google.com/analytics/">Google Analytics</a>がよく使われていると思います。
 このサイトでも<a href="https://www.google.com/analytics/">Google Analytics</a>を使っていたので、CSPレポートをGoogle Analyticsに送る<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/" title="analytics.js">analytics.js</a>のプラグインを作りました。</p>
@@ -125,7 +131,7 @@ Google Analyticsの<a href="https://developers.google.com/analytics/devguides/co
 
 <p>このデータはHTTPSへの移行する時のMixed Content探しの指標データなどとして利用できると思います。</p>
 
-<p>もっとしっかりと分析したい人はAWSのAPI Gatewayで作成したAPIを<code>report-to</code>に指定し、<a href="https://aws.amazon.com/jp/kinesis/data-firehose/" title="Amazon Kinesis Data Firehose">Amazon Kinesis Data Firehose</a>にデータを流し、S3やRedshiftなどでデータを分析するのがいいと思います。</p>
+<p>もっとしっかりと分析したい人はAWSのAPI Gatewayで作成したAPIを<code>report-to</code>(<code>report-uri</code>)に指定し、<a href="https://aws.amazon.com/jp/kinesis/data-firehose/" title="Amazon Kinesis Data Firehose">Amazon Kinesis Data Firehose</a>にデータを流し、S3やRedshiftなどでデータを分析するのがいいと思います。</p>
 
 <ul>
 <li><a href="http://techlife.cookpad.com/entry/2017/04/19/190901" title="Web サービスの完全 HTTPS 化 - クックパッド開発者ブログ">Web サービスの完全 HTTPS 化 - クックパッド開発者ブログ</a></li>
