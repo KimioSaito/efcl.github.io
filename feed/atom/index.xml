@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-03-17T21:30:15+09:00</updated>
+ <updated>2018-03-19T20:18:37+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -13,6 +13,138 @@
  </author>
  
 
+ 
+ <entry>
+   <title>CSPレポート(Mixed Content)をGoogle Analyticsに集約する</title>
+   <link href="http://efcl.info/2018/03/19/csp-report-to-google-analytics/"/>
+   <updated>2018-03-19T19:37:00+09:00</updated>
+   <id>http://efcl.info/2018/03/19/csp-report-to-google-analytics</id>
+   <content type="html"><![CDATA[ <p>Content Security Policy(CSP) ではさまざまな条件でコンテンツに制約をかけることができます。
+そのCSPの中でも実際に制約をかけずにテストして、その結果を特定のURLにPOSTする <code>Content-Security-Policy-Report-Only</code> という仕組みがあります。</p>
+
+<p>CSPにはHTTPSじゃないと画像やJavaScriptを読み込めなくする制約も設定できるので、HTTPからHTTPSに移行する際などに役立ちます。
+例えば、リソースはすべてHTTPSから読み込まないと行けないというCSPの設定は次のようにかけます。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">Content-Security-Policy: default-src https:
+</code></pre></div>
+<p>実際にこのCSPをレスポンスHTTPヘッダに設定するとCSPに対応しているブラウザは、HTTPSではない画像やJavaScriptなどをブロックします。</p>
+
+<p>実際にブロックされると使えなくなって困るので、サイトの管理者はそのようなリソースが実在しているのかを <code>Content-Security-Policy-Report-Only</code> でチェックすることができます。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">Content-Security-Policy-Report-Only: default-src https: report-to https://example.com/csp-report
+</code></pre></div>
+<p>のようなレスポンスHTTPヘッダを設定することで、ユーザーがページにアクセスした時に、<code>https://example.com/csp-report</code> へPOSTでその情報を投げてくれます。
+(ブラウザが勝手にやってくれます)</p>
+
+<p>このCSPについては次の記事が詳しいです。</p>
+
+<ul>
+<li><a href="https://developers.google.com/web/fundamentals/security/csp/?hl=ja">コンテンツ セキュリティ ポリシー  |  Web  |  Google Developers</a></li>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/HTTP/CSP">Content Security Policy (CSP) - HTTP | MDN</a></li>
+<li><a href="https://blog.jxck.io/entries/2017-02-13/csp-report-case-study.html">CSP Report 収集と実レポートの考察 | blog.jxck.io</a></li>
+<li><a href="https://blog.jxck.io/entries/2016-03-30/content-security-policy.html">Content Security Policy(CSP) 対応と report-uri.io でのレポート収集 | blog.jxck.io</a></li>
+</ul>
+
+<p>このCSPレポートの仕組みは便利ですがそのデータの集約先をどうするかという問題がついてきます。
+CSPレポートは PV * CSP違反のリソース数 となるため適当にやると膨大なデータが飛んでくる可能性があります。
+このCSPレポートを収集できるサービスとして<a href="https://report-uri.com/" title="report-uri.com">report-uri.com</a>や<a href="https://sentry.io/">sentry.io</a>などがあります。</p>
+
+<ul>
+<li><a href="https://medium.com/sourceclear/content-security-policy-with-sentry-efb04f336f59" title="Adopting and Reducing Challenges of Content Security Policy (CSP) with Sentry">Adopting and Reducing Challenges of Content Security Policy (CSP) with Sentry</a></li>
+</ul>
+
+<p>どちらもそれだけのために使うのも微妙だなーと思いCSPについて調べていたところ、CSPの制約違反は<code>report-to</code>だけではなくJavaScriptのイベントとして取得する方法を見つけました。
+<code>securitypolicyviolation</code>イベントではCSPの制約違反をした時にエラーオブジェクトと共に呼び出されます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;securitypolicyviolation&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">blockedURI</span><span class="p">);</span>    
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">violatedDirective</span><span class="p">);</span>    
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">originalPolicy</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/SecurityPolicyViolationEvent" title="SecurityPolicyViolationEvent - Web APIs | MDN">SecurityPolicyViolationEvent - Web APIs | MDN</a></li>
+</ul>
+
+<p>このイベントを使えば、<code>report-to</code>の指定以外の方法でも任意の場所にCSPレポートを送ることができそうです。</p>
+
+<p>こういったPVに関連するデータの集積といったら<a href="https://www.google.com/analytics/">Google Analytics</a>がよく使われていると思います。
+このサイトでも<a href="https://www.google.com/analytics/">Google Analytics</a>を使っていたので、CSPレポートをGoogle Analyticsに送る<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/" title="analytics.js">analytics.js</a>のプラグインを作りました。</p>
+
+<h2 id="csp-report-to-google-analytics"><a href="https://github.com/azu/csp-report-to-google-analytics">csp-report-to-google-analytics</a></h2>
+
+<ul>
+<li>ソースコード: <a href="https://github.com/azu/csp-report-to-google-analytics" title="azu/csp-report-to-google-analytics: CSP report to Google Analytics.">azu/csp-report-to-google-analytics: CSP report to Google Analytics.</a></li>
+<li>CDN: <a href="https://unpkg.com/csp-report-to-google-analytics/dist/csp-report-to-google-analytics.min.js">https://unpkg.com/csp-report-to-google-analytics/dist/csp-report-to-google-analytics.min.js</a>
+
+<ul>
+<li><a href="https://unpkg.com/" title="unpkg">unpkg</a>から直接読み込めます</li>
+</ul></li>
+</ul>
+
+<p>この<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/" title="analytics.js">analytics.js</a>のプラグインはCSPレポートを<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/events?hl=ja" title="イベント トラッキング">イベント</a>としてGoogle Analyticsに送信します。</p>
+
+<p>導入方法は簡単で既に<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/" title="analytics.js">analytics.js</a>を導入している人は、
+<code>&lt;script async src=&#39;https://unpkg.com/csp-report-to-google-analytics/dist/csp-report-to-google-analytics.min.js&#39;&gt;&lt;/script&gt;</code>でプラグインを別途読み込み、<code>ga(&#39;require&#39;, &#39;csp-report&#39;);</code>でプラグイン<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/" title="analytics.js">analytics.js</a>に適応するだけです。</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="c">&lt;!-- Google Analytics --&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">ga</span><span class="o">=</span><span class="nb">window</span><span class="p">.</span><span class="nx">ga</span><span class="o">||</span><span class="kd">function</span><span class="p">(){(</span><span class="nx">ga</span><span class="p">.</span><span class="nx">q</span><span class="o">=</span><span class="nx">ga</span><span class="p">.</span><span class="nx">q</span><span class="o">||</span><span class="p">[]).</span><span class="nx">push</span><span class="p">(</span><span class="nx">arguments</span><span class="p">)};</span><span class="nx">ga</span><span class="p">.</span><span class="nx">l</span><span class="o">=+</span><span class="k">new</span> <span class="nb">Date</span><span class="p">;</span>
+<span class="nx">ga</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="s1">&#39;UA-XXXXX-Y&#39;</span><span class="p">,</span> <span class="s1">&#39;auto&#39;</span><span class="p">);</span>
+<span class="nx">ga</span><span class="p">(</span><span class="s1">&#39;send&#39;</span><span class="p">,</span> <span class="s1">&#39;pageview&#39;</span><span class="p">);</span>
+<span class="c1">// require csp-report-to-google-analytics plugin</span>
+<span class="nx">ga</span><span class="p">(</span><span class="s1">&#39;require&#39;</span><span class="p">,</span> <span class="s1">&#39;csp-report&#39;</span><span class="p">);</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">async</span> <span class="na">src=</span><span class="s">&#39;https://www.google-analytics.com/analytics.js&#39;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="c">&lt;!-- End Google Analytics --&gt;</span>
+<span class="c">&lt;!-- Load csp-report-to-google-analytics plugin --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">async</span> <span class="na">src=</span><span class="s">&#39;https://unpkg.com/csp-report-to-google-analytics/dist/csp-report-to-google-analytics.min.js&#39;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div>
+<p>今のGoogle Analyticsはgtag.jsがデフォルトみたいですが、gtag.jsはプラグインの仕組みをサポートしていないため<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/" title="analytics.js">analytics.js</a>でしか動きません。</p>
+
+<ul>
+<li><a href="https://github.com/googleanalytics/autotrack/issues/202" title="gtag.js API? · Issue #202 · googleanalytics/autotrack">gtag.js API? · Issue #202 · googleanalytics/autotrack</a></li>
+</ul>
+
+<p>あとは待っていればCSPレポートがGoogle Analyticsのイベント画面に表示されます。
+(<a href="https://developer.mozilla.org/en-US/docs/Web/API/SecurityPolicyViolationEvent" title="SecurityPolicyViolationEvent">SecurityPolicyViolationEvent</a>に対応しているブラウザでアクセスする必要があります。)</p>
+
+<h2 id="efcl-infoでのテスト">efcl.infoでのテスト</h2>
+
+<p>このサイトでもHTTPSに移行するためにこのプラグインを導入してみました。
+CSPは次のようなディレクティブが書かれています。
+(<code>http://www.google-analytics.com/*</code>を許可しているのは、Google Analyticsがビーコンに画像を使っていて再帰的に掛かりそうな問題があるため。これBeacon APIにすれば解消するのかも)</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">Content-Security-Policy-Report-Only: default-src https: http://www.google-analytics.com/* &#39;unsafe-eval&#39; &#39;unsafe-inline&#39;;
+</code></pre></div>
+<ul>
+<li><a href="https://github.com/efcl/efcl.github.io/pull/158" title="Add CSP report by azu · Pull Request #158 · efcl/efcl.github.io">Add CSP report by azu · Pull Request #158 · efcl/efcl.github.io</a></li>
+</ul>
+
+<p>実際に取得できたCSPレポートはGoogle Analyticsの管理画面で見ることができます。
+Google Analyticsの<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/events?hl=ja" title="イベント トラッキング">イベント トラッキング</a>を使っているため自動的にページなどに紐付いたデータとなっています。</p>
+
+<p><img src="https://monosnap.com/file/T6PG3DJYTrCCtkpaGf7iAIL2bknlPm.png" alt="image"></p>
+
+<p><img src="https://monosnap.com/file/nLN63lZGRFY5vyhJE5dZi7HHSFF33f.png" alt="image"></p>
+
+<p>このデータはHTTPSへの移行する時のMixed Content探しの指標データなどとして利用できると思います。</p>
+
+<p>もっとしっかりと分析したい人はAWSのAPI Gatewayで作成したAPIを<code>report-to</code>に指定し、<a href="https://aws.amazon.com/jp/kinesis/data-firehose/" title="Amazon Kinesis Data Firehose">Amazon Kinesis Data Firehose</a>にデータを流し、S3やRedshiftなどでデータを分析するのがいいと思います。</p>
+
+<ul>
+<li><a href="http://techlife.cookpad.com/entry/2017/04/19/190901" title="Web サービスの完全 HTTPS 化 - クックパッド開発者ブログ">Web サービスの完全 HTTPS 化 - クックパッド開発者ブログ</a></li>
+</ul>
+
+<p>Google Analyticsのイベントは遅れるデータに制約があるので、<a href="https://github.com/azu/csp-report-to-google-analytics">csp-report-to-google-analytics</a> では重要そうなデータしか送っていません。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p><a href="https://github.com/azu/csp-report-to-google-analytics">csp-report-to-google-analytics</a>を使ったCSPレポートを<a href="https://www.google.com/analytics/">Google Analytics</a>に送る方法を紹介しました。</p>
+
+<p>CSPのレスポンスHTTPヘッダを指定する必要がありますが、結構気軽にできるので面白いかもしれません。</p>
+
+<p>残念ながら <code>&lt;meta&gt;</code>タグでは <code>Content-Security-Policy-Report-Only</code> が利用できません。
+(通常のCSPは設定できますが実際にコンテンツが表示されなくなるので、目的に合わない)
+そのため、この手法にはHTTPヘッダを設定できるサーバが必要です。
+このサイトはGitHub Pagesから<a href="https://www.netlify.com/">Netlify</a>に移すことで、この問題を回避しています。</p>
+ ]]></content>
+ </entry>
  
  <entry>
    <title>ECMAScriptの仕様/プロポーザルの調べ方を知る</title>
@@ -3268,105 +3400,6 @@ ESLintのXOやstandardに近いかな?</p>
 <ul>
 <li><a href="https://github.com/textlint/textlint/issues/366">Core rule utility · Issue #366 · textlint/textlint</a></li>
 <li><a href="https://github.com/textlint/textlint/issues/396">textlint-tester: to TypeScript · Issue #396 · textlint/textlint</a></li>
-</ul>
- ]]></content>
- </entry>
- 
- <entry>
-   <title>ページ上でずっと動いているsetTimeout、setInterval、requestAnimationFrameを見つけてパフォーマンス改善する</title>
-   <link href="http://efcl.info/2017/12/07/capture-living-timer/"/>
-   <updated>2017-12-07T10:25:00+09:00</updated>
-   <id>http://efcl.info/2017/12/07/capture-living-timer</id>
-   <content type="html"><![CDATA[ <p>複雑なウェブアプリケーションになってくると、1つのページで複数のTimerなどを回すことがあります。</p>
-
-<p>例えば、Twitterのようなアプリならば、ポーリングで更新するために<code>setInverval</code>のようなタイマーを回します。
-また、ゲームなどCanvasで描画を行うアプリケーションならば、メインループを<code>requestAnimationFrame</code>で回します。</p>
-
-<p>このように色々なタイマー系がありますが、アプリが多機能になっていくと色々なタイマーが同時に動くようになっていきます。
-特に問題がなりやすいのが表示中だけタイマーを回すコンポーネントです。</p>
-
-<p>よくあるのが次のようなmount時にtimerを開始して、unmount時にtimerを停止するコンポーネントです。
-この実装はunmount時に止めているので問題ありませんが、<code>componentWillUnmount</code>の実装を忘れるとそのタイマーはコンポーネントが消えた後も回り続けます。</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">TimerComponent</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
-
-    <span class="nx">componentDidMount</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">startTimer</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="nx">componentWillUnmount</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">stopTimer</span><span class="p">();</span> <span class="c1">// &lt;= これを止め忘れるとTimerリーク</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>このような意図しないで動いてるタイマーなどを見つけるspyスクリプトを書きました</p>
-
-<ul>
-<li><a href="https://gist.github.com/azu/d7942102dc5282b0eca859149791c3f0" title="Logging Timer and requestAnimationFrame">Logging Timer and requestAnimationFrame</a></li>
-</ul>
-
-<h2 id="使い方">使い方</h2>
-
-<ol>
-<li>次のスクリプトをページに読み込ませる<br>
-
-<ul>
-<li>コンソールにコピペして実行しても大丈夫</li>
-<li>Non strict modeじゃないと動かないことやってるで混ぜる場合は注意</li>
-</ul></li>
-<li>結果を取りたくなったら <code>window.getContexualLogResult()</code>を叩く</li>
-</ol>
-
-<p>&quot;setTimeout&quot;, &quot;setInterval&quot;, &quot;requestAnimationFrame&quot;の実行元の関数毎に呼ばれた回数をまとめて表示してくれます。
-またスタックトレースも無理やり入れているので、意図しない呼び出しが頻発しているならその部分のコードを直す目安となります。</p>
-
-<script src="https://gist.github.com/azu/d7942102dc5282b0eca859149791c3f0.js"></script>
-
-<p>例えば、twtter.comでこれを実行してみると<code>setInterval</code>と<code>requestAnimationFrame</code>が回っていることが分かります。</p>
-
-<p><img src="http://efcl.info/wp-content/uploads/2017/12/07-1512611803.png" alt="image"></p>
-
-<p>これは定期的な更新をするために呼び出していることがわかります。</p>
-
-<p>タイムラインツールでも記録はできるのですが、呼び出し元毎のグルーピングやフィルタリングが難しいです。(良い方法があるなら知りたい)
-&quot;setTimeout&quot;, &quot;setInterval&quot;, &quot;requestAnimationFrame&quot;を乗っ取ってログを取ることで実装しています。</p>
-
-<p>一回のタイマー発火ごとの処理は小さくても、スペック弱いデバイスではネックとなることがあるのでそのような無駄な処理を発見する目的で作りました。
-(Chromeの<a href="https://umaar.com/dev-tips/88-cpu-throttling/" title="CPU Throttling - Chrome DevTools - Dev Tips">CPU Throttling</a>などでシミュレートすると問題を見つけやすいです)</p>
-
-<p>最近は、分かりやすい指標が既にある起動時間のパフォーマンスではなく、アプリを起動後のパフォーマンスを改善しています。</p>
-
-<p>次の記事で作ってたものはそういうところを改善する目安を探すためのツールです。</p>
-
-<ul>
-<li><a href="http://efcl.info/2017/11/15/performance.mark-metadata/" title="performance.markにメタデータを紐付けできるライブラリを書いた | Web Scratch">performance.markにメタデータを紐付けできるライブラリを書いた | Web Scratch</a></li>
-<li><a href="https://dev.to/azu/performancemark-with-medata-is-useful-for-real-user-monitoring-54p" title="`performance.mark` with metadata is useful for Real user monitoring"><code>performance.mark</code> with metadata is useful for Real user monitoring</a></li>
-</ul>
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">これのFB Flux版を実装してたけど、やっぱりこういうの必要だと思う。ボトルネックが可視化されるので特殊な技能がなくてもパフォーマンス悪いところが発見できる。 &quot;Almin + React/Vue.jsのパフォーマンスプロフ…&quot; <a href="https://t.co/9alBY5tnca">https://t.co/9alBY5tnca</a></p>&mdash; azu (@azu_re) <a href="https://twitter.com/azu_re/status/933888717101588480?ref_src=twsrc%5Etfw">November 24, 2017</a></blockquote>
-
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<p>アプリの起動後の指標として、何かした時に反応が100ms以内、アニメーションが10ms以内、アイドル時の処理は50ms以上以内のブロックにする(long task)、Loadは1000ms以内などを指標を定めた<a href="https://developers.google.com/web/fundamentals/performance/rail?hl=ja" title="RAIL">RAIL</a>モデルなどがあります。</p>
-
-<p>これらはマイクロなベンチマークを取ってからそれを改善していくという積み重ねをしています。
-この記事で書いたspyスクリプトも、無駄に動くタイマーが減ればその分処理が減ったということが明確であるため、それを検出するために作りました。</p>
-
-<p>また、アプリ起動後は何もしてないときも体感が良いということも必要になります。
-例えばユーザー操作がないけど、タイムラインがスムーズに更新される、映像がスムーズに流れる、放置ゲームを眺めててつっかかりがないとか、リアルタイムにデータを受信してて止まらないなどがこれにあたります。</p>
-
-<p>これらの放置時の更新は大体裏では&quot;setTimeout&quot;, &quot;setInterval&quot;, &quot;requestAnimationFrame&quot;などを使っていることが多いです。
-(WebRTCやWebSocketなどもありますが、それらが止まってないかを定期的にチェックする仕組みなどにも関係します)</p>
-
-<p>タイマー系は意図しないタイミングで他の処理と重なるとUIを固めたりするので、<a href="https://developer.mozilla.org/ja/docs/Web/API/Window/requestIdleCallback" title="requestIdleCallback">requestIdleCallback</a>と組み合わせるなどの工夫が必要になるかもしれません。</p>
-
-<ul>
-<li><a href="https://github.com/azu/faao/blob/f52920656db792a0e24fc8bcbbc555c33b02b623/src/infra/time-sheduler/TimeScheduler.ts">https://github.com/azu/faao/blob/f52920656db792a0e24fc8bcbbc555c33b02b623/src/infra/time-sheduler/TimeScheduler.ts</a></li>
-</ul>
-
-<p>その他</p>
-
-<ul>
-<li><a href="https://havelog.ayumusato.com/develop/javascript/e725-timer_vs_raf.html" title="requestAnimationFrame とタイマーの今更な比較とデモ ::ハブろぐ">requestAnimationFrame とタイマーの今更な比較とデモ ::ハブろぐ</a></li>
 </ul>
  ]]></content>
  </entry>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+    <title>
+        
+        CSPレポート(Mixed Content)をGoogle Analyticsに集約する | Web Scratch
+        
+    </title>
+    <meta name="description" content="Content Security Policy(CSP) ではさまざまな条件でコンテンツに制約をかけることができます。そのCSPの中でも実際に制約をかけずにテストして、その結果を特定のURLにPOSTする Content-Security-Policy-Report-Only という仕組みがあります。">
+    
+    <meta name="keywords" content="CSP,HTTPS,MixedContent,SSL" />
+    
+    <meta name="author" content="azu">
+    <!-- Icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="/public/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="http://efcl.info/public/favicon.ico">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/public/css/main.css">
+    <!-- JavaScript -->
+    <!-- Open graph tags -->
+<meta property="og:title" content="CSPレポート(Mixed Content)をGoogle Analyticsに集約する">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://efcl.info/2018/03/19/csp-report-to-google-analytics/">
+<meta property="og:image" content="http://efcl.info/public/favicon.ico">
+
+<meta property="og:description" content="Content Security Policy(CSP) ではさまざまな条件でコンテンツに制約をかけることができます。そのCSPの中でも実際に制約をかけずにテストして、その結果を特定のURLにPOSTする Content-Security-Policy-Report-Only という仕組みがあります。">
+<meta property="og:site_name" content="Web Scratch">
+
+
+
+
+<meta property="article:published_time" content="2018-03-19T19:37:00+09:00">
+<meta property="article:author" content="https://www.facebook.com/">
+
+<meta property="og:see_also" content="http://efcl.info/2018/03/07/ecmascript-usage/">
+
+<meta property="og:see_also" content="http://efcl.info/2018/02/22/node29/">
+
+<meta property="og:see_also" content="http://efcl.info/2018/02/02/snapshot-test/">
+
+
+
+
+
+<meta property="article:section" content="雑記">
+
+
+
+
+
+<meta property="article:tag" content="CSP">
+
+<meta property="article:tag" content="HTTPS">
+
+<meta property="article:tag" content="MixedContent">
+
+<meta property="article:tag" content="SSL">
+
+
+    <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-2184335-8', 'auto');
+    ga('send', 'pageview');
+    ga('require', 'csp-report');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script async src='https://unpkg.com/csp-report-to-google-analytics/dist/csp-report-to-google-analytics.min.js'></script>
+
+    <script>
+var blog_categories = [
+{
+    "title" : "greasemonkey",
+    "count" : 61
+},{
+    "title" : "ニコニコ動画",
+    "count" : 16
+},{
+    "title" : "小説電子化",
+    "count" : 3
+},{
+    "title" : "vista",
+    "count" : 12
+},{
+    "title" : "firefox",
+    "count" : 55
+},{
+    "title" : "その他",
+    "count" : 13
+},{
+    "title" : "webサービス",
+    "count" : 22
+},{
+    "title" : "software",
+    "count" : 59
+},{
+    "title" : "雑記",
+    "count" : 38
+},{
+    "title" : "まとめ",
+    "count" : 11
+},{
+    "title" : "zaurus",
+    "count" : 3
+},{
+    "title" : "ハードウェア",
+    "count" : 8
+},{
+    "title" : "アドオン",
+    "count" : 31
+},{
+    "title" : "wordpress",
+    "count" : 6
+},{
+    "title" : "javascript",
+    "count" : 200
+},{
+    "title" : "インストール設定",
+    "count" : 12
+},{
+    "title" : "iphone",
+    "count" : 10
+},{
+    "title" : "loox u",
+    "count" : 1
+},{
+    "title" : "tombloo",
+    "count" : 3
+},{
+    "title" : "イベント",
+    "count" : 92
+},{
+    "title" : "userchome.js",
+    "count" : 8
+},{
+    "title" : "jetpack",
+    "count" : 7
+},{
+    "title" : "onenote",
+    "count" : 2
+},{
+    "title" : "nilscript",
+    "count" : 4
+},{
+    "title" : "keysnail",
+    "count" : 3
+},{
+    "title" : "ios",
+    "count" : 15
+},{
+    "title" : "shell",
+    "count" : 3
+},{
+    "title" : "r言語",
+    "count" : 2
+},{
+    "title" : "node.js",
+    "count" : 3
+},{
+    "title" : "mac",
+    "count" : 2
+},{
+    "title" : "github",
+    "count" : 11
+},{
+    "title" : "jekyll",
+    "count" : 1
+},{
+    "title" : "golang",
+    "count" : 1
+},{
+    "title" : "web",
+    "count" : 1
+},{
+    "title" : "スライド",
+    "count" : 1
+},{
+    "title" : "ie",
+    "count" : 1
+},{
+    "title" : "書籍",
+    "count" : 2
+},{
+    "title" : "textlint",
+    "count" : 9
+}
+];
+    blog_categories = blog_categories.filter(function(categoryObject){
+        return !/^\d+$/.test(categoryObject.title);
+    });
+</script>
+</head>
+
+
+<body class="layout-reverse theme-base-0d">
+<a href="https://github.com/efcl/efcl.github.io" class="github-ribbon">
+    <img style="position: fixed; z-index:100; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+<header>
+    <div class="site-header">
+    <img src="/public/img/reimu-right.png" class="header-logo">
+
+    <h1 class="site-title">
+        <a href="/">
+            Web Scratch
+        </a>
+    </h1>
+    <p class="lead">ブラウザ/JavaScript等についてのブログ</p>
+
+</div>
+</header>
+<aside>
+    <div class="sidebar">
+    <div class="container">
+        <div class="profile">
+            <a href="/about/" title="About"><img src="/public/img/azu.png" alt="Profile"></a>
+
+            <h2><a href="/about/" title="About">azu</a></h2>
+        </div>
+        <div class="social">
+            <a class="twitter" href="http://twitter.com/azu_re" title="Twitter">
+                <img src="/public/svg/twitter.svg" alt="twitter" width="32" height="32"/>
+            </a>
+            <a class="github" href="https://github.com/azu" title="GitHub">
+                <img src="/public/svg/github.svg" alt="GitHub" width="32" height="32"/>
+            </a>
+            <a class="rss" href="/feed/" title="RSS Feed">
+                <img src="/public/svg/feed.svg" alt="RSS" width="32" height="32"/>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="search">
+                <form class="search-box" method="get" action="https://www.google.co.jp/search">
+                    <label for="search-box-label">検索:</label>
+                    <input type="hidden" name="q" value="site:efcl.info">
+                    <input id="search-box-label" type="search" name="q">
+                    <input type="submit" value="search">
+                </form>
+            </div>
+            <div class="recent">
+    <h3 class="recent-posts-list-title">
+        <a href="/">最近の投稿</a>
+    </h3>
+    <ul class="recent-posts">
+        
+        <li>
+            <a href="/2018/03/19/csp-report-to-google-analytics/">
+                CSPレポート(Mixed Content)をGoogle Analyticsに集約する
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2018/03/07/ecmascript-usage/">
+                ECMAScriptの仕様/プロポーザルの調べ方を知る
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2018/02/22/node29/">
+                Node学園 29時限目でECMAScriptの調べ方について発表してきた
+            </a>
+        </li>
+        
+        <li>
+            <a href="/2018/02/02/snapshot-test/">
+                Jestなどを使わずにスナップショットテストを書く
+            </a>
+        </li>
+        
+    </ul>
+</div>
+            <div class="recent">
+    <h3 class="categories-list-title"><a href="/categories">カテゴリ一覧</a></h3>
+
+    <div class="categories-list" id="js-categories-list">
+
+    </div>
+    <script>
+        (function () {
+            var categoriesList = window.blog_categories;
+            var appendPoint = document.getElementById("js-categories-list");
+            // big ... small
+            var sortedCategories = categoriesList.sort(function (a, b) {
+                return a.count < b.count ? 1 : -1;
+            });
+            var ulTag = document.createElement("ul");
+            var displayCount = sortedCategories.length < 3 ? sortedCategories.length : 3;
+            for (var i = 0; i < displayCount; i++) {
+                var category = sortedCategories[i];
+                var liTag = document.createElement("li");
+                var aTag = document.createElement("a");
+                aTag.href = "/categories#" + category.title;
+                aTag.textContent = category.title;
+                var spanTag = document.createElement("span");
+                spanTag.appendChild(document.createTextNode("[" + category.count + "]"));
+                liTag.appendChild(aTag);
+                liTag.appendChild(spanTag);
+                ulTag.appendChild(liTag);
+            }
+            var lastLiTag = document.createElement("li");
+            var lastATag = document.createElement("a");
+            lastATag.href = "/categories";
+            lastATag.textContent = "その他のタグ…";
+            lastLiTag.appendChild(lastATag);
+            ulTag.appendChild(lastATag);
+            appendPoint.appendChild(ulTag);
+        })();
+    </script>
+</div>
+        </nav>
+    </div>
+</div>
+
+</aside>
+<article>
+    <div class="content container">
+        <div class="post" id="js-post-url" data-post-url="/2018/03/19/csp-report-to-google-analytics/">
+    <h1 class="post-title">CSPレポート(Mixed Content)をGoogle Analyticsに集約する</h1>
+
+    <div class="pre-post-toolbar">
+        <span class="post-date">2018年03月19日</span>
+        <a class="btn edit-on-github" href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2018/2018-03-19-csp-report-to-google-analytics.md"><span class="edito-on-github-label"></span>Edit on GitHub</a>
+
+    </div>
+    <div class="post-content">
+        <p>Content Security Policy(CSP) ではさまざまな条件でコンテンツに制約をかけることができます。
+そのCSPの中でも実際に制約をかけずにテストして、その結果を特定のURLにPOSTする <code>Content-Security-Policy-Report-Only</code> という仕組みがあります。</p>
+
+<p>CSPにはHTTPSじゃないと画像やJavaScriptを読み込めなくする制約も設定できるので、HTTPからHTTPSに移行する際などに役立ちます。
+例えば、リソースはすべてHTTPSから読み込まないと行けないというCSPの設定は次のようにかけます。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">Content-Security-Policy: default-src https:
+</code></pre></div>
+<p>実際にこのCSPをレスポンスHTTPヘッダに設定するとCSPに対応しているブラウザは、HTTPSではない画像やJavaScriptなどをブロックします。</p>
+
+<p>実際にブロックされると使えなくなって困るので、サイトの管理者はそのようなリソースが実在しているのかを <code>Content-Security-Policy-Report-Only</code> でチェックすることができます。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">Content-Security-Policy-Report-Only: default-src https: report-to https://example.com/csp-report
+</code></pre></div>
+<p>のようなレスポンスHTTPヘッダを設定することで、ユーザーがページにアクセスした時に、<code>https://example.com/csp-report</code> へPOSTでその情報を投げてくれます。
+(ブラウザが勝手にやってくれます)</p>
+
+<p>このCSPについては次の記事が詳しいです。</p>
+
+<ul>
+<li><a href="https://developers.google.com/web/fundamentals/security/csp/?hl=ja">コンテンツ セキュリティ ポリシー  |  Web  |  Google Developers</a></li>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/HTTP/CSP">Content Security Policy (CSP) - HTTP | MDN</a></li>
+<li><a href="https://blog.jxck.io/entries/2017-02-13/csp-report-case-study.html">CSP Report 収集と実レポートの考察 | blog.jxck.io</a></li>
+<li><a href="https://blog.jxck.io/entries/2016-03-30/content-security-policy.html">Content Security Policy(CSP) 対応と report-uri.io でのレポート収集 | blog.jxck.io</a></li>
+</ul>
+
+<p>このCSPレポートの仕組みは便利ですがそのデータの集約先をどうするかという問題がついてきます。
+CSPレポートは PV * CSP違反のリソース数 となるため適当にやると膨大なデータが飛んでくる可能性があります。
+このCSPレポートを収集できるサービスとして<a href="https://report-uri.com/" title="report-uri.com">report-uri.com</a>や<a href="https://sentry.io/">sentry.io</a>などがあります。</p>
+
+<ul>
+<li><a href="https://medium.com/sourceclear/content-security-policy-with-sentry-efb04f336f59" title="Adopting and Reducing Challenges of Content Security Policy (CSP) with Sentry">Adopting and Reducing Challenges of Content Security Policy (CSP) with Sentry</a></li>
+</ul>
+
+<p>どちらもそれだけのために使うのも微妙だなーと思いCSPについて調べていたところ、CSPの制約違反は<code>report-to</code>だけではなくJavaScriptのイベントとして取得する方法を見つけました。
+<code>securitypolicyviolation</code>イベントではCSPの制約違反をした時にエラーオブジェクトと共に呼び出されます。</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;securitypolicyviolation&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">blockedURI</span><span class="p">);</span>    
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">violatedDirective</span><span class="p">);</span>    
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">originalPolicy</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/SecurityPolicyViolationEvent" title="SecurityPolicyViolationEvent - Web APIs | MDN">SecurityPolicyViolationEvent - Web APIs | MDN</a></li>
+</ul>
+
+<p>このイベントを使えば、<code>report-to</code>の指定以外の方法でも任意の場所にCSPレポートを送ることができそうです。</p>
+
+<p>こういったPVに関連するデータの集積といったら<a href="https://www.google.com/analytics/">Google Analytics</a>がよく使われていると思います。
+このサイトでも<a href="https://www.google.com/analytics/">Google Analytics</a>を使っていたので、CSPレポートをGoogle Analyticsに送る<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/" title="analytics.js">analytics.js</a>のプラグインを作りました。</p>
+
+<h2 id="csp-report-to-google-analytics"><a href="https://github.com/azu/csp-report-to-google-analytics">csp-report-to-google-analytics</a></h2>
+
+<ul>
+<li>ソースコード: <a href="https://github.com/azu/csp-report-to-google-analytics" title="azu/csp-report-to-google-analytics: CSP report to Google Analytics.">azu/csp-report-to-google-analytics: CSP report to Google Analytics.</a></li>
+<li>CDN: <a href="https://unpkg.com/csp-report-to-google-analytics/dist/csp-report-to-google-analytics.min.js">https://unpkg.com/csp-report-to-google-analytics/dist/csp-report-to-google-analytics.min.js</a>
+
+<ul>
+<li><a href="https://unpkg.com/" title="unpkg">unpkg</a>から直接読み込めます</li>
+</ul></li>
+</ul>
+
+<p>この<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/" title="analytics.js">analytics.js</a>のプラグインはCSPレポートを<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/events?hl=ja" title="イベント トラッキング">イベント</a>としてGoogle Analyticsに送信します。</p>
+
+<p>導入方法は簡単で既に<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/" title="analytics.js">analytics.js</a>を導入している人は、
+<code>&lt;script async src=&#39;https://unpkg.com/csp-report-to-google-analytics/dist/csp-report-to-google-analytics.min.js&#39;&gt;&lt;/script&gt;</code>でプラグインを別途読み込み、<code>ga(&#39;require&#39;, &#39;csp-report&#39;);</code>でプラグイン<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/" title="analytics.js">analytics.js</a>に適応するだけです。</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="c">&lt;!-- Google Analytics --&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">ga</span><span class="o">=</span><span class="nb">window</span><span class="p">.</span><span class="nx">ga</span><span class="o">||</span><span class="kd">function</span><span class="p">(){(</span><span class="nx">ga</span><span class="p">.</span><span class="nx">q</span><span class="o">=</span><span class="nx">ga</span><span class="p">.</span><span class="nx">q</span><span class="o">||</span><span class="p">[]).</span><span class="nx">push</span><span class="p">(</span><span class="nx">arguments</span><span class="p">)};</span><span class="nx">ga</span><span class="p">.</span><span class="nx">l</span><span class="o">=+</span><span class="k">new</span> <span class="nb">Date</span><span class="p">;</span>
+<span class="nx">ga</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="s1">&#39;UA-XXXXX-Y&#39;</span><span class="p">,</span> <span class="s1">&#39;auto&#39;</span><span class="p">);</span>
+<span class="nx">ga</span><span class="p">(</span><span class="s1">&#39;send&#39;</span><span class="p">,</span> <span class="s1">&#39;pageview&#39;</span><span class="p">);</span>
+<span class="c1">// require csp-report-to-google-analytics plugin</span>
+<span class="nx">ga</span><span class="p">(</span><span class="s1">&#39;require&#39;</span><span class="p">,</span> <span class="s1">&#39;csp-report&#39;</span><span class="p">);</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">async</span> <span class="na">src=</span><span class="s">&#39;https://www.google-analytics.com/analytics.js&#39;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="c">&lt;!-- End Google Analytics --&gt;</span>
+<span class="c">&lt;!-- Load csp-report-to-google-analytics plugin --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">async</span> <span class="na">src=</span><span class="s">&#39;https://unpkg.com/csp-report-to-google-analytics/dist/csp-report-to-google-analytics.min.js&#39;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div>
+<p>今のGoogle Analyticsはgtag.jsがデフォルトみたいですが、gtag.jsはプラグインの仕組みをサポートしていないため<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/" title="analytics.js">analytics.js</a>でしか動きません。</p>
+
+<ul>
+<li><a href="https://github.com/googleanalytics/autotrack/issues/202" title="gtag.js API? · Issue #202 · googleanalytics/autotrack">gtag.js API? · Issue #202 · googleanalytics/autotrack</a></li>
+</ul>
+
+<p>あとは待っていればCSPレポートがGoogle Analyticsのイベント画面に表示されます。
+(<a href="https://developer.mozilla.org/en-US/docs/Web/API/SecurityPolicyViolationEvent" title="SecurityPolicyViolationEvent">SecurityPolicyViolationEvent</a>に対応しているブラウザでアクセスする必要があります。)</p>
+
+<h2 id="efcl-infoでのテスト">efcl.infoでのテスト</h2>
+
+<p>このサイトでもHTTPSに移行するためにこのプラグインを導入してみました。
+CSPは次のようなディレクティブが書かれています。
+(<code>http://www.google-analytics.com/*</code>を許可しているのは、Google Analyticsがビーコンに画像を使っていて再帰的に掛かりそうな問題があるため。これBeacon APIにすれば解消するのかも)</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">Content-Security-Policy-Report-Only: default-src https: http://www.google-analytics.com/* &#39;unsafe-eval&#39; &#39;unsafe-inline&#39;;
+</code></pre></div>
+<ul>
+<li><a href="https://github.com/efcl/efcl.github.io/pull/158" title="Add CSP report by azu · Pull Request #158 · efcl/efcl.github.io">Add CSP report by azu · Pull Request #158 · efcl/efcl.github.io</a></li>
+</ul>
+
+<p>実際に取得できたCSPレポートはGoogle Analyticsの管理画面で見ることができます。
+Google Analyticsの<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/events?hl=ja" title="イベント トラッキング">イベント トラッキング</a>を使っているため自動的にページなどに紐付いたデータとなっています。</p>
+
+<p><img src="https://monosnap.com/file/T6PG3DJYTrCCtkpaGf7iAIL2bknlPm.png" alt="image"></p>
+
+<p><img src="https://monosnap.com/file/nLN63lZGRFY5vyhJE5dZi7HHSFF33f.png" alt="image"></p>
+
+<p>このデータはHTTPSへの移行する時のMixed Content探しの指標データなどとして利用できると思います。</p>
+
+<p>もっとしっかりと分析したい人はAWSのAPI Gatewayで作成したAPIを<code>report-to</code>に指定し、<a href="https://aws.amazon.com/jp/kinesis/data-firehose/" title="Amazon Kinesis Data Firehose">Amazon Kinesis Data Firehose</a>にデータを流し、S3やRedshiftなどでデータを分析するのがいいと思います。</p>
+
+<ul>
+<li><a href="http://techlife.cookpad.com/entry/2017/04/19/190901" title="Web サービスの完全 HTTPS 化 - クックパッド開発者ブログ">Web サービスの完全 HTTPS 化 - クックパッド開発者ブログ</a></li>
+</ul>
+
+<p>Google Analyticsのイベントは遅れるデータに制約があるので、<a href="https://github.com/azu/csp-report-to-google-analytics">csp-report-to-google-analytics</a> では重要そうなデータしか送っていません。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p><a href="https://github.com/azu/csp-report-to-google-analytics">csp-report-to-google-analytics</a>を使ったCSPレポートを<a href="https://www.google.com/analytics/">Google Analytics</a>に送る方法を紹介しました。</p>
+
+<p>CSPのレスポンスHTTPヘッダを指定する必要がありますが、結構気軽にできるので面白いかもしれません。</p>
+
+<p>残念ながら <code>&lt;meta&gt;</code>タグでは <code>Content-Security-Policy-Report-Only</code> が利用できません。
+(通常のCSPは設定できますが実際にコンテンツが表示されなくなるので、目的に合わない)
+そのため、この手法にはHTTPヘッダを設定できるサーバが必要です。
+このサイトはGitHub Pagesから<a href="https://www.netlify.com/">Netlify</a>に移すことで、この問題を回避しています。</p>
+
+    </div>
+    <div class="post-post-toolbar">
+        <a class="btn edit-on-github"
+           href="https://github.com/efcl/efcl.github.io/edit/develop/_posts/2018/2018-03-19-csp-report-to-google-analytics.md"><span
+                class="edit-on-github-label"></span>修正リクエストをする</a>
+        <nav class="tags"
+             id="js-post-tags"
+             data-post-tags='["CSP","HTTPS","MixedContent","SSL"]'>
+            <span>タグ:</span>
+            <ul>
+                
+                <li><a href="/tags/?q=CSP">CSP</a></li>
+                
+                <li><a href="/tags/?q=HTTPS">HTTPS</a></li>
+                
+                <li><a href="/tags/?q=MixedContent">MixedContent</a></li>
+                
+                <li><a href="/tags/?q=SSL">SSL</a></li>
+                
+            </ul>
+        </nav>
+    </div>
+    <div class="announce-area">
+        <h3>お知らせ欄</h3>
+        <div class="announce-text">
+            <!--お知らせ-->
+JavaScriptに関する最新情報は週一で<a href="http://jser.info/" title="JSer.info">JSer.info</a>を更新しています。
+
+        </div>
+        <h3>次に書くかもしれない記事候補</h3>
+        <p>興味がありましたら<a href="https://github.com/efcl/efcl.github.io/labels/%E8%A8%98%E4%BA%8B%E5%80%99%E8%A3%9C" title="Issues · efcl/efcl.github.io">Issues · efcl/efcl.github.io</a>からご意見下さい</p>
+        <div class="announce-text">
+            <iframe src="https://azu.github.io/github-issue-widget/?owner=efcl&repo=efcl.github.io&labels=記事候補&limit=4&random"
+                    allowtransparency="true" frameborder="0" scrolling="0" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+    <div class="related-articles" id="js-related-articles">
+        <h3>関連記事</h3>
+    </div>
+</div>
+<div class="zenback-embed">
+    <!-- X:S ZenBackWidget --><div id="zenback-widget-loader"></div><script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var r=Math.ceil((new Date()*1)*Math.random());var j=d.createElement("script");j.id=i;j.async=true;j.src="//w.zenback.jp/v1/?base_uri=http%3A//efcl.info/&nsid=89229392978401102%3A%3A89229398078677080&rand="+r;d.body.appendChild(j);}}(document,"zenback-widget-js");</script><!-- X:E ZenBackWidget -->
+</div>
+<div class="disqus-embed" id="js-disqus-embed">
+    <button class="comment-button" id="js-comment-button">コメントを表示</button>
+</div>
+
+<script type="text/javascript" src="/public/js/tag-fetcher.js"></script>
+<script type="text/javascript" src="/public/js/show-related-article.js"></script>
+<script type="text/javascript" src="/public/js/show-disqus.js"></script>
+
+    </div>
+</article>
+</body>
+</html>

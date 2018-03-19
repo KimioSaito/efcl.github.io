@@ -819,7 +819,13 @@
         
         "this",
         
-        "Proposal"
+        "Proposal",
+        
+        "CSP",
+        
+        "HTTPS",
+        
+        "MixedContent"
         
     ]
 }
