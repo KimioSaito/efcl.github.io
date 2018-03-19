@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-03-19T20:27:15+09:00</updated>
+ <updated>2018-03-19T21:43:32+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -28,7 +28,7 @@
 </code></pre></div>
 <p>実際にこのCSPをレスポンスHTTPヘッダに設定するとCSPに対応しているブラウザは、HTTPSではない画像やJavaScriptなどをブロックします。</p>
 
-<p>実際にブロックされると使えなくなって困るので、サイトの管理者はそのようなリソースが埋め込まれていないかを <code>Content-Security-Policy-Report-Only</code> でチェックすることができます。(チェックするのは実際にアクセスしたブラウザ)</p>
+<p>実際にブロックされると使えなくなって困るので、サイトの管理者はそのようなリソースが埋め込まれていないかを <code>Content-Security-Policy-Report-Only</code> でチェックすることができます。(実際にアクセスしたブラウザがCSP違反があるならレポート先のURLにデータをPOSTする)</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">Content-Security-Policy-Report-Only: default-src https: report-to https://example.com/csp-report
 </code></pre></div>
 <p>のようなレスポンスHTTPヘッダを設定することで、ユーザーがページにアクセスした時に、<code>https://example.com/csp-report</code> へPOSTでその情報を投げてくれます。(ブラウザが必要な情報を勝手に送信します)</p>
@@ -57,17 +57,13 @@ CSPレポートは PV * CSP違反のリソース数 となるため適当にや�
 </ul>
 
 <p>どちらもそれだけのために使うのも微妙だなーと思いCSPについて調べていたところ、CSPの制約違反は<code>report-to</code>だけではなくJavaScriptのイベントとして取得する方法を見つけました。
-<code>securitypolicyviolation</code>イベントではCSPの制約違反をした時にエラーオブジェクトと共に呼び出されます。</p>
+<code>securitypolicyviolation</code>イベントではCSPの制約違反をした時に<a href="https://developer.mozilla.org/en-US/docs/Web/API/SecurityPolicyViolationEvent" title="SecurityPolicyViolationEvent - Web APIs | MDN">SecurityPolicyViolationEvent</a>オブジェクトと共に呼び出されます。</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;securitypolicyviolation&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">blockedURI</span><span class="p">);</span>    
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">violatedDirective</span><span class="p">);</span>    
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">originalPolicy</span><span class="p">);</span>
 <span class="p">});</span>
 </code></pre></div>
-<ul>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/SecurityPolicyViolationEvent" title="SecurityPolicyViolationEvent - Web APIs | MDN">SecurityPolicyViolationEvent - Web APIs | MDN</a></li>
-</ul>
-
 <p>このイベントを使えば、<code>report-to</code>(<code>report-uri</code>)の指定以外の方法でも任意の場所にCSPレポートを送ることができそうです。</p>
 
 <p>こういったPVに関連するデータの集積といったら<a href="https://www.google.com/analytics/">Google Analytics</a>がよく使われていると思います。
