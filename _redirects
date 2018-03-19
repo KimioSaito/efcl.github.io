@@ -1,0 +1,4 @@
+# Rewrite rule
+# https://www.netlify.com/docs/redirects/
+# Netlifyはindex.xmlをDirectoryIndexとして認識しない
+/feed/    /feed/index.xml    200
