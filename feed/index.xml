@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-03-19T20:23:40+09:00</updated>
+ <updated>2018-03-19T20:25:00+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -28,11 +28,10 @@
 </code></pre></div>
 <p>実際にこのCSPをレスポンスHTTPヘッダに設定するとCSPに対応しているブラウザは、HTTPSではない画像やJavaScriptなどをブロックします。</p>
 
-<p>実際にブロックされると使えなくなって困るので、サイトの管理者はそのようなリソースが実在しているのかを <code>Content-Security-Policy-Report-Only</code> でチェックすることができます。</p>
+<p>実際にブロックされると使えなくなって困るので、サイトの管理者はそのようなリソースが埋め込まれていないかを <code>Content-Security-Policy-Report-Only</code> でチェックすることができます。(チェックするのは実際にアクセスしたブラウザ)</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">Content-Security-Policy-Report-Only: default-src https: report-to https://example.com/csp-report
 </code></pre></div>
-<p>のようなレスポンスHTTPヘッダを設定することで、ユーザーがページにアクセスした時に、<code>https://example.com/csp-report</code> へPOSTでその情報を投げてくれます。
-(ブラウザが勝手にやってくれます)</p>
+<p>のようなレスポンスHTTPヘッダを設定することで、ユーザーがページにアクセスした時に、<code>https://example.com/csp-report</code> へPOSTでその情報を投げてくれます。(ブラウザが必要な情報を勝手に送信します)</p>
 
 <p>ここでは<code>report-to</code>と書いていますが、古いブラウザは<code>report-uri</code>だったりするので注意します。</p>
 
