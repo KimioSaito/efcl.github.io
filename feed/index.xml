@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-03-19T20:22:36+09:00</updated>
+ <updated>2018-03-19T20:23:40+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -15,7 +15,7 @@
 
  
  <entry>
-   <title>CSPレポート(Mixed Content)をGoogle Analyticsに集約する</title>
+   <title>CSPレポート(Mixed Contentの問題)をGoogle Analyticsに集約する</title>
    <link href="http://efcl.info/2018/03/19/csp-report-to-google-analytics/"/>
    <updated>2018-03-19T19:37:00+09:00</updated>
    <id>http://efcl.info/2018/03/19/csp-report-to-google-analytics</id>
