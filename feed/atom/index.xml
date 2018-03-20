@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-03-20T12:21:39+09:00</updated>
+ <updated>2018-03-20T12:29:49+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -22,7 +22,7 @@
    <content type="html"><![CDATA[ <p>Content Security Policy(CSP) ではHTTPヘッダや<code>&lt;meta&gt;</code>要素に定義を記述し、さまざまな条件でコンテンツに制約をかけることができます。
 そのCSPの中でも実際に制約をかけずにテストして、その結果を特定のURLにPOSTする <code>Content-Security-Policy-Report-Only</code> という仕組みがあります。</p>
 
-<p>CSPにはHTTPSじゃないと画像やJavaScriptを読み込めなくする制約も設定できるので、HTTPからHTTPSに移行する際などに役立ちます。
+<p>CSPにはHTTPSではない画像やJavaScriptを読み込めなくする制約も設定できるので、HTTPからHTTPSに移行する際などに役立ちます。
 例えば、リソースはすべてHTTPSから読み込まないと行けないというCSPの設定は次のようにかけます。</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">Content-Security-Policy: default-src https:
 </code></pre></div>
