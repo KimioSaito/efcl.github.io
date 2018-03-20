@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/atom/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-03-20T01:28:32+09:00</updated>
+ <updated>2018-03-20T12:21:39+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -19,7 +19,7 @@
    <link href="http://efcl.info/2018/03/19/csp-report-to-google-analytics/"/>
    <updated>2018-03-19T19:37:00+09:00</updated>
    <id>http://efcl.info/2018/03/19/csp-report-to-google-analytics</id>
-   <content type="html"><![CDATA[ <p>Content Security Policy(CSP) ではさまざまな条件でコンテンツに制約をかけることができます。
+   <content type="html"><![CDATA[ <p>Content Security Policy(CSP) ではHTTPヘッダや<code>&lt;meta&gt;</code>要素に定義を記述し、さまざまな条件でコンテンツに制約をかけることができます。
 そのCSPの中でも実際に制約をかけずにテストして、その結果を特定のURLにPOSTする <code>Content-Security-Policy-Report-Only</code> という仕組みがあります。</p>
 
 <p>CSPにはHTTPSじゃないと画像やJavaScriptを読み込めなくする制約も設定できるので、HTTPからHTTPSに移行する際などに役立ちます。
