@@ -4,7 +4,7 @@
  <title>Web Scratch</title>
  <link href="http://efcl.info/feed/" rel="self"/>
  <link href="http://efcl.info"/>
- <updated>2018-03-20T12:29:49+09:00</updated>
+ <updated>2018-03-23T11:13:09+09:00</updated>
  <id>http://efcl.info/</id>
  
  <author>
@@ -26,12 +26,12 @@
 例えば、リソースはすべてHTTPSから読み込まないと行けないというCSPの設定は次のようにかけます。</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">Content-Security-Policy: default-src https:
 </code></pre></div>
-<p>実際にこのCSPをレスポンスHTTPヘッダに設定するとCSPに対応しているブラウザは、HTTPSではない画像やJavaScriptなどをブロックします。</p>
+<p>実際にこのCSPをHTTPレスポンスヘッダに設定するとCSPに対応しているブラウザは、HTTPSではない画像やJavaScriptなどをブロックします。</p>
 
 <p>実際にブロックされると使えなくなって困るので、サイトの管理者はそのようなリソースが埋め込まれていないかを <code>Content-Security-Policy-Report-Only</code> でチェックすることができます。(実際にアクセスしたブラウザがCSP違反があるならレポート先のURLにデータをPOSTする)</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">Content-Security-Policy-Report-Only: default-src https: report-to https://example.com/csp-report
 </code></pre></div>
-<p>のようなレスポンスHTTPヘッダを設定することで、ユーザーがページにアクセスした時に、<code>https://example.com/csp-report</code> へPOSTでその情報を投げてくれます。(ブラウザが必要な情報を勝手に送信します)</p>
+<p>のようなHTTPレスポンスヘッダを設定することで、ユーザーがページにアクセスした時に、<code>https://example.com/csp-report</code> へPOSTでその情報を投げてくれます。(ブラウザが必要な情報を勝手に送信します)</p>
 
 <p>ここでは<code>report-to</code>と書いていますが、古いブラウザは<code>report-uri</code>だったりするので注意します。</p>
 
@@ -138,7 +138,7 @@ Google Analyticsの<a href="https://developers.google.com/analytics/devguides/co
 
 <p><a href="https://github.com/azu/csp-report-to-google-analytics">csp-report-to-google-analytics</a>を使ったCSPレポートを<a href="https://www.google.com/analytics/">Google Analytics</a>に送る方法を紹介しました。</p>
 
-<p>CSPのレスポンスHTTPヘッダを指定する必要がありますが、結構気軽にできるので面白いかもしれません。</p>
+<p>CSPのHTTPレスポンスヘッダを指定する必要がありますが、結構気軽にできるので面白いかもしれません。</p>
 
 <p>残念ながら <code>&lt;meta&gt;</code>タグでは <code>Content-Security-Policy-Report-Only</code> が利用できません。
 (通常のCSPは設定できますが実際にコンテンツが表示されなくなるので、目的に合わない)
